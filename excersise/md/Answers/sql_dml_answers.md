@@ -1,0 +1,4174 @@
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 1 ANSWERS (Exercises 1-10)
+Difficulty Level: BEGINNER
+Solutions for Basic SELECT queries
+---
+
+---
+## EXERCISE 1: Simple SELECT - Retrieve All Student Records
+---
+### ANSWER
+
+SELECT * FROM Students;
+
+### EXPLANATION
+- SELECT * retrieves all columns from the table
+- FROM Students specifies the source table
+- No WHERE clause means all rows are returned
+- Result will show every student record in the database
+- This is the simplest form of SQL query
+- Useful for viewing all data in a table
+- Use with caution on large tables (use LIMIT to restrict results)
+
+### BREAKDOWN
+- SELECT: Keyword to retrieve data
+- *: Wildcard meaning "all columns"
+- FROM: Specifies which table to query
+- Students: The table name
+
+### SAMPLE OUTPUT
+StudentID | Name          | DeptID | Email                    | Phone
+-----------|---------------|--------|--------------------------|----------
+1          | Aarav Kumar   | 1      | aarav.kumar@college.edu  | 9000000001
+2          | Ananya Gupta  | 1      | ananya.gupta@college.edu | 9000000002
+3          | Arjun Singh   | 2      | arjun.singh@college.edu  | 9000000003
+4          | Bhargav Nair  | 3      | bhargav.nair@college.edu | 9000000004
+5          | Chitra Desai  | 1      | chitra.desai@college.edu | 9000000005
+
+VARIATIONS:
+-- Select specific columns instead of all:
+SELECT StudentID, Name, Email FROM Students;
+
+-- Order results:
+SELECT * FROM Students ORDER BY Name;
+
+-- Limit number of results:
+SELECT * FROM Students LIMIT 10;
+
+
+---
+## EXERCISE 2: SELECT with WHERE - Find Students by Department
+---
+### ANSWER
+
+SELECT StudentID, Name, Email, DeptID FROM Students WHERE DeptID = 1;
+
+### EXPLANATION
+- WHERE clause filters rows based on condition
+- DeptID = 1 selects only Computer Science department
+- Only rows matching the condition are returned
+- Other rows are excluded from results
+- Equals sign (=) tests for exact match
+- WHERE is essential for filtering data
+- Can use AND, OR for multiple conditions
+
+### BREAKDOWN
+- SELECT StudentID, Name, Email, DeptID: Choose columns to display
+- FROM Students: Source table
+- WHERE DeptID = 1: Filter condition (only dept 1)
+- Only rows where DeptID equals 1 are returned
+
+### SYNTAX PATTERN
+SELECT columns FROM table WHERE condition;
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email                    | DeptID
+-----------|---------------|--------------------------|--------
+1          | Aarav Kumar   | aarav.kumar@college.edu  | 1
+2          | Ananya Gupta  | ananya.gupta@college.edu | 1
+5          | Chitra Desai  | chitra.desai@college.edu | 1
+8          | Deepak Nair   | deepak.nair@college.edu  | 1
+
+### COMMON VARIATIONS
+-- Find students NOT in department 1:
+SELECT StudentID, Name, Email FROM Students WHERE DeptID <> 1;
+-- or
+SELECT StudentID, Name, Email FROM Students WHERE DeptID != 1;
+
+-- Find students in multiple departments:
+SELECT StudentID, Name, Email FROM Students WHERE DeptID = 1 OR DeptID = 2;
+-- or
+SELECT StudentID, Name, Email FROM Students WHERE DeptID IN (1, 2);
+
+-- Find students where Phone is NULL:
+SELECT StudentID, Name FROM Students WHERE Phone IS NULL;
+
+
+---
+## EXERCISE 3: SELECT with ORDER BY - Sort Students by Name
+---
+### ANSWER
+
+SELECT StudentID, Name, Email FROM Students ORDER BY Name ASC;
+
+-- OR (ASC is default, so this also works):
+SELECT StudentID, Name, Email FROM Students ORDER BY Name;
+
+### EXPLANATION
+- ORDER BY sorts results based on specified column
+- ASC means Ascending (A-Z, 0-9, oldest to newest)
+- Default order is ASC if not specified
+- Can sort by multiple columns
+- Affects display order, not data in database
+- Useful for alphabetical or chronological organization
+- DESC sorts descending (Z-A, 9-0, newest to oldest)
+
+### BREAKDOWN
+- SELECT StudentID, Name, Email: Columns to retrieve
+- FROM Students: Source table
+- ORDER BY Name: Sort by Name column
+- ASC: Ascending order (optional, default behavior)
+
+### SYNTAX PATTERN
+SELECT columns FROM table ORDER BY column ASC|DESC;
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+4          | Bhargav Nair  | bhargav.nair@college.edu
+5          | Chitra Desai  | chitra.desai@college.edu
+
+VARIATIONS:
+-- Sort descending (Z-A):
+SELECT StudentID, Name, Email FROM Students ORDER BY Name DESC;
+
+-- Sort by multiple columns:
+SELECT StudentID, Name, DeptID FROM Students ORDER BY DeptID ASC, Name ASC;
+
+-- Sort by column number (1-based):
+SELECT StudentID, Name, Email FROM Students ORDER BY 2 ASC;  -- Sort by 2nd column (Name)
+
+-- Sort by calculated expression:
+SELECT StudentID, Name, LENGTH(Name) AS NameLength FROM Students ORDER BY LENGTH(Name) DESC;
+
+
+---
+## EXERCISE 4: SELECT with LIMIT - Get Top 5 Students
+---
+### ANSWER
+
+SELECT StudentID, Name, Email FROM Students LIMIT 5;
+
+### EXPLANATION
+- LIMIT restricts number of rows returned
+- LIMIT 5 means "return only first 5 rows"
+- Useful for viewing sample data
+- Essential for large datasets to avoid overload
+- Can combine with ORDER BY for meaningful results
+- LIMIT without ORDER BY returns arbitrary rows
+- Different databases use different syntax: LIMIT (MySQL), FETCH FIRST (SQL Server, Oracle)
+
+### BREAKDOWN
+- SELECT StudentID, Name, Email: Columns to retrieve
+- FROM Students: Source table
+- LIMIT 5: Return maximum 5 rows
+
+### SYNTAX PATTERN
+SELECT columns FROM table LIMIT number;
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+4          | Bhargav Nair  | bhargav.nair@college.edu
+5          | Chitra Desai  | chitra.desai@college.edu
+
+VARIATIONS:
+-- Limit with offset (skip first 10, get next 5):
+SELECT StudentID, Name, Email FROM Students LIMIT 5 OFFSET 10;
+-- or MySQL syntax:
+SELECT StudentID, Name, Email FROM Students LIMIT 10, 5;
+
+-- Limit with ordering:
+SELECT StudentID, Name, Email FROM Students ORDER BY Name LIMIT 5;
+
+-- Get top 10% of results (depends on dialect):
+SELECT StudentID, Name, Email FROM Students LIMIT 10 ROWS ONLY;
+
+-- SQL Server syntax:
+SELECT TOP 5 StudentID, Name, Email FROM Students;
+
+
+---
+## EXERCISE 5: SELECT with Multiple Conditions - Complex WHERE
+---
+### ANSWER
+
+-- Method 1: Using OR
+SELECT StudentID, Name, DeptID FROM Students 
+WHERE DeptID = 1 OR DeptID = 2 
+ORDER BY Name ASC;
+
+-- Method 2: Using IN (preferred for readability)
+SELECT StudentID, Name, DeptID FROM Students 
+WHERE DeptID IN (1, 2) 
+ORDER BY Name ASC;
+
+### EXPLANATION
+- Multiple conditions combined with OR return rows matching ANY condition
+- IN clause is cleaner for checking multiple values in same column
+- Both methods produce identical results
+- IN is more readable and efficient than chained OR
+- AND requires ALL conditions to be true
+- OR requires ANY condition to be true
+- Conditions are evaluated left to right
+- Use parentheses for clarity with complex logic
+
+### BREAKDOWN
+- WHERE DeptID = 1 OR DeptID = 2: Match either condition
+- IN (1, 2): Equivalent, more concise syntax
+- ORDER BY Name ASC: Sort alphabetically
+
+### SYNTAX PATTERN
+SELECT columns FROM table WHERE column = value1 OR column = value2;
+SELECT columns FROM table WHERE column IN (value1, value2);
+
+### SAMPLE OUTPUT
+StudentID | Name          | DeptID
+-----------|---------------|--------
+1          | Aarav Kumar   | 1
+2          | Ananya Gupta  | 1
+3          | Arjun Singh   | 2
+5          | Chitra Desai  | 1
+7          | Deepak Nair   | 2
+
+LOGIC ### COMPARISON
+-- OR: Match row if ANY condition is true
+WHERE DeptID = 1 OR DeptID = 2
+
+-- AND: Match row if ALL conditions are true
+WHERE DeptID = 1 AND Email LIKE '%@college.edu%'
+
+-- IN: Shorthand for multiple OR on same column
+WHERE DeptID IN (1, 2, 3)
+
+-- NOT IN: Opposite of IN
+WHERE DeptID NOT IN (1, 2)
+
+
+---
+## EXERCISE 6: SELECT Specific Columns - Email List
+---
+### ANSWER
+
+SELECT StudentID, Email FROM Students;
+
+### EXPLANATION
+- Selecting specific columns instead of all columns (*)
+- More efficient than SELECT *
+- Returns only requested columns
+- Useful for privacy/security (exclude sensitive data)
+- Faster queries on wide tables with many columns
+- Better for reports showing specific information
+- Column order matches SELECT list order
+
+### BREAKDOWN
+- SELECT StudentID, Email: Choose only these 2 columns
+- FROM Students: Source table
+- No WHERE = all rows included
+
+### SYNTAX PATTERN
+SELECT column1, column2, column3 FROM table;
+
+### SAMPLE OUTPUT
+StudentID | Email
+-----------|-------------------------
+1          | aarav.kumar@college.edu
+2          | ananya.gupta@college.edu
+3          | arjun.singh@college.edu
+4          | bhargav.nair@college.edu
+5          | chitra.desai@college.edu
+
+PERFORMANCE NOTES:
+- SELECT * is convenient but inefficient
+- SELECT specific columns is best practice
+- Reduces network traffic (less data to transmit)
+- Easier to maintain if table schema changes
+- Column aliases can rename output:
+
+SELECT StudentID AS 'Student ID', Email AS 'Email Address' FROM Students;
+
+-- Output column order can be changed:
+SELECT Email, StudentID FROM Students;
+
+-- Expressions in SELECT:
+SELECT StudentID, CONCAT(StudentID, ' - ', Email) AS 'Student Info' FROM Students;
+
+
+---
+## EXERCISE 7: SELECT with WHERE and ORDER BY - Sorted Department List
+---
+### ANSWER
+
+SELECT StudentID, Name, Email, DeptID FROM Students 
+WHERE DeptID = 1 
+ORDER BY Name DESC;
+
+### EXPLANATION
+- Combines WHERE for filtering with ORDER BY for sorting
+- WHERE executes first (filters rows)
+- ORDER BY executes second (sorts filtered results)
+- DESC means descending (Z-A, reverse alphabetical)
+- Only filtered rows are sorted, improving efficiency
+- Multiple sorts can be applied
+- Critical for meaningful reports
+
+### BREAKDOWN
+- SELECT StudentID, Name, Email, DeptID: Columns to show
+- WHERE DeptID = 1: Filter to only Computer Science
+- ORDER BY Name DESC: Sort by name, Z to A
+
+EXECUTION ORDER:
+1. FROM Students: Get all rows from Students table
+2. WHERE DeptID = 1: Filter to only matching rows
+3. SELECT StudentID, Name, Email, DeptID: Pick columns
+4. ORDER BY Name DESC: Sort results
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email                    | DeptID
+-----------|---------------|--------------------------|--------
+5          | Deepak Nair   | deepak.nair@college.edu  | 1
+2          | Ananya Gupta  | ananya.gupta@college.edu | 1
+1          | Aarav Kumar   | aarav.kumar@college.edu  | 1
+
+VARIATIONS:
+-- Ascending order (A-Z):
+SELECT StudentID, Name FROM Students WHERE DeptID = 1 ORDER BY Name ASC;
+
+-- Sort by numeric value:
+SELECT StudentID, Name, DeptID FROM Students WHERE DeptID >= 1 ORDER BY StudentID DESC;
+
+-- Multiple sort columns:
+SELECT StudentID, Name, DeptID FROM Students 
+WHERE DeptID IN (1, 2) 
+ORDER BY DeptID ASC, Name DESC;
+
+
+---
+## EXERCISE 8: SELECT with DISTINCT - Get Unique Departments
+---
+### ANSWER
+
+SELECT DISTINCT DeptID FROM Students;
+
+### EXPLANATION
+- DISTINCT removes duplicate values from results
+- Useful for finding unique values in column
+- Returns each unique value only once
+- Applies to all columns in SELECT list
+- Can use with multiple columns
+- Essential for data analysis
+- NULL is treated as a distinct value
+
+### BREAKDOWN
+- SELECT DISTINCT DeptID: Get unique department IDs
+- FROM Students: Source table
+- Duplicates are eliminated in results
+
+### EXECUTION
+1. FROM Students: Get all student records
+2. DISTINCT DeptID: Group and show only unique values
+3. Results contain no duplicate DeptIDs
+
+### SAMPLE OUTPUT
+DeptID
+--------
+1
+2
+3
+4
+5
+
+VARIATIONS:
+-- DISTINCT with multiple columns:
+SELECT DISTINCT DeptID, Email FROM Students;
+
+-- DISTINCT with WHERE:
+SELECT DISTINCT DeptID FROM Students WHERE DeptID > 2;
+
+-- Count unique values:
+SELECT COUNT(DISTINCT DeptID) FROM Students;
+
+-- Show all columns as distinct (checks uniqueness across all):
+SELECT DISTINCT * FROM Students;
+
+-- Compare with GROUP BY:
+SELECT DeptID FROM Students GROUP BY DeptID;  -- Similar result, different method
+
+
+---
+## EXERCISE 9: SELECT with BETWEEN - Students by ID Range
+---
+### ANSWER
+
+SELECT StudentID, Name, Email FROM Students 
+WHERE StudentID BETWEEN 10 AND 20;
+
+### EXPLANATION
+- BETWEEN selects rows within a range (inclusive)
+- Includes both start and end values
+- BETWEEN x AND y is equivalent to >= x AND <= y
+- Works with numbers, dates, strings
+- More readable than >= AND <=
+- Range is inclusive on both ends
+- NULL values are not matched
+
+### BREAKDOWN
+- SELECT StudentID, Name, Email: Columns to retrieve
+- WHERE StudentID BETWEEN 10 AND 20: Range filter
+- Includes StudentID 10, 11, 12...20 (all inclusive)
+
+### SYNTAX PATTERN
+SELECT columns FROM table WHERE column BETWEEN start AND end;
+
+EQUIVALENCE:
+-- These are identical:
+WHERE StudentID BETWEEN 10 AND 20
+WHERE StudentID >= 10 AND StudentID <= 20
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+10         | Hari Patel    | hari.patel@college.edu
+11         | Isha Sharma   | isha.sharma@college.edu
+12         | Jatin Kumar   | jatin.kumar@college.edu
+15         | Kavya Singh   | kavya.singh@college.edu
+20         | Neha Desai    | neha.desai@college.edu
+
+VARIATIONS:
+-- BETWEEN with dates:
+SELECT StudentID, Name FROM Students WHERE EnrollmentDate BETWEEN '2023-01-01' AND '2024-01-31';
+
+-- NOT BETWEEN (exclude range):
+SELECT StudentID, Name FROM Students WHERE StudentID NOT BETWEEN 10 AND 20;
+
+-- BETWEEN with strings (alphabetic range):
+SELECT Name FROM Students WHERE Name BETWEEN 'A' AND 'M';
+
+
+---
+## EXERCISE 10: SELECT with LIKE - Search by Name Pattern
+---
+### ANSWER
+
+SELECT StudentID, Name, Email FROM Students 
+WHERE Name LIKE 'A%';
+
+### EXPLANATION
+- LIKE performs pattern matching with wildcards
+- % represents any number of characters (0 or more)
+- _ represents single character
+- LIKE is case-insensitive (usually)
+- Essential for search functionality
+- Works with partial text matching
+- Slower than exact match (=)
+
+### BREAKDOWN
+- WHERE Name LIKE 'A%': Name starts with 'A'
+- A: Literal character 'A'
+- %: Followed by any characters
+- Result: All names starting with A
+
+WILDCARD PATTERNS:
+- LIKE 'A%': Starts with A (A, Aa, Ab, Abc...)
+- LIKE '%a': Ends with a (a, ba, ca, bba...)
+- LIKE '%ar%': Contains 'ar' anywhere (ar, bar, arc, bart...)
+- LIKE 'A_': Starts with A, exactly 2 chars (Ab, Ac, Ad...)
+- LIKE 'A__': Starts with A, exactly 3 chars (Abc, Add...)
+
+### SAMPLE OUTPUT
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+
+VARIATIONS:
+-- Case insensitive (default in most systems):
+SELECT StudentID, Name FROM Students WHERE Name LIKE 'a%';  -- Same as 'A%'
+
+-- Ends with specific letter:
+SELECT StudentID, Name FROM Students WHERE Name LIKE '%h';
+
+-- Contains specific text:
+SELECT StudentID, Name FROM Students WHERE Name LIKE '%Singh%';
+
+-- NOT LIKE (opposite):
+SELECT StudentID, Name FROM Students WHERE Name NOT LIKE 'A%';
+
+-- Using underscore for single character:
+SELECT StudentID, Name FROM Students WHERE Name LIKE 'A_____';  -- Exactly 6 chars, starts with A
+
+-- REGEXP (more advanced pattern matching):
+SELECT StudentID, Name FROM Students WHERE Name REGEXP '^A';  -- Starts with A
+
+
+---
+KEY CONCEPTS COVERED IN # BATCH 1:
+---
+1. SELECT *: Retrieve all columns
+2. Specific column selection: Reduce output to needed columns
+3. WHERE clause: Filter rows based on conditions
+4. ORDER BY: Sort results (ASC/DESC)
+5. LIMIT: Restrict number of rows returned
+6. WHERE with AND/OR: Multiple conditions
+7. WHERE with IN: Multiple values in one column
+8. DISTINCT: Remove duplicate values
+9. BETWEEN: Range filtering (inclusive)
+10. LIKE: Pattern matching with wildcards
+
+BEST PRACTICES:
+- Always specify columns instead of SELECT *
+- Use WHERE to filter early, reduce data processing
+- Use ORDER BY for consistent result ordering
+- Use LIMIT for large datasets
+- Use IN instead of multiple OR conditions
+- Use LIKE for search functionality
+- Test queries on small datasets first
+- Comment complex WHERE conditions
+
+COMMON MISTAKES:
+- Forgetting WHERE causes all rows to be returned
+- Using = instead of LIKE for partial matches
+- Not ordering results when order matters
+- Using SELECT * for performance-sensitive queries
+- Forgetting to use LIMIT on large tables
+- Case sensitivity issues with LIKE
+- Using wrong wildcard (% vs _)
+- Forgetting ASC/DESC can give unexpected order
+
+PRACTICE TIPS:
+- Try all operators: =, <>, <, >, <=, >=
+- Combine multiple clauses in one query
+- Practice with sample data
+- Understand execution order (FROM → WHERE → SELECT → ORDER BY → LIMIT)
+- Use comments to document complex queries
+
+---
+END OF # BATCH 1 ANSWERS (Exercises 1-10)
+Total Exercises in Series: 50 (Beginner to Mid-Level)
+Batch 2 coming next: UPDATE, DELETE, JOINs
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 2 ANSWERS (11-20)
+Difficulty Level: BEGINNER to INTERMEDIATE
+Solutions for UPDATE, JOIN, and advanced SELECT
+---
+
+---
+## EXERCISE 11: UPDATE Single Row - Change Student Email
+---
+### ANSWER
+
+-- Step 1: Verify current email before update
+SELECT StudentID, Email FROM Students WHERE StudentID = 5;
+
+-- Step 2: Update the email
+UPDATE Students 
+SET Email = 'newemail@college.edu' 
+WHERE StudentID = 5;
+
+-- Step 3: Verify update was successful
+SELECT StudentID, Email FROM Students WHERE StudentID = 5;
+
+### EXPLANATION
+- UPDATE keyword starts modification statement
+- SET specifies which column(s) to change and new value
+- WHERE identifies which row(s) to update (CRITICAL!)
+- Without WHERE, ALL rows would be updated (disaster!)
+- Always verify with SELECT before and after
+- Transactions helpful for safety
+
+EXECUTION FLOW:
+1. Database finds row where StudentID = 5
+2. Changes Email column to 'newemail@college.edu'
+3. Saves change permanently (auto-commit in most systems)
+4. Returns number of rows affected (should be 1)
+
+### SAMPLE OUTPUT
+Before:
+StudentID | Email
+-----------|-------------------------
+5          | chitra.desai@college.edu
+
+After:
+StudentID | Email
+-----------|---------------------
+5          | newemail@college.edu
+
+Rows affected: 1
+
+IMPORTANT NOTES:
+- Email field must exist in Students table
+- Value must fit field type and length constraints
+- StudentID must exist (else 0 rows affected)
+- WHERE clause is essential for safety
+- Use quotes around string values ('newemail@college.edu')
+- NULL is also valid assignment: SET Email = NULL
+
+
+---
+## EXERCISE 12: UPDATE Multiple Rows - Change Phone for Department
+---
+### ANSWER
+
+-- Step 1: Count students in Department 2 before update
+SELECT COUNT(*) AS StudentsInDept2 FROM Students WHERE DeptID = 2;
+
+-- Step 2: View current phone numbers (sample)
+SELECT StudentID, Name, Phone FROM Students WHERE DeptID = 2 LIMIT 5;
+
+-- Step 3: Update all phones in Department 2
+UPDATE Students 
+SET Phone = '9999999999' 
+WHERE DeptID = 2;
+
+-- Step 4: Verify update - count and sample
+SELECT COUNT(*) AS UpdatedPhones FROM Students WHERE DeptID = 2 AND Phone = '9999999999';
+
+-- Step 5: View updated records (sample)
+SELECT StudentID, Name, Phone FROM Students WHERE DeptID = 2 LIMIT 5;
+
+### EXPLANATION
+- WHERE DeptID = 2 matches all students in Electronics department
+- SET Phone updates that column for ALL matching rows
+- Multiple rows updated in single statement
+- More efficient than individual UPDATE per row
+- COUNT shows how many rows were affected
+- WHERE is essential - verify first with SELECT!
+
+### EXECUTION
+1. Database identifies all rows where DeptID = 2 (47 rows)
+2. Updates Phone column in each matching row
+3. Returns count of affected rows (47)
+
+### SAMPLE OUTPUT
+Before Count: 47 students
+Before Sample:
+StudentID | Name        | Phone
+-----------|-------------|----------
+4          | Bhargav...  | 9000000004
+6          | Esha Patel  | 9000000006
+9          | Farhan Khan | 9000000009
+
+After Count: 47 students with new phone
+After Sample:
+StudentID | Name        | Phone
+-----------|-------------|----------
+4          | Bhargav...  | 9999999999
+6          | Esha Patel  | 9999999999
+9          | Farhan Khan | 9999999999
+
+Rows affected: 47
+
+BEST PRACTICE:
+-- Always test WHERE clause first:
+SELECT COUNT(*) FROM Students WHERE DeptID = 2;  -- Should return 47
+
+-- Then perform update:
+UPDATE Students SET Phone = '9999999999' WHERE DeptID = 2;
+
+-- Then verify:
+SELECT COUNT(*) FROM Students WHERE DeptID = 2 AND Phone = '9999999999';
+
+
+---
+## EXERCISE 13: UPDATE with Expression - Increment StudentID
+---
+### ANSWER
+
+-- WARNING: This is destructive! Back up first!
+
+-- Step 1: View original StudentIDs (sample)
+SELECT StudentID FROM Students ORDER BY StudentID LIMIT 10;
+
+-- Step 2: Use expression to add 1000 to each StudentID
+UPDATE Students 
+SET StudentID = StudentID + 1000;
+
+-- Step 3: Verify new StudentIDs
+SELECT StudentID FROM Students ORDER BY StudentID LIMIT 10;
+
+### EXPLANATION
+- SET StudentID = StudentID + 1000: Uses expression
+- StudentID (right side) is current value
+- + 1000 adds to current value
+- Result stored in StudentID (left side)
+- Applied to ALL rows (no WHERE clause!)
+- Very dangerous - typically only in examples
+- Demonstrates calculation in UPDATE
+
+### EXECUTION
+1. For each row, read current StudentID value
+2. Add 1000 to that value
+3. Store result back in StudentID
+4. Example: StudentID 5 becomes 1005, StudentID 10 becomes 1010
+
+### SAMPLE OUTPUT
+Before:
+StudentID
+--------
+1
+2
+3
+4
+5
+10
+
+After:
+StudentID
+--------
+1001
+1002
+1003
+1004
+1005
+1010
+
+Rows affected: 477 (all students)
+
+MATHEMATICAL OPERATIONS IN UPDATE:
+-- Addition:
+UPDATE Students SET StudentID = StudentID + 1000;
+
+-- Subtraction:
+UPDATE Fees SET Amount = Amount - 100;
+
+-- Multiplication:
+UPDATE Fees SET Amount = Amount * 1.10;  -- Increase 10%
+
+-- Division:
+UPDATE Fees SET Amount = Amount / 2;
+
+-- Modulo (remainder):
+UPDATE table SET col = col % 10;
+
+-- String concatenation:
+UPDATE Students SET Email = CONCAT(Name, '@newemail.com');
+
+SAFETY PRECAUTIONS:
+-- Use transaction:
+BEGIN;
+UPDATE Students SET StudentID = StudentID + 1000;
+-- Review changes...
+COMMIT;  -- or ROLLBACK; to undo
+
+-- Backup before destructive updates:
+-- CREATE TABLE Students_Backup AS SELECT * FROM Students;
+
+
+---
+## EXERCISE 14: UPDATE with CASE Statement - Conditional Updates
+---
+### ANSWER
+
+-- View sample current grades
+SELECT StudentID, CourseID, Grade FROM StudentCourses LIMIT 10;
+
+-- Update grades with CASE statement
+UPDATE StudentCourses 
+SET Grade = CASE 
+    WHEN Grade >= 80 THEN 'A'
+    WHEN Grade >= 70 THEN 'B'
+    WHEN Grade >= 60 THEN 'C'
+    ELSE 'F'
+END;
+
+-- Verify updates by checking grade distribution
+SELECT Grade, COUNT(*) AS Count 
+FROM StudentCourses 
+GROUP BY Grade 
+ORDER BY Grade DESC;
+
+-- View sample updated records
+SELECT StudentID, CourseID, Grade FROM StudentCourses LIMIT 10;
+
+### EXPLANATION
+- CASE provides conditional logic in UPDATE
+- WHEN Grade >= 80: If condition true, use 'A'
+- Multiple WHEN clauses tested in order
+- ELSE provides default if no WHEN matches
+- Applied to ALL rows in StudentCourses
+- Single statement replaces multiple UPDATE queries
+
+CASE ### EXECUTION
+For each row:
+1. Check WHEN Grade >= 80 → if TRUE, set 'A'
+2. Else check WHEN Grade >= 70 → if TRUE, set 'B'
+3. Else check WHEN Grade >= 60 → if TRUE, set 'C'
+4. Else set 'F'
+
+### SAMPLE OUTPUT
+Before:
+StudentID | CourseID | Grade
+-----------|----------|-------
+1          | 101      | 92
+2          | 101      | 85
+3          | 102      | 75
+4          | 102      | 58
+5          | 103      | 88
+
+After:
+StudentID | CourseID | Grade
+-----------|----------|-------
+1          | 101      | A
+2          | 101      | A
+3          | 102      | B
+4          | 102      | F
+5          | 103      | A
+
+Grade Distribution:
+Grade | Count
+------|------
+A     | 145
+B     | 162
+C     | 110
+F     | 33
+Total | 450
+
+VARIATIONS:
+-- CASE with numeric conversion:
+UPDATE StudentCourses 
+SET GPA = CASE 
+    WHEN Grade >= 90 THEN 4.0
+    WHEN Grade >= 80 THEN 3.0
+    WHEN Grade >= 70 THEN 2.0
+    WHEN Grade >= 60 THEN 1.0
+    ELSE 0.0
+END;
+
+-- CASE with multiple column checks:
+UPDATE Students 
+SET Status = CASE 
+    WHEN Age < 18 THEN 'Minor'
+    WHEN Age >= 18 AND Age < 65 THEN 'Adult'
+    ELSE 'Senior'
+END;
+
+
+---
+## EXERCISE 15: UPDATE with JOIN - Update Fee Amounts by Department
+---
+### ANSWER
+
+-- Step 1: View current fees by department (sample)
+SELECT F.FeeID, S.Name, D.DeptName, F.Amount
+FROM Fees F
+JOIN Students S ON F.StudentID = S.StudentID
+JOIN Departments D ON S.DeptID = D.DeptID
+LIMIT 10;
+
+-- Step 2: Update fees with department-based increase
+UPDATE Fees F
+JOIN Students S ON F.StudentID = S.StudentID
+JOIN Departments D ON S.DeptID = D.DeptID
+SET F.Amount = CASE 
+    WHEN D.DeptID = 1 THEN F.Amount * 1.10      -- CS: +10%
+    WHEN D.DeptID = 2 THEN F.Amount * 1.05      -- Electronics: +5%
+    ELSE F.Amount * 1.02                         -- Others: +2%
+END;
+
+-- Step 3: Verify updates with department breakdown
+SELECT D.DeptName, COUNT(F.FeeID) AS FeesUpdated, 
+       SUM(F.Amount) AS TotalAmount
+FROM Fees F
+JOIN Students S ON F.StudentID = S.StudentID
+JOIN Departments D ON S.DeptID = D.DeptID
+GROUP BY D.DeptName
+ORDER BY TotalAmount DESC;
+
+### EXPLANATION
+- UPDATE with JOIN matches records from multiple tables
+- JOIN conditions link Fees → Students → Departments
+- CASE applies different multipliers by department
+- F.Amount * 1.10 increases by 10%
+- F.Amount * 1.05 increases by 5%
+- F.Amount * 1.02 increases by 2%
+- Simultaneous update to multiple tables' data
+
+JOIN LOGIC:
+1. For each Fees row:
+2. Find matching Student (F.StudentID = S.StudentID)
+3. Find matching Department (S.DeptID = D.DeptID)
+4. Use D.DeptID to determine multiplier
+5. Update F.Amount accordingly
+
+### SAMPLE OUTPUT
+Before:
+FeeID | StudentName | DeptName         | Amount
+------|-------------|------------------|--------
+1     | Aarav Kumar | Computer Science | 50000
+2     | Ananya...   | Computer Science | 50000
+3     | Arjun Singh | Electronics      | 50000
+
+After:
+FeeID | StudentName | DeptName         | Amount
+------|-------------|------------------|--------
+1     | Aarav Kumar | Computer Science | 55000
+2     | Ananya...   | Computer Science | 55000
+3     | Arjun Singh | Electronics      | 52500
+
+Summary by Department:
+DeptName            | FeesUpdated | TotalAmount
+--------------------|-------------|-------------------
+Computer Science    | 125         | $6,875,000 (was 6.25M)
+Electronics         | 118         | $2,470,000 (was 2.35M)
+IT                  | 150         | $3,090,000 (was 3.03M)
+Other Depts         | 84          | $1,715,000 (was 1.68M)
+
+IMPORTANT SYNTAX:
+-- Most systems use this syntax:
+UPDATE table1
+JOIN table2 ON condition
+SET table1.column = value;
+
+-- SQL Server uses different syntax:
+UPDATE table1
+SET table1.column = value
+FROM table1
+JOIN table2 ON condition;
+
+
+---
+## EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
+---
+### ANSWER
+
+SELECT 
+    S.StudentID,
+    S.Name,
+    C.CourseName,
+    SC.Grade
+FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+INNER JOIN Courses C ON SC.CourseID = C.CourseID
+ORDER BY S.StudentID, C.CourseName;
+
+### EXPLANATION
+- INNER JOIN returns rows where conditions match
+- Only students WITH enrolled courses appear
+- Students without courses are excluded
+- First JOIN: Students ↔ StudentCourses (via StudentID)
+- Second JOIN: StudentCourses ↔ Courses (via CourseID)
+- ORDER BY sorts by StudentID then CourseName
+- Creates full course enrollment view
+
+JOIN PROCESS:
+1. Start with Students table
+2. Find matching StudentCourses (StudentID match)
+3. Find matching Courses (CourseID match)
+4. Keep only rows with matches at each step
+
+### SAMPLE OUTPUT
+StudentID | Name          | CourseName           | Grade
+-----------|--------------|----------------------|-------
+1          | Aarav Kumar  | Algorithms           | 88
+1          | Aarav Kumar  | Data Structures      | 90
+1          | Aarav Kumar  | Database Systems     | 92
+2          | Ananya Gupta | Data Structures      | 85
+2          | Ananya Gupta | Database Systems     | 87
+3          | Arjun Singh  | Algorithms           | 79
+3          | Arjun Singh  | Web Development      | 82
+
+QUERY ### BREAKDOWN
+-- SELECT columns from all joined tables
+SELECT S.StudentID, S.Name, C.CourseName, SC.Grade
+
+-- FROM primary table
+FROM Students S
+
+-- JOIN secondary tables
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+INNER JOIN Courses C ON SC.CourseID = C.CourseID
+
+-- ORDER results
+ORDER BY S.StudentID, C.CourseName;
+
+TABLE ALIASES:
+- S: Students (alias for shorter reference)
+- SC: StudentCourses (alias for shorter reference)
+- C: Courses (alias for shorter reference)
+- Usage: S.StudentID instead of Students.StudentID (cleaner)
+
+
+---
+## EXERCISE 17: SELECT with LEFT JOIN - Students Without Courses
+---
+### ANSWER
+
+SELECT 
+    S.StudentID,
+    S.Name,
+    S.Email
+FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+WHERE SC.StudentID IS NULL
+ORDER BY S.Name;
+
+### EXPLANATION
+- LEFT JOIN keeps ALL rows from left table (Students)
+- RIGHT side (StudentCourses) rows included only if match
+- WHERE SC.StudentID IS NULL finds non-matches
+- Identifies students with NO course enrollments
+- NULL in StudentID means no matching enrollment
+- Essential for finding missing relationships
+
+JOIN PROCESS:
+1. Start with ALL Students (left table)
+2. Try to find matching StudentCourses (right table)
+3. If match exists: Include StudentCourses columns
+4. If no match: StudentCourses columns are NULL
+5. WHERE filters to only NULL matches (no courses)
+
+### SAMPLE OUTPUT
+StudentID | Name       | Email
+-----------|------------|-------------------------
+150        | Not Enrolled| noenroll@college.edu
+175        | Nobody Yet | nobody@college.edu
+200        | Waiting    | waiting@college.edu
+245        | Free Agent | freeagent@college.edu
+
+CONTRAST WITH INNER JOIN:
+-- INNER JOIN (only with courses):
+SELECT COUNT(*) FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID;
+Result: 450 students (only those with courses)
+
+-- LEFT JOIN + WHERE IS NULL (only without courses):
+SELECT COUNT(*) FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+WHERE SC.StudentID IS NULL;
+Result: 27 students (only those without courses)
+
+-- LEFT JOIN all (with or without courses):
+SELECT COUNT(*) FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID;
+Result: 477 students (all students, whether courses or not)
+
+JOIN TYPE ### COMPARISON
+INNER JOIN: Only matching rows (Students WITH courses)
+LEFT JOIN: All left + matching right (All students, some with NULL)
+RIGHT JOIN: All right + matching left (All courses, students if assigned)
+FULL OUTER JOIN: All from both tables
+
+
+---
+## EXERCISE 18: SELECT with Multiple JOINs - Complete Student Course Info
+---
+### ANSWER
+
+SELECT 
+    S.StudentID,
+    S.Name AS StudentName,
+    C.CourseID,
+    C.CourseName,
+    D.DeptName,
+    F.FacultyName,
+    SC.Grade,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS AttendancePercent
+FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+INNER JOIN Courses C ON SC.CourseID = C.CourseID
+INNER JOIN Departments D ON C.DeptID = D.DeptID
+INNER JOIN Classes Cl ON C.CourseID = Cl.CourseID
+INNER JOIN Faculty F ON Cl.FacultyID = F.FacultyID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name, C.CourseID, C.CourseName, D.DeptName, F.FacultyName, SC.Grade
+ORDER BY S.StudentID, C.CourseName
+LIMIT 20;
+
+### EXPLANATION
+- 7 tables joined in single query
+- Builds complete enrollment picture
+- StudentCourses is junction table
+- Classes links Courses to Faculty
+- Attendance aggregated per student
+- GROUP BY required for aggregation (COUNT)
+- CASE counts 'Present' records
+- Comprehensive reporting query
+
+JOIN CHAIN:
+Students (1:M)→ StudentCourses (M:1)→ Courses (1:M)→ Departments
+                                       ↓(1:M)
+                                     Classes (M:1)→ Faculty
+
+Students (1:M)→ Attendance (attendance tracking)
+
+### SAMPLE OUTPUT
+StudentID | StudentName | CourseID | CourseName | DeptName         | FacultyName | Grade | Attendance
+-----------|------------|----------|------------|------------------|------------|-------|----------
+1          | Aarav Kumar| 101      | Database   | Computer Science | Dr. Smith  | 92    | 95.00
+1          | Aarav Kumar| 102      | Algorithms | Computer Science | Dr. Jones  | 88    | 92.00
+2          | Ananya...  | 101      | Database   | Computer Science | Dr. Smith  | 85    | 88.00
+2          | Ananya...  | 103      | Web Dev    | Computer Science | Dr. Brown  | 90    | 90.50
+
+
+---
+## EXERCISE 19: UPDATE with Subquery - Update Based on Aggregate
+---
+### ANSWER
+
+-- Step 1: Create temporary view of student attendance
+CREATE TEMPORARY VIEW StudentAttendance AS
+SELECT 
+    S.StudentID,
+    S.Name,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS AttendancePercent
+FROM Students S
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name;
+
+-- Step 2: Update Students table using subquery
+UPDATE Students S
+SET Status = (
+    SELECT CASE 
+        WHEN SA.AttendancePercent >= 90 THEN 'Excellent'
+        WHEN SA.AttendancePercent >= 75 THEN 'Good'
+        WHEN SA.AttendancePercent >= 60 THEN 'Average'
+        ELSE 'At Risk'
+    END
+    FROM StudentAttendance SA
+    WHERE SA.StudentID = S.StudentID
+);
+
+-- Step 3: Verify update by showing distribution
+SELECT Status, COUNT(*) AS StudentCount
+FROM Students
+GROUP BY Status
+ORDER BY StudentCount DESC;
+
+### EXPLANATION
+- Subquery calculates attendance for each student
+- Main UPDATE uses subquery for each row
+- CASE converts attendance % to status
+- Temporary view simplifies main query
+- Scalar subquery returns one value per row
+- Applied to all Students
+
+### EXECUTION
+For each student in Students table:
+1. Run subquery to find attendance %
+2. Apply CASE to convert to status
+3. Update Status column
+4. Move to next student
+
+### SAMPLE OUTPUT
+Status     | StudentCount
+-----------|------
+Excellent  | 95
+Good       | 142
+Average    | 168
+At Risk    | 72
+Total      | 477
+
+### ADVANCED VARIATIONS
+-- Without temporary view:
+UPDATE Students S
+SET Status = (
+    SELECT CASE 
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                  NULLIF(COUNT(A.AttendanceID), 0), 2) >= 90 THEN 'Excellent'
+        ELSE 'Average'
+    END
+    FROM Attendance A
+    WHERE A.StudentID = S.StudentID
+);
+
+-- With JOIN instead of subquery:
+UPDATE Students S
+JOIN (
+    SELECT StudentID, 
+           ROUND(100 * SUM(CASE WHEN Status = 'Present' THEN 1 ELSE 0 END) /
+                 COUNT(*), 2) AS AttPct
+    FROM Attendance
+    GROUP BY StudentID
+) A ON S.StudentID = A.StudentID
+SET S.Status = CASE 
+    WHEN A.AttPct >= 90 THEN 'Excellent'
+    ELSE 'Average'
+END;
+
+
+---
+## EXERCISE 20: SELECT with UNION - Combine Multiple Queries
+---
+### ANSWER
+
+SELECT 
+    1 AS Rank,
+    StudentID,
+    Name,
+    'GPA' AS Category,
+    ROUND(AVG(CAST(Grade AS DECIMAL(5,2))), 2) AS Score
+FROM StudentCourses SC
+JOIN Students S ON SC.StudentID = S.StudentID
+GROUP BY SC.StudentID, S.Name
+ORDER BY AVG(CAST(Grade AS DECIMAL(5,2))) DESC
+LIMIT 5
+
+UNION ALL
+
+SELECT 
+    1 AS Rank,
+    StudentID,
+    Name,
+    'Attendance' AS Category,
+    ROUND(100 * SUM(CASE WHEN Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(*), 0), 2) AS Score
+FROM Attendance A
+JOIN Students S ON A.StudentID = S.StudentID
+GROUP BY A.StudentID, S.Name
+ORDER BY 100 * SUM(CASE WHEN Status = 'Present' THEN 1 ELSE 0 END) /
+         NULLIF(COUNT(*), 0) DESC
+LIMIT 5
+
+ORDER BY Category, Rank;
+
+### EXPLANATION
+- UNION combines results from two SELECT queries
+- UNION ALL includes duplicates (UNION removes duplicates)
+- Both queries must have same number of columns
+- Column types must be compatible
+- Each query can have different WHERE/GROUP BY
+- Final ORDER BY applies to combined result
+- Creates unified top-5 list by two metrics
+
+FIRST QUERY:
+- Top 5 students by GPA
+- Calculates average grade per student
+- Categories as 'GPA'
+- Orders by highest GPA
+
+SECOND QUERY:
+- Top 5 students by Attendance
+- Calculates attendance percentage
+- Categories as 'Attendance'
+- Orders by highest attendance
+
+COMBINED RESULT:
+- Total 10 rows (5 GPA + 5 Attendance)
+- Identified by Category column
+- Can see if same students top both lists
+
+### SAMPLE OUTPUT
+Rank | StudentID | Name          | Category   | Score
+------|-----------|---------------|------------|-------
+1    | 1         | Aarav Kumar   | Attendance | 98.00
+2    | 3         | Arjun Singh   | Attendance | 97.50
+3    | 5         | Chitra Desai  | Attendance | 96.75
+4    | 8         | Deepak Nair   | Attendance | 95.50
+5    | 12        | Harsh Kumar   | Attendance | 95.00
+1    | 1         | Aarav Kumar   | GPA        | 3.95
+2    | 5         | Chitra Desai  | GPA        | 3.87
+3    | 8         | Deepak Nair   | GPA        | 3.76
+4    | 2         | Ananya Gupta  | GPA        | 3.68
+5    | 10        | Gita Sharma   | GPA        | 3.55
+
+UNION vs UNION ALL:
+-- UNION: Removes duplicate rows
+SELECT StudentID, Name FROM Table1
+UNION
+SELECT StudentID, Name FROM Table2;
+
+-- UNION ALL: Keeps all rows including duplicates
+SELECT StudentID, Name FROM Table1
+UNION ALL
+SELECT StudentID, Name FROM Table2;
+
+CONSTRAINTS:
+- Same number of columns in both queries
+- Compatible data types in corresponding columns
+- Column names from first query appear in result
+- Use aliases to ensure matching names
+- NULL values handled same as any other value
+
+
+---
+KEY CONCEPTS COVERED IN # BATCH 2:
+---
+1. UPDATE statement (single and multiple rows)
+2. SET with expressions (arithmetic operations)
+3. SET with CASE statement (conditional updates)
+4. UPDATE with JOIN (cross-table updates)
+5. INNER JOIN (matching rows only)
+6. LEFT JOIN (all left + matching right)
+7. Multiple JOINs in single query
+8. Aggregation with GROUP BY in JOINs
+9. Subqueries in UPDATE
+10. UNION combining result sets
+
+BEST PRACTICES:
+- Always test WHERE before UPDATE
+- Use transactions for safety
+- Verify row counts after UPDATE
+- Use LIMIT to test queries before full run
+- Column aliases for clarity
+- Comment complex joins
+- Back up data before destructive operations
+- Use appropriate JOIN type for your needs
+
+COMMON MISTAKES:
+- Forgetting WHERE in UPDATE (updates all rows!)
+- Using INNER when LEFT needed
+- Incorrect JOIN conditions
+- Forgetting GROUP BY with aggregates
+- Column count mismatch in UNION
+- Not ordering after UNION
+- Type mismatch in UNION columns
+- Forgetting to alias columns in subqueries
+
+---
+END OF # BATCH 2 ANSWERS (Exercises 11-20)
+Total Progress: 20 of 50 exercises completed
+Next: DELETE statements, complex filtering, data validation
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 3 ANSWERS (21-30)
+Difficulty Level: INTERMEDIATE
+Solutions for DELETE, constraints, and data validation
+---
+
+---
+## EXERCISE 21: DELETE Single Row - Remove Specific Student
+---
+### ANSWER
+
+-- Step 1: Verify student exists before deletion
+SELECT StudentID, Name, Email FROM Students WHERE StudentID = 100;
+
+-- Step 2: Check if student has dependencies
+SELECT COUNT(*) AS CoursesEnrolled 
+FROM StudentCourses 
+WHERE StudentID = 100;
+
+SELECT COUNT(*) AS AttendanceRecords 
+FROM Attendance 
+WHERE StudentID = 100;
+
+-- Step 3: Delete the student (careful!)
+DELETE FROM Students 
+WHERE StudentID = 100;
+
+-- Step 4: Verify deletion
+SELECT COUNT(*) FROM Students WHERE StudentID = 100;
+
+### EXPLANATION
+- DELETE removes entire row from table
+- WHERE condition identifies which row(s) to delete
+- Without WHERE, ALL rows would be deleted!
+- Deletion is PERMANENT (usually no undo)
+- Must check dependencies before deleting
+- Dependent records may be CASCADE deleted
+
+### EXECUTION
+1. Database finds row where StudentID = 100
+2. Checks constraints/foreign keys
+3. Removes entire row if allowed
+4. Returns count of deleted rows (should be 1)
+
+### SAMPLE OUTPUT
+Before deletion:
+StudentID | Name      | Email
+-----------|-----------|------------------------
+100        | John Doe  | john.doe@college.edu
+
+Dependencies check:
+CoursesEnrolled: 5 records
+AttendanceRecords: 950 records
+
+After deletion:
+COUNT(*): 0
+Rows deleted: 1
+
+IMPORTANT NOTES:
+- IF foreign key has CASCADE: Related records deleted too
+- IF foreign key has RESTRICT: Delete fails if dependencies exist
+- IF foreign key has SET NULL: Dependent records set to NULL
+- Always check dependencies first!
+
+
+---
+## EXERCISE 22: DELETE Multiple Rows - Remove All Students Without Courses
+---
+### ANSWER
+
+-- Step 1: Find students with NO course enrollments
+SELECT S.StudentID, S.Name
+FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+WHERE SC.StudentID IS NULL
+ORDER BY S.Name;
+
+-- Step 2: Count students without courses
+SELECT COUNT(*) AS StudentsWithoutCourses
+FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+WHERE SC.StudentID IS NULL;
+
+-- Step 3: Delete students without courses
+DELETE FROM Students 
+WHERE StudentID IN (
+    SELECT S.StudentID
+    FROM Students S
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    WHERE SC.StudentID IS NULL
+);
+
+-- Step 4: Verify deletion
+SELECT COUNT(*) AS RemainingStudents FROM Students;
+
+### EXPLANATION
+- Subquery identifies students with no StudentCourses matches
+- LEFT JOIN + WHERE IS NULL finds non-matches
+- DELETE with IN subquery deletes all matching students
+- Multiple rows deleted in single statement
+- More efficient than row-by-row deletion
+- Verify counts before and after
+
+### EXECUTION
+1. Subquery finds 27 students with no courses
+2. DELETE removes all 27 matching rows
+3. Remaining 450 students stay in system
+4. StudentCourses table unaffected
+
+### SAMPLE OUTPUT
+Students without courses identified:
+StudentID | Name
+-----------|--------------------
+101        | Not Enrolled
+102        | Nobody Yet
+103        | Waiting
+
+Count of students without courses: 27
+
+After deletion:
+Remaining students: 450
+Deleted students: 27
+Total before: 477
+
+ALTERNATIVE APPROACH:
+-- Using NOT IN:
+DELETE FROM Students 
+WHERE StudentID NOT IN (
+    SELECT DISTINCT StudentID FROM StudentCourses
+);
+
+-- Using NOT EXISTS:
+DELETE FROM Students S
+WHERE NOT EXISTS (
+    SELECT 1 FROM StudentCourses SC 
+    WHERE SC.StudentID = S.StudentID
+);
+
+
+---
+## EXERCISE 23: DELETE with JOIN - Remove Courses in Specific Department
+---
+### ANSWER
+
+-- Step 1: Identify courses in Department 5
+SELECT C.CourseID, C.CourseName, D.DeptName
+FROM Courses C
+JOIN Departments D ON C.DeptID = D.DeptID
+WHERE D.DeptID = 5
+ORDER BY C.CourseName;
+
+-- Step 2: Count courses in Department 5
+SELECT COUNT(*) AS CoursesInDept5
+FROM Courses C
+WHERE C.DeptID = 5;
+
+-- Step 3: Check dependencies before deletion
+SELECT COUNT(*) AS StudentEnrollments
+FROM StudentCourses SC
+JOIN Courses C ON SC.CourseID = C.CourseID
+WHERE C.DeptID = 5;
+
+-- Step 4: Delete courses from Department 5
+DELETE FROM Courses 
+WHERE DeptID = 5;
+
+-- Step 5: Verify deletion
+SELECT COUNT(*) AS RemainingCourses FROM Courses;
+
+### EXPLANATION
+- DELETE FROM Courses finds matching DeptID = 5
+- JOIN helps identify all courses in department
+- Deletion affects only Courses table
+- StudentCourses records may be CASCADE deleted
+- Depends on foreign key constraint configuration
+- COUNT verifies number of affected rows
+
+### EXECUTION
+1. Database identifies 8 courses with DeptID = 5
+2. Checks for dependent StudentCourses records (CASCADE)
+3. If CASCADE enabled: Deletes courses AND enrollments
+4. Returns count of deleted rows (8)
+
+### SAMPLE OUTPUT
+Courses in Department 5:
+CourseID | CourseName | DeptName
+----------|------------|----------
+501       | Course A   | Dept 5
+502       | Course B   | Dept 5
+...
+508       | Course H   | Dept 5
+
+Total courses in Dept 5: 8
+
+Student enrollments affected: 120
+
+After deletion:
+Remaining courses: 42
+Deleted courses: 8
+Total before: 50
+
+CONSTRAINT SCENARIOS:
+-- Scenario 1: CASCADE (deletes dependent records)
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    DeptID INT,
+    FOREIGN KEY (DeptID) REFERENCES Departments
+        ON DELETE CASCADE
+);
+-- DELETE Department → deletes all Courses in that dept
+
+-- Scenario 2: RESTRICT (prevents deletion if dependencies exist)
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    DeptID INT,
+    FOREIGN KEY (DeptID) REFERENCES Departments
+        ON DELETE RESTRICT
+);
+-- DELETE Department fails if courses exist in that dept
+
+-- Scenario 3: SET NULL (sets foreign key to NULL)
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    DeptID INT NULL,
+    FOREIGN KEY (DeptID) REFERENCES Departments
+        ON DELETE SET NULL
+);
+-- DELETE Department → sets DeptID = NULL in all courses
+
+
+---
+## EXERCISE 24: DELETE with Subquery - Remove Low Attendance Students
+---
+### ANSWER
+
+-- Step 1: Calculate attendance % per student
+SELECT 
+    S.StudentID,
+    S.Name,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS AttendancePercent
+FROM Students S
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name
+HAVING ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+       NULLIF(COUNT(A.AttendanceID), 0), 2) < 40
+ORDER BY AttendancePercent;
+
+-- Step 2: Count low attendance students
+SELECT COUNT(*) AS LowAttendanceStudents
+FROM (
+    SELECT S.StudentID
+    FROM Students S
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    GROUP BY S.StudentID
+    HAVING ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+           NULLIF(COUNT(A.AttendanceID), 0), 2) < 40
+) AS LowAttendance;
+
+-- Step 3: Delete students with attendance < 40%
+DELETE FROM Students 
+WHERE StudentID IN (
+    SELECT S.StudentID
+    FROM Students S
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    GROUP BY S.StudentID
+    HAVING ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+           NULLIF(COUNT(A.AttendanceID), 0), 2) < 40
+);
+
+-- Step 4: Verify deletion
+SELECT COUNT(*) AS RemainingStudents FROM Students;
+
+### EXPLANATION
+- Subquery calculates attendance percentage per student
+- HAVING clause filters students < 40% attendance
+- DELETE with IN uses subquery to identify candidates
+- Aggregate functions (SUM, COUNT) required in subquery
+- CASE counts 'Present' records
+- NULLIF prevents division by zero
+- Deletes all matching student records
+
+### EXECUTION
+1. Subquery identifies students with < 40% attendance
+2. Finds 12 students meeting criteria
+3. DELETE removes all 12 matching rows
+4. Remaining 465 students stay in system
+
+### SAMPLE OUTPUT
+Low attendance students identified:
+StudentID | Name          | AttendancePercent
+-----------|---------------|------------------
+50         | Low Student   | 35.00
+75         | Poor Attender | 28.00
+90         | Irregular     | 22.00
+
+Total low attendance: 12
+After deletion: 465 remaining students
+
+ATTENDANCE CATEGORIES POST-DELETION:
+- Excellent (>90%): 95 students
+- Good (75-90%): 142 students
+- Average (60-75%): 168 students
+- Below threshold (<60%): 60 students (improved from 72)
+
+
+---
+## EXERCISE 25: DELETE with Condition - Remove Failed Courses
+---
+### ANSWER
+
+-- Step 1: Count StudentCourses with Grade = 'F'
+SELECT COUNT(*) AS FailedCourses 
+FROM StudentCourses 
+WHERE Grade = 'F';
+
+-- Step 2: View sample failed courses
+SELECT StudentID, CourseID, Grade 
+FROM StudentCourses 
+WHERE Grade = 'F' 
+LIMIT 10;
+
+-- Step 3: Delete all failed course enrollments
+DELETE FROM StudentCourses 
+WHERE Grade = 'F';
+
+-- Step 4: Verify deletion
+SELECT COUNT(*) AS RemainingEnrollments 
+FROM StudentCourses;
+
+-- Step 5: Show impact on grade distribution
+SELECT Grade, COUNT(*) AS Count 
+FROM StudentCourses 
+GROUP BY Grade 
+ORDER BY Grade;
+
+### EXPLANATION
+- DELETE targets StudentCourses junction table (not Students)
+- WHERE Grade = 'F' identifies failed courses
+- Student records remain intact (not deleted)
+- Only enrollment records with F grade are removed
+- Student can re-enroll or take different courses
+- Preserves referential integrity
+
+### EXECUTION
+1. Database finds 45 StudentCourses rows with Grade = 'F'
+2. Deletes only those rows
+3. Students table: Still contains all 477 students
+4. Remaining StudentCourses: 1205 records
+5. Students affected: 42 still in system
+
+### SAMPLE OUTPUT
+Failed courses before deletion: 45
+
+Sample failed enrollments:
+StudentID | CourseID | Grade
+-----------|----------|-------
+1          | 101      | F
+3          | 102      | F
+5          | 103      | F
+
+After deletion:
+Total StudentCourse records: 1205
+Deleted records: 45
+Students still in system: 477
+
+Grade distribution after deletion:
+Grade | Count
+------|------
+A     | 145
+B     | 162
+C     | 110
+F     | 0
+Total | 1205
+
+SOFT DELETE ALTERNATIVE:
+-- Instead of DELETE, mark as inactive:
+UPDATE StudentCourses 
+SET Status = 'Inactive' 
+WHERE Grade = 'F';
+
+-- Query only active enrollments:
+SELECT * FROM StudentCourses WHERE Status = 'Active';
+
+Benefits:
+- Audit trail preserved
+- Can reactivate if needed
+- Referential integrity maintained
+- Can track failed attempts
+
+
+---
+## EXERCISE 26: Data Constraint - Foreign Key Deletion Cascading
+---
+### ANSWER
+
+-- Part 1: CASCADE Delete Behavior
+-- Create test scenario with CASCADE constraint:
+
+CREATE TABLE Departments (
+    DeptID INT PRIMARY KEY,
+    DeptName VARCHAR(50)
+);
+
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    DeptID INT,
+    FOREIGN KEY (DeptID) REFERENCES Departments(DeptID)
+        ON DELETE CASCADE
+);
+
+-- Scenario 1: DELETE Department with CASCADE enabled
+-- Step 1: Count students in Department 5
+SELECT COUNT(*) AS StudentsInDept5 FROM Students WHERE DeptID = 5;
+
+-- Step 2: Delete Department 5 (CASCADE will delete students too)
+DELETE FROM Departments WHERE DeptID = 5;
+
+-- Step 3: Verify cascading deletion
+SELECT COUNT(*) AS RemainingStudents FROM Students;
+SELECT COUNT(*) FROM Students WHERE DeptID = 5;  -- Should be 0
+
+EXPLANATION CASCADE:
+- CASCADE: When parent (Department) deleted, children (Students) auto-deleted
+- Efficient for cleanup but dangerous if not intended
+- Automatically removes all dependent rows
+- Single DELETE triggers multiple deletions
+
+CASCADE ### EXECUTION
+1. DELETE Departments WHERE DeptID = 5
+2. System finds 47 Students with DeptID = 5
+3. CASCADE trigger fires automatically
+4. Deletes all 47 Student records
+5. Deletes all StudentCourses for those 47 students
+6. Final result: Department + 47 students + 180 enrollments removed
+
+SAMPLE OUTPUT CASCADE:
+Before deletion:
+Departments: 50
+Students: 477
+StudentCourses: 1250
+
+DELETE Department DeptID = 5 (with CASCADE):
+Department deleted: 1
+Students cascade deleted: 47
+StudentCourses cascade deleted: 180
+
+After deletion:
+Departments: 49
+Students: 430
+StudentCourses: 1070
+
+-- Part 2: RESTRICT Delete Behavior
+-- Create constraint with RESTRICT:
+
+CREATE TABLE StudentCourses (
+    StudentID INT,
+    CourseID INT,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
+        ON DELETE RESTRICT
+);
+
+-- Scenario 2: DELETE Department with RESTRICT
+-- Step 1: Try to delete department
+DELETE FROM Departments WHERE DeptID = 5;
+
+-- Step 2: Get error message
+-- Error: Cannot delete or update a parent row:
+-- a foreign key constraint fails
+-- Reason: 47 Student records still reference this DeptID
+
+EXPLANATION RESTRICT:
+- RESTRICT: Prevents deletion if children exist
+- Safer than CASCADE for accidental deletes
+- Forces explicit handling of dependencies
+- Returns error message if constraint violated
+
+RESTRICT BEHAVIOR:
+1. DELETE Departments WHERE DeptID = 5
+2. System checks if any Students have DeptID = 5
+3. Finds 47 matching rows
+4. REJECT the DELETE operation
+5. Return error: Constraint violation
+6. No data deleted (all-or-nothing)
+
+SAMPLE OUTPUT RESTRICT:
+DELETE attempt: DELETE FROM Departments WHERE DeptID = 5;
+
+Error Code: 1451
+Error Message: Cannot delete or update a parent row:
+               a foreign key constraint fails
+
+Details:
+- Table: Departments
+- DeptID: 5
+- Blocking records: 47 Students
+- Action required: Delete Students first, then Department
+
+-- Part 3: SET NULL Delete Behavior
+
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    DeptID INT,
+    FOREIGN KEY (DeptID) REFERENCES Departments(DeptID)
+        ON DELETE SET NULL
+);
+
+-- When Department deleted, Courses.DeptID becomes NULL
+
+DELETE FROM Departments WHERE DeptID = 5;
+
+-- Results:
+-- Department deleted: 1
+-- Courses updated: 8 (DeptID set to NULL)
+-- Courses not deleted
+
+EXPLANATION SET NULL:
+- SET NULL: When parent deleted, FK becomes NULL in children
+- Preserves child records but orphans them
+- Useful for optional relationships
+- Child can be re-assigned to different parent
+
+SET NULL BEHAVIOR:
+1. DELETE Departments WHERE DeptID = 5
+2. Finds 8 Courses with DeptID = 5
+3. Sets Courses.DeptID = NULL for each
+4. Department row deleted
+5. Courses preserved but unassigned
+
+SAMPLE OUTPUT SET NULL:
+Before:
+Courses:
+CourseID | DeptID
+----------|-------
+501       | 5
+502       | 5
+...
+508       | 5
+
+After:
+Courses:
+CourseID | DeptID
+----------|-------
+501       | NULL
+502       | NULL
+...
+508       | NULL
+
+Departments deleted: 1
+Courses updated: 8
+
+
+---
+## EXERCISE 27: DELETE All Matching Conditions - Attendance Cleanup
+---
+### ANSWER
+
+-- Step 1: Count total attendance records
+SELECT COUNT(*) AS TotalAttendanceRecords FROM Attendance;
+
+-- Step 2: Count old records for classes 101, 102, 103
+SELECT COUNT(*) AS OldRecords
+FROM Attendance
+WHERE attendencedate < '2024-12-31'
+  AND ClassID IN (101, 102, 103);
+
+-- Step 3: View sample old records to be deleted
+SELECT AttendanceID, ClassID, StudentID, attendencedate, Status
+FROM Attendance
+WHERE attendencedate < '2024-12-31'
+  AND ClassID IN (101, 102, 103)
+LIMIT 10;
+
+-- Step 4: Delete old attendance records
+DELETE FROM Attendance
+WHERE attendencedate < '2024-12-31'
+  AND ClassID IN (101, 102, 103);
+
+-- Step 5: Verify deletion
+SELECT COUNT(*) AS RemainingRecords FROM Attendance;
+
+-- Step 6: Check impact by class
+SELECT ClassID, COUNT(*) AS AttendanceRecords
+FROM Attendance
+WHERE ClassID IN (101, 102, 103)
+GROUP BY ClassID;
+
+### EXPLANATION
+- DELETE removes records matching ALL conditions (AND)
+- WHERE attendencedate < '2024-12-31': Records before end of 2024
+- AND ClassID IN (101, 102, 103): Only classes 101, 102, 103
+- Both conditions must be true for deletion
+- IN operator checks multiple values
+- Verify before and after counts
+
+### EXECUTION
+1. Database finds all matching records
+2. Checks date < 2024-12-31 AND ClassID in list
+3. Deletes all 45,000 matching records
+4. Returns count of deleted rows
+5. Remaining records: 555,000
+
+### SAMPLE OUTPUT
+Total attendance records before: 600,000
+Old records in classes 101-103: 45,000
+
+Sample old records (before deletion):
+AttendanceID | ClassID | StudentID | attendencedate | Status
+--------------|---------|----------|----------------|--------
+1             | 101     | 1        | 2024-01-15     | Present
+2             | 102     | 2        | 2024-01-16     | Absent
+3             | 103     | 3        | 2024-01-17     | Present
+
+After deletion:
+Total attendance records: 555,000
+Records deleted: 45,000
+
+Remaining records by class:
+ClassID | AttendanceRecords
+--------|-------------------
+101     | 8,500 (from 2024-12-31 onwards)
+102     | 8,450
+103     | 8,600
+
+MULTIPLE CONDITIONS:
+-- ALL conditions (AND):
+DELETE FROM Attendance
+WHERE attendencedate < '2024-12-31'
+  AND ClassID IN (101, 102, 103)
+  AND Status = 'Absent';
+
+-- ANY condition (OR):
+DELETE FROM Attendance
+WHERE ClassID = 101
+  OR attendencedate < '2024-01-01';
+
+-- Complex condition:
+DELETE FROM Attendance
+WHERE (ClassID IN (101, 102) AND attendencedate < '2024-06-01')
+   OR (ClassID = 103 AND Status = 'Absent');
+
+
+---
+## EXERCISE 28: DELETE with Complex Condition - Clean Invalid Records
+---
+### ANSWER
+
+-- Step 1: Find orphaned StudentCourses (StudentID doesn't exist)
+SELECT COUNT(*) AS OrphanedByStudent
+FROM StudentCourses SC
+WHERE SC.StudentID NOT IN (SELECT StudentID FROM Students);
+
+-- Step 2: Find orphaned StudentCourses (CourseID doesn't exist)
+SELECT COUNT(*) AS OrphanedByCourse
+FROM StudentCourses SC
+WHERE SC.CourseID NOT IN (SELECT CourseID FROM Courses);
+
+-- Step 3: Find orphaned Attendance (StudentID doesn't exist)
+SELECT COUNT(*) AS OrphanedAttendance
+FROM Attendance A
+WHERE A.StudentID NOT IN (SELECT StudentID FROM Students);
+
+-- Step 4: View samples of orphaned records
+SELECT 'StudentCourses' AS TableName, SC.StudentID, SC.CourseID
+FROM StudentCourses SC
+WHERE SC.StudentID NOT IN (SELECT StudentID FROM Students)
+LIMIT 5
+
+UNION ALL
+
+SELECT 'StudentCourses' AS TableName, SC.StudentID, SC.CourseID
+FROM StudentCourses SC
+WHERE SC.CourseID NOT IN (SELECT CourseID FROM Courses)
+LIMIT 5
+
+UNION ALL
+
+SELECT 'Attendance', A.StudentID, A.ClassID
+FROM Attendance A
+WHERE A.StudentID NOT IN (SELECT StudentID FROM Students)
+LIMIT 5;
+
+-- Step 5: Delete orphaned StudentCourses (invalid StudentID)
+DELETE FROM StudentCourses
+WHERE StudentID NOT IN (SELECT StudentID FROM Students);
+
+-- Step 6: Delete orphaned StudentCourses (invalid CourseID)
+DELETE FROM StudentCourses
+WHERE CourseID NOT IN (SELECT CourseID FROM Courses);
+
+-- Step 7: Delete orphaned Attendance records
+DELETE FROM Attendance
+WHERE StudentID NOT IN (SELECT StudentID FROM Students);
+
+-- Step 8: Validate remaining data integrity
+SELECT 
+    'StudentCourses' AS TableName,
+    COUNT(*) AS Records,
+    'VALID' AS Status
+FROM StudentCourses
+WHERE StudentID IN (SELECT StudentID FROM Students)
+  AND CourseID IN (SELECT CourseID FROM Courses)
+
+UNION ALL
+
+SELECT 
+    'Attendance',
+    COUNT(*),
+    'VALID'
+FROM Attendance
+WHERE StudentID IN (SELECT StudentID FROM Students);
+
+### EXPLANATION
+- Orphaned records: Child records without parent reference
+- Data quality issue: Referential integrity violation
+- NOT IN subquery: Identifies records with missing parents
+- Multiple orphan types cleaned in one operation
+- Validation confirms remaining data integrity
+- Essential for database maintenance
+
+ORPHAN DETECTION:
+1. StudentCourses with StudentID not in Students: 3 records
+2. StudentCourses with CourseID not in Courses: 2 records
+3. Attendance with StudentID not in Students: 5 records
+4. Total orphaned: 8 records
+
+### SAMPLE OUTPUT
+Orphaned StudentCourses (invalid StudentID): 3
+Orphaned StudentCourses (invalid CourseID): 2
+Orphaned Attendance (invalid StudentID): 5
+Total invalid records: 8
+
+Orphaned records (sample):
+TableName       | StudentID/Attrib | CourseID/Attrib
+-----------------|------------------|------------------
+StudentCourses  | 5000             | 101
+StudentCourses  | 6000             | 102
+Attendance      | 7000             | 103
+
+After cleanup deletion:
+StudentCourses deleted: 5
+Attendance deleted: 5
+Total deleted: 10
+
+Data validation:
+StudentCourses: 1245 VALID records
+Attendance: 599995 VALID records
+Status: PASSED
+
+PREVENTING ORPHANS:
+-- Use foreign key constraints:
+CREATE TABLE StudentCourses (
+    StudentID INT,
+    CourseID INT,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+
+-- Database prevents invalid StudentID or CourseID insertion
+-- Constraints eliminate need for cleanup
+
+
+---
+## EXERCISE 29: DELETE and TRANSACTION - Safe Deletion with Rollback
+---
+### ANSWER
+
+-- Step 1: Identify students to delete (example: specific criteria)
+SELECT StudentID, Name, Email
+FROM Students
+WHERE DeptID = 6 AND (
+    SELECT AVG(Grade) FROM StudentCourses SC 
+    WHERE SC.StudentID = Students.StudentID
+) < 2.0
+LIMIT 15;
+
+-- Step 2: Begin transaction (safe wrapper)
+BEGIN TRANSACTION;
+
+-- Step 3: Check point - count before deletion
+SELECT COUNT(*) AS StudentCountBefore FROM Students;
+
+-- Step 4: Delete within transaction
+DELETE FROM Students
+WHERE StudentID IN (
+    SELECT S.StudentID
+    FROM Students S
+    WHERE S.DeptID = 6
+);
+
+-- Step 5: Check point - count after deletion
+SELECT COUNT(*) AS StudentCountAfter FROM Students;
+
+-- Step 6: Review deletion impact (can still ROLLBACK)
+SELECT 'Transaction Status: PENDING - Can still ROLLBACK' AS Status;
+
+-- Option A: COMMIT the deletion (permanent)
+COMMIT;
+
+-- Option B: ROLLBACK if deletion looks wrong (undo)
+-- ROLLBACK;
+
+-- Step 7: After COMMIT - verify permanent deletion
+SELECT COUNT(*) AS FinalStudentCount FROM Students;
+SELECT 'Transaction Status: COMMITTED - Cannot ROLLBACK' AS Status;
+
+### EXPLANATION
+- Transaction = atomic unit of work (all-or-nothing)
+- BEGIN: Start transaction block
+- DELETE: Remove records (not yet permanent)
+- ROLLBACK: Undo all changes in transaction
+- COMMIT: Make all changes permanent
+- Between BEGIN and COMMIT: Can still undo with ROLLBACK
+
+TRANSACTION ### EXECUTION
+1. BEGIN: Open transaction
+2. DELETE: Mark rows for deletion (memory only)
+3. ROLLBACK: Restore data to pre-transaction state
+4. COMMIT: Write deletion to disk (permanent)
+
+### SAMPLE OUTPUT
+Transaction Start: 2024-01-15 10:30:00
+
+Students to delete:
+StudentID | Name       | Email
+-----------|------------|------------------------
+150        | Student A  | student.a@college.edu
+160        | Student B  | student.b@college.edu
+
+StudentCountBefore: 477
+StudentCountAfter: 462
+
+Transaction Status: PENDING - Changes in memory, not on disk
+
+Option 1 - COMMIT:
+COMMIT executed
+StudentCountFinal: 462
+Transaction Status: COMMITTED
+Audit Log: 15 students deleted from Dept 6
+
+Cannot ROLLBACK after COMMIT
+
+Option 2 - ROLLBACK (if executed instead):
+ROLLBACK executed
+StudentCountFinal: 477
+Data restored to original state
+No deletion occurred
+
+TRANSACTION PATTERNS:
+-- Pattern 1: Safe deletion with verification
+BEGIN;
+DELETE FROM Students WHERE StudentID = 100;
+-- Verify impact...
+COMMIT;  -- Or ROLLBACK;
+
+-- Pattern 2: Multiple operations in transaction
+BEGIN;
+DELETE FROM StudentCourses WHERE StudentID = 100;
+DELETE FROM Attendance WHERE StudentID = 100;
+DELETE FROM Students WHERE StudentID = 100;
+COMMIT;
+
+-- Pattern 3: Conditional commit
+BEGIN;
+DELETE FROM Students WHERE Status = 'Inactive';
+IF (SELECT COUNT(*) FROM Students) < 400 THEN
+    ROLLBACK;  -- Prevent deletion if count too low
+ELSE
+    COMMIT;
+END IF;
+
+TRANSACTION BENEFITS:
+- Review changes before committing
+- Undo if mistake detected
+- Multiple operations atomic (all or nothing)
+- Prevents partial deletions from network failure
+- Essential for data integrity
+
+
+---
+## EXERCISE 30: DELETE vs UPDATE - When to Use Which
+---
+### ANSWER
+
+-- SCENARIO 1: Hard Delete (DELETE)
+-- Remove failed students completely from system
+
+-- Step 1: Identify failed students
+SELECT S.StudentID, S.Name, AVG(SC.Grade) AS AvgGrade
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name
+HAVING AVG(SC.Grade) < 2.0;
+
+-- Step 2: Hard delete (PERMANENT removal)
+DELETE FROM Students 
+WHERE StudentID IN (
+    SELECT S.StudentID
+    FROM Students S
+    JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    GROUP BY S.StudentID
+    HAVING AVG(SC.Grade) < 2.0
+    LIMIT 10
+);
+
+-- Result:
+-- Students table: 477 → 467 records
+-- Audit trail: LOST (can't recover data)
+-- Referential integrity: May cascade delete related records
+
+SAMPLE OUTPUT HARD DELETE:
+Failed students identified: 10
+Students table before: 477
+Students table after: 467
+Deleted records: 10
+Data recovery: NOT POSSIBLE
+Audit trail: NONE
+
+Problems with Hard Delete:
+- Cannot recover deleted data
+- No record of who deleted what when
+- Regulatory compliance issues
+- Difficult to track history
+- Cannot reactivate mistakenly deleted records
+
+
+-- SCENARIO 2: Soft Delete (UPDATE Status)
+-- Mark failed students as inactive instead of deleting
+
+-- Step 1: Add Status column if not exists
+ALTER TABLE Students ADD COLUMN Status VARCHAR(20) DEFAULT 'Active';
+
+-- Step 2: Identify students to deactivate
+SELECT S.StudentID, S.Name, AVG(SC.Grade) AS AvgGrade
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name
+HAVING AVG(SC.Grade) < 2.0;
+
+-- Step 3: Soft delete (UPDATE instead of DELETE)
+UPDATE Students 
+SET Status = 'Inactive',
+    DeactivatedDate = NOW(),
+    DeactivationReason = 'Low academic performance'
+WHERE StudentID IN (
+    SELECT S.StudentID
+    FROM Students S
+    JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    GROUP BY S.StudentID
+    HAVING AVG(SC.Grade) < 2.0
+    LIMIT 10
+);
+
+-- Step 4: Query only active students
+SELECT * FROM Students WHERE Status = 'Active';
+
+-- Step 5: Can view inactive for audit trail
+SELECT * FROM Students WHERE Status = 'Inactive';
+
+-- Step 6: Reactivation is easy
+UPDATE Students SET Status = 'Active' WHERE StudentID = 150;
+
+SAMPLE OUTPUT SOFT DELETE:
+Failed students identified: 10
+Students table before: 477
+Students table after: 477 (unchanged!)
+Inactive marked: 10
+Active remaining: 467
+Data recovery: POSSIBLE (soft-deleted records still exist)
+Audit trail: AVAILABLE (can see when/why deactivated)
+
+Benefits of Soft Delete:
+- Full data preservation
+- Audit trail intact
+- Easy reactivation
+- Referential integrity preserved
+- Regulatory compliance friendly
+- Can analyze soft-deleted data
+- Undo deactivation easily
+
+COMPARISON TABLE:
+Feature                | Hard Delete (DELETE) | Soft Delete (UPDATE)
+-----------------------|----------------------|---------------------
+Data Recovery          | NOT POSSIBLE        | EASY (Status='Inactive')
+Audit Trail           | NONE                | COMPLETE
+Referential Integrity | May cascade delete  | PRESERVED
+Reactivation          | NOT POSSIBLE        | Easy: SET Status='Active'
+Query Complexity      | SIMPLE              | Requires WHERE Status...
+Regulatory Compliance | POOR                | EXCELLENT
+Data Volume           | Reduces             | INCREASES
+Disk Space            | SAVED               | USED
+Query Performance     | Better              | Slightly slower
+Historical Analysis   | Impossible          | Possible
+
+USE HARD DELETE WHEN:
+- Temporary data (logs, cache)
+- Privacy required (GDPR compliance: deletion)
+- Truly obsolete data
+- Cleanup operations only
+- High volume cleanup needed
+- Disk space critical
+
+USE SOFT DELETE WHEN:
+- Critical business data
+- Audit trail required
+- Reactivation possible
+- Regulatory requirements
+- Historical analysis needed
+- Undo/recovery needed
+- User deletion requests (can mark instead)
+
+BEST PRACTICE ARCHITECTURE:
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Status VARCHAR(20) DEFAULT 'Active',  -- Soft delete flag
+    CreatedDate TIMESTAMP DEFAULT NOW(),
+    DeactivatedDate TIMESTAMP NULL,
+    DeactivationReason VARCHAR(255),
+    UpdatedDate TIMESTAMP DEFAULT NOW() ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Create index for performance
+CREATE INDEX idx_status ON Students(Status);
+
+-- Query active only
+SELECT * FROM Students WHERE Status = 'Active';
+
+-- View deleted records
+SELECT * FROM Students WHERE Status = 'Inactive';
+
+-- Easy reactivation
+UPDATE Students SET Status = 'Active' WHERE StudentID = 150;
+
+-- Full audit trail
+SELECT * FROM Students WHERE DeactivatedDate IS NOT NULL
+ORDER BY DeactivatedDate DESC;
+
+
+---
+KEY CONCEPTS COVERED IN # BATCH 3:
+---
+1. DELETE statement (single and multiple rows)
+2. DELETE with WHERE conditions
+3. DELETE with subqueries (complex conditions)
+4. DELETE with JOIN
+5. Foreign key constraints (CASCADE, RESTRICT, SET NULL)
+6. Referential integrity violations
+7. Orphaned records (data quality issues)
+8. Cascade behavior implications
+9. Transaction control (BEGIN, COMMIT, ROLLBACK)
+10. Soft delete vs hard delete patterns
+11. Audit trail preservation
+12. Data recovery scenarios
+
+BEST PRACTICES:
+- Always test WHERE with SELECT first
+- Verify row counts before and after
+- Use transactions for safety
+- Check dependencies before deleting
+- Consider soft delete for critical data
+- Back up before major deletions
+- Document deletion reasons
+- Maintain audit trails
+- Use constraints to prevent orphans
+- ROLLBACK if unexpected results
+
+COMMON MISTAKES:
+- Forgetting WHERE in DELETE (deletes all!)
+- Not checking CASCADE implications
+- Hard delete when soft delete better
+- Missing audit trail
+- Not testing with SELECT first
+- Ignoring foreign key constraints
+- No backup before large deletions
+- Not verifying dependencies
+- Missing data recovery options
+- Overusing hard delete
+
+---
+END OF # BATCH 3 ANSWERS (Exercises 21-30)
+Total Progress: 30 of 50 exercises completed
+Next: Complex filtering, aggregate functions, optimization
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 4 ANSWERS (31-40)
+Difficulty Level: INTERMEDIATE to ADVANCED
+Solutions for complex filtering and aggregate functions
+---
+
+---
+## EXERCISE 31: GROUP BY and COUNT - Student Enrollment Distribution
+---
+### ANSWER
+
+SELECT 
+    C.CourseName,
+    COUNT(SC.StudentID) AS EnrollmentCount
+FROM Courses C
+LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+GROUP BY C.CourseID, C.CourseName
+ORDER BY EnrollmentCount DESC;
+
+### EXPLANATION
+- GROUP BY aggregates data by CourseName
+- COUNT(SC.StudentID) counts enrollments per course
+- LEFT JOIN includes courses with 0 enrollments
+- ORDER BY DESC shows most popular courses first
+- Must include all non-aggregate columns in GROUP BY
+
+### EXECUTION
+1. Join Courses with StudentCourses
+2. Group rows by course
+3. Count student enrollments in each group
+4. Sort by count descending
+5. Display results
+
+### SAMPLE OUTPUT
+CourseName            | EnrollmentCount
+----------------------|----------------
+Database Systems      | 145
+Algorithms            | 128
+Data Structures       | 110
+Web Development       | 87
+Discrete Math         | 0
+Advanced Java         | 0
+
+ROW COUNTS:
+Total courses: 50
+Courses with enrollments: 48
+Courses without enrollments: 2
+Total enrollments: 1250
+
+SYNTAX ### BREAKDOWN
+SELECT C.CourseName              -- Column to display (from GROUP BY)
+COUNT(SC.StudentID)              -- Aggregate: count non-NULL values
+FROM Courses C                   -- Primary table
+LEFT JOIN StudentCourses SC...   -- Include unmatched courses
+GROUP BY C.CourseID, C.CourseName -- Aggregate dimension
+ORDER BY EnrollmentCount DESC    -- Sort results
+
+### KEY POINTS
+- GROUP BY required for aggregates
+- All non-aggregate columns must be in GROUP BY
+- LEFT JOIN includes courses with 0 students
+- COUNT counts non-NULL values
+- ORDER BY uses alias from SELECT
+
+
+---
+## EXERCISE 32: GROUP BY Multiple Columns - Student Grades by Course
+---
+### ANSWER
+
+SELECT 
+    C.CourseName,
+    SC.Grade,
+    COUNT(SC.StudentID) AS StudentCount
+FROM StudentCourses SC
+JOIN Courses C ON SC.CourseID = C.CourseID
+GROUP BY C.CourseID, C.CourseName, SC.Grade
+ORDER BY C.CourseName, SC.Grade;
+
+### EXPLANATION
+- GROUP BY multiple columns: Course AND Grade
+- Counts students for each Course-Grade combination
+- Shows grade distribution across courses
+- Essential for analyzing performance patterns
+- ORDER BY courses first, then grades within course
+
+### EXECUTION
+1. Join StudentCourses with Courses
+2. Group by both Course and Grade
+3. Count students in each combination
+4. Sort by course name then grade
+5. Display results
+
+### SAMPLE OUTPUT
+CourseName            | Grade | StudentCount
+----------------------|-------|-------------
+Advanced Java         | A     | 15
+Advanced Java         | B     | 22
+Advanced Java         | C     | 18
+Advanced Java         | F     | 8
+Algorithms            | A     | 34
+Algorithms            | B     | 56
+Algorithms            | C     | 28
+Algorithms            | F     | 10
+Database Systems      | A     | 45
+Database Systems      | B     | 62
+Database Systems      | C     | 28
+Database Systems      | F     | 10
+
+GRADE DISTRIBUTION ## SUMMARY:
+Grade | Total Students | Percentage
+------|----------------|----------
+A     | 360            | 29%
+B     | 450            | 36%
+C     | 330            | 26%
+F     | 110            | 9%
+Total | 1250           | 100%
+
+MULTI-COLUMN GROUP BY:
+-- 2 columns:
+GROUP BY Department, Status
+
+-- 3 columns:
+GROUP BY Year, Month, Department
+
+-- All non-aggregate columns:
+GROUP BY C.CourseID, C.CourseName, SC.Grade
+
+### KEY POINTS
+- Each unique combination creates separate group
+- Aggregates calculated independently per group
+- ORDER BY can sort by any column
+- HAVING can filter specific grade combinations
+
+
+---
+## EXERCISE 33: HAVING Clause - Filter Groups
+---
+### ANSWER
+
+SELECT 
+    C.CourseName,
+    COUNT(SC.StudentID) AS EnrollmentCount,
+    ROUND(AVG(SC.Grade), 2) AS AvgGrade
+FROM StudentCourses SC
+JOIN Courses C ON SC.CourseID = C.CourseID
+GROUP BY C.CourseID, C.CourseName
+HAVING COUNT(SC.StudentID) > 100
+ORDER BY EnrollmentCount DESC;
+
+### EXPLANATION
+- HAVING filters GROUPS (not rows like WHERE)
+- Applied AFTER GROUP BY and aggregation
+- Only shows courses with > 100 students
+- WHERE filters before grouping
+- HAVING filters after grouping
+- Essential for aggregate-based filtering
+
+WHERE vs HAVING:
+WHERE: Filters individual rows BEFORE grouping
+HAVING: Filters groups AFTER grouping
+
+### EXECUTION
+1. Join StudentCourses with Courses
+2. Group by course
+3. Calculate aggregates per group
+4. HAVING filters groups: COUNT > 100
+5. Sort by enrollment count
+6. Display results
+
+### SAMPLE OUTPUT
+CourseName            | EnrollmentCount | AvgGrade
+----------------------|-----------------|----------
+Database Systems      | 145             | 82.5
+Algorithms            | 128             | 79.3
+Data Structures       | 110             | 81.2
+
+DETAILED ### BREAKDOWN
+Before HAVING (all courses):
+- Course 1: 145 students ✓ (included)
+- Course 2: 128 students ✓ (included)
+- Course 3: 110 students ✓ (included)
+- Course 4: 87 students ✗ (filtered out)
+- Course 5: 65 students ✗ (filtered out)
+
+After HAVING: 3 courses remain
+
+### SYNTAX PATTERN
+SELECT column, aggregate_function(column)
+FROM table
+GROUP BY column
+HAVING aggregate_condition
+
+MULTIPLE HAVING CONDITIONS:
+-- Multiple conditions with AND:
+HAVING COUNT(StudentID) > 100 AND AVG(Grade) > 80
+
+-- Multiple conditions with OR:
+HAVING COUNT(StudentID) > 150 OR AVG(Grade) < 60
+
+-- Complex conditions:
+HAVING (COUNT(StudentID) > 100 AND AVG(Grade) > 80)
+   OR (COUNT(StudentID) < 50 AND AVG(Grade) > 85)
+
+
+---
+## EXERCISE 34: Aggregate Functions - Department Statistics
+---
+### ANSWER
+
+SELECT 
+    D.DeptID,
+    D.DeptName,
+    ROUND(AVG(SC.Grade), 2) AS AvgGrade,
+    MIN(SC.Grade) AS MinGrade,
+    MAX(SC.Grade) AS MaxGrade,
+    COUNT(DISTINCT S.StudentID) AS StudentCount
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY AvgGrade DESC;
+
+### EXPLANATION
+- Multiple aggregate functions in single query
+- AVG() calculates average grade
+- MIN() and MAX() find extremes
+- COUNT(DISTINCT) avoids counting students multiple times
+- Grouped by department
+- All statistics show per-department
+
+AGGREGATE FUNCTIONS:
+- COUNT(column): Count non-NULL values
+- COUNT(DISTINCT column): Count unique values
+- SUM(column): Total of values
+- AVG(column): Average value
+- MIN(column): Minimum value
+- MAX(column): Maximum value
+
+### EXECUTION
+1. Join Departments → Students → StudentCourses
+2. Group by department
+3. Calculate all aggregates
+4. Order by average grade
+5. Display results
+
+### SAMPLE OUTPUT
+DeptID | DeptName             | AvgGrade | MinGrade | MaxGrade | StudentCount
+--------|----------------------|----------|----------|----------|---------------
+1       | Computer Science     | 84.5     | 35       | 98       | 125
+2       | Electronics          | 78.2     | 42       | 95       | 98
+3       | Information Tech     | 80.3     | 38       | 97       | 102
+
+DETAILED ### BREAKDOWN
+Computer Science Department:
+- Total students: 125
+- Total grades recorded: 450 (125 × 3.6 avg enrollments)
+- Average grade: 84.5
+- Lowest grade: 35
+- Highest grade: 98
+- Grade span: 63 points
+
+Electronics Department:
+- Total students: 98
+- Total grades recorded: 352
+- Average grade: 78.2
+- Lowest grade: 42
+- Highest grade: 95
+- Grade span: 53 points
+
+MULTIPLE AGGREGATES:
+SELECT column,
+       COUNT(*) AS TotalRows,
+       COUNT(column) AS NonNullCount,
+       COUNT(DISTINCT column) AS UniqueCount,
+       SUM(column) AS Total,
+       AVG(column) AS Average,
+       MIN(column) AS Minimum,
+       MAX(column) AS Maximum
+FROM table
+GROUP BY column;
+
+### KEY POINTS
+- Each aggregate independent
+- Can mix different aggregate types
+- NULL handling: COUNT ignores NULL, SUM ignores NULL
+- ROUND() for readable decimal places
+- DISTINCT prevents double-counting
+
+
+---
+## EXERCISE 35: SUM and AVG with GROUP BY - Fee Analysis
+---
+### ANSWER
+
+SELECT 
+    D.DeptName,
+    COUNT(DISTINCT S.StudentID) AS StudentCount,
+    COUNT(F.FeeID) AS FeeRecords,
+    SUM(F.Amount) AS TotalFees,
+    ROUND(AVG(F.Amount), 2) AS AvgFeePerStudent
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY TotalFees DESC;
+
+### EXPLANATION
+- SUM() calculates total fees per department
+- AVG() calculates average per student
+- COUNT(DISTINCT) counts unique students
+- COUNT(FeeID) counts fee records
+- LEFT JOIN includes students with no fees
+- Financial analysis grouped by department
+
+### EXECUTION
+1. Join Departments → Students
+2. Left join Fees (some students may have no fees)
+3. Group by department
+4. Calculate financial metrics
+5. Order by total fees
+6. Display results
+
+### SAMPLE OUTPUT
+DeptName             | StudentCount | FeeRecords | TotalFees      | AvgFeePerStudent
+----------------------|--------------|-----------|----------------|------------------
+Computer Science     | 125          | 250       | $12,500,000    | $100,000
+Electronics          | 98           | 196       | $9,800,000     | $100,000
+Information Tech     | 102          | 204       | $10,200,000    | $100,000
+
+FINANCIAL ANALYSIS:
+Department          | Students | Fee Records | Total       | Avg/Student | Variance
+--------------------|----------|-------------|-------------|-------------|----------
+Computer Science    | 125      | 250        | $12.5M      | $100K       | Consistent
+Electronics         | 98       | 196        | $9.8M       | $100K       | Consistent
+IT                  | 102      | 204        | $10.2M      | $100K       | Consistent
+
+INSIGHT:
+- Some students have 2 fee records (semester 1 & 2)
+- Others have 0 (if just enrolled)
+- Average $100K per student consistent across departments
+
+SUM vs AVG vs COUNT:
+SUM(Amount):
+- Computer Science total: $12,500,000
+
+AVG(Amount):
+- Computer Science per student: $100,000
+
+COUNT(FeeID):
+- Computer Science records: 250
+- Implies some students have 2 records (250 / 125 = 2)
+
+### KEY POINTS
+- LEFT JOIN preserves students with no fees
+- SUM for total amounts
+- AVG for per-student analysis
+- COUNT for records/transactions
+- Multiple aggregates show complete picture
+
+
+---
+## EXERCISE 36: DISTINCT with Aggregates - Unique Value Counts
+---
+### ANSWER
+
+SELECT 
+    C.CourseName,
+    COUNT(DISTINCT SC.StudentID) AS UniqueStudents,
+    COUNT(DISTINCT SC.Grade) AS UniqueGrades
+FROM StudentCourses SC
+JOIN Courses C ON SC.CourseID = C.CourseID
+GROUP BY C.CourseID, C.CourseName
+ORDER BY UniqueStudents DESC;
+
+### EXPLANATION
+- COUNT(DISTINCT column) counts unique values
+- Essential for avoiding duplicates in counts
+- UniqueStudents shows diversity of enrollment
+- UniqueGrades shows performance range
+- Identifies variety/diversity metrics
+
+### EXECUTION
+1. Join StudentCourses with Courses
+2. Group by course
+3. Count distinct students per course
+4. Count distinct grades per course
+5. Order by unique students
+6. Display results
+
+### SAMPLE OUTPUT
+CourseName            | UniqueStudents | UniqueGrades
+----------------------|----------------|-------------
+Database Systems      | 145            | 4
+Algorithms            | 128            | 4
+Data Structures       | 110            | 4
+Web Development       | 87             | 4
+Discrete Math         | 65             | 3
+
+### COMPARISON WITH vs WITHOUT DISTINCT
+
+Without DISTINCT - COUNT(StudentID):
+- Counts ALL rows in StudentCourses
+- Result: 1250 (total enrollments)
+
+With DISTINCT - COUNT(DISTINCT StudentID):
+- Counts each unique student once
+- Result: 145 (unique students per course)
+
+SAMPLE DATA:
+StudentCourses table (Database Systems course):
+StudentID | CourseID | Grade
+-----------|----------|-------
+1          | 101      | A
+2          | 101      | B
+3          | 101      | A
+4          | 101      | C
+1          | 102      | B  (same student, different course)
+
+COUNT(StudentID) = 5 (all rows)
+COUNT(DISTINCT StudentID) = 4 (unique: 1,2,3,4)
+
+GRADE DISTRIBUTION EXAMPLE:
+Database Systems grades: A, B, C, F (4 unique)
+
+DISTINCT ### USE CASES
+-- Count unique customers per order:
+COUNT(DISTINCT CustomerID)
+
+-- Count unique dates with activity:
+COUNT(DISTINCT DATE(OrderDate))
+
+-- Count unique states:
+COUNT(DISTINCT State)
+
+-- Check if column has variation:
+IF(COUNT(DISTINCT Status) = 1, 'No variation', 'Multiple values')
+
+### KEY POINTS
+- DISTINCT eliminates duplicates from count
+- Essential for enrollment counts
+- Shows actual student diversity
+- Multiple DISTINCT in same query OK
+- Performance impact if used with large datasets
+
+
+---
+## EXERCISE 37: Subquery in WHERE - Complex Filtering
+---
+### ANSWER
+
+-- Step 1: View course averages
+SELECT C.CourseID, C.CourseName, AVG(SC.Grade) AS CourseAverage
+FROM StudentCourses SC
+JOIN Courses C ON SC.CourseID = C.CourseID
+GROUP BY C.CourseID, C.CourseName;
+
+-- Step 2: Find students above course average
+SELECT 
+    S.StudentID,
+    S.Name AS StudentName,
+    C.CourseName,
+    SC.Grade,
+    (SELECT ROUND(AVG(SC2.Grade), 2)
+     FROM StudentCourses SC2
+     WHERE SC2.CourseID = C.CourseID) AS CourseAverage
+FROM StudentCourses SC
+JOIN Students S ON SC.StudentID = S.StudentID
+JOIN Courses C ON SC.CourseID = C.CourseID
+WHERE SC.Grade > (
+    SELECT AVG(SC2.Grade)
+    FROM StudentCourses SC2
+    WHERE SC2.CourseID = C.CourseID
+)
+ORDER BY C.CourseName, SC.Grade DESC;
+
+### EXPLANATION
+- Subquery calculates average grade per course
+- WHERE compares individual grades to course average
+- Correlated subquery: references outer query
+- Finds students above their course average
+- Inner query executes for each outer row
+
+### EXECUTION
+1. For each StudentCourse record
+2. Calculate average grade for that course
+3. Compare student's grade to course average
+4. Include if student's grade > average
+5. Display matching records
+
+### SAMPLE OUTPUT
+StudentName | CourseName       | Grade | CourseAverage
+------------|------------------|-------|---------------
+Aarav Kumar | Database Systems | 92    | 82.5
+Ananya...   | Database Systems | 90    | 82.5
+Arjun Singh | Algorithms       | 90    | 79.3
+Bhargav...  | Algorithms       | 88    | 79.3
+Chitra...   | Data Structures  | 88    | 81.2
+Deepak...   | Web Development  | 85    | 76.8
+
+ANALYSIS:
+Database Systems:
+- Course average: 82.5
+- Students above average: 78 out of 145 (54%)
+- Students at/below average: 67 out of 145 (46%)
+
+Algorithms:
+- Course average: 79.3
+- Students above average: 65 out of 128 (51%)
+- Students at/below average: 63 out of 128 (49%)
+
+SUBQUERY TYPES:
+-- Scalar subquery (returns 1 value):
+WHERE Grade > (SELECT AVG(Grade) FROM StudentCourses)
+
+-- List subquery (returns multiple values):
+WHERE StudentID IN (SELECT StudentID FROM ...)
+
+-- EXISTS subquery (returns TRUE/FALSE):
+WHERE EXISTS (SELECT 1 FROM ...)
+
+-- Correlated subquery (references outer query):
+WHERE Grade > (SELECT AVG(Grade) FROM SC2 WHERE SC2.CourseID = C.CourseID)
+
+### KEY POINTS
+- Subquery executes for each outer row
+- Parentheses required around subquery
+- Can use comparison operators: >, <, =, >=, <=, !=
+- Subquery must return matching data type
+- Performance: Subqueries can be slower than JOINs
+
+
+---
+## EXERCISE 38: Nested Subqueries - Multi-Level Filtering
+---
+### ANSWER
+
+-- Step 1: Calculate attendance per department
+SELECT D.DeptID, D.DeptName, 
+       ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+             NULLIF(COUNT(A.AttendanceID), 0), 2) AS AvgAttendance
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY D.DeptID, D.DeptName;
+
+-- Step 2: Find departments with > 75% attendance
+SELECT D.DeptID
+FROM Departments D
+WHERE (SELECT ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2)
+       FROM Students S
+       JOIN Attendance A ON S.StudentID = A.StudentID
+       WHERE S.DeptID = D.DeptID) > 75;
+
+-- Step 3: Full query - students in high-attendance departments
+SELECT 
+    D.DeptName,
+    S.StudentID,
+    S.Name AS StudentName,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS AttendancePercent
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+JOIN Attendance A ON S.StudentID = A.StudentID
+WHERE D.DeptID IN (
+    SELECT D2.DeptID
+    FROM Departments D2
+    JOIN Students S2 ON D2.DeptID = S2.DeptID
+    JOIN Attendance A2 ON S2.StudentID = A2.StudentID
+    GROUP BY D2.DeptID
+    HAVING ROUND(100 * SUM(CASE WHEN A2.Status = 'Present' THEN 1 ELSE 0 END) /
+                 NULLIF(COUNT(A2.AttendanceID), 0), 2) > 75
+)
+GROUP BY D.DeptID, D.DeptName, S.StudentID, S.Name
+ORDER BY D.DeptName, AttendancePercent DESC;
+
+### EXPLANATION
+- Outer query: Selects students
+- Middle query: Filters departments with > 75% attendance
+- Inner query: Calculates department average attendance
+- Nested subqueries: Multi-level filtering
+- Each level builds on previous
+
+### EXECUTION
+Level 1: Calculate attendance per department
+Level 2: Filter departments with > 75%
+Level 3: Get students in filtered departments
+
+### SAMPLE OUTPUT
+DeptName         | StudentID | StudentName | AttendancePercent
+-----------------|-----------|-------------|------------------
+Computer Science | 1         | Aarav Kumar | 95%
+Computer Science | 3         | Arjun Singh | 88%
+Computer Science | 5         | Chitra...   | 92%
+Electronics      | 7         | Gita Sharma | 82%
+Electronics      | 9         | Harsh Kumar | 78%
+
+NESTED SUBQUERY STRUCTURE:
+Main Query (Level 1):
+  ↓ Uses result from
+Middle Filter (Level 2):
+  ↓ Uses result from
+Inner Calculation (Level 3):
+  ↓ Aggregates data
+
+PERFORMANCE NOTE:
+- Nested subqueries can be slow
+- Consider CTEs (Common Table Expressions) for readability
+- Often can be rewritten as JOINs
+
+CTE ALTERNATIVE:
+WITH DeptAttendance AS (
+    SELECT D.DeptID, D.DeptName,
+           ROUND(100 * SUM(...) / COUNT(...), 2) AS AvgAtt
+    FROM Departments D
+    JOIN Students S ON D.DeptID = S.DeptID
+    JOIN Attendance A ON S.StudentID = A.StudentID
+    GROUP BY D.DeptID, D.DeptName
+    HAVING AvgAtt > 75
+)
+SELECT D.DeptName, S.Name, ...
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+WHERE D.DeptID IN (SELECT DeptID FROM DeptAttendance);
+
+### KEY POINTS
+- Nesting adds complexity
+- Can be hard to debug
+- CTEs often clearer
+- Performance depends on DB optimizer
+- Test both approaches
+
+
+---
+## EXERCISE 39: CASE in GROUP BY - Categorize and Count
+---
+### ANSWER
+
+SELECT 
+    CASE 
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2) >= 90 THEN 'Excellent'
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2) >= 75 THEN 'Good'
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2) >= 60 THEN 'Average'
+        ELSE 'Poor'
+    END AS AttendanceCategory,
+    COUNT(DISTINCT S.StudentID) AS StudentCount,
+    ROUND(100 * COUNT(DISTINCT S.StudentID) / 477, 2) AS PercentageOfTotal
+FROM Students S
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY AttendanceCategory
+ORDER BY CASE 
+    WHEN AttendanceCategory = 'Excellent' THEN 1
+    WHEN AttendanceCategory = 'Good' THEN 2
+    WHEN AttendanceCategory = 'Average' THEN 3
+    ELSE 4
+END;
+
+### EXPLANATION
+- CASE creates categories based on attendance
+- Attendance calculated per student
+- GROUP BY groups by category
+- COUNT students in each category
+- Calculates percentage of total
+- ORDER BY maintains consistent order
+
+### EXECUTION
+1. Calculate attendance percentage per student
+2. Apply CASE to categorize
+3. Group by category
+4. Count students in each
+5. Calculate percentages
+6. Order by priority
+
+### SAMPLE OUTPUT
+AttendanceCategory | StudentCount | PercentageOfTotal
+-------------------|--------------|------------------
+Excellent          | 95           | 19.92%
+Good               | 142          | 29.77%
+Average            | 168          | 35.22%
+Poor               | 72           | 15.09%
+
+## SUMMARY:
+Total students: 477
+- 95 (20%) Excellent (≥90%)
+- 142 (30%) Good (75-90%)
+- 168 (35%) Average (60-75%)
+- 72 (15%) Poor (<60%)
+
+DETAILED ### BREAKDOWN
+Excellent Category (≥90% attendance):
+- Examples: 95%, 91%, 90.5%
+- Count: 95 students
+
+Good Category (75-89.9%):
+- Examples: 89%, 85%, 76%
+- Count: 142 students
+
+Average Category (60-74.9%):
+- Examples: 74%, 68%, 62%
+- Count: 168 students
+
+Poor Category (<60%):
+- Examples: 58%, 45%, 35%
+- Count: 72 students
+
+CASE VARIATIONS:
+-- Numeric categories:
+CASE WHEN Grade >= 90 THEN 4
+     WHEN Grade >= 80 THEN 3
+     WHEN Grade >= 70 THEN 2
+     ELSE 1
+END AS GradeLevel
+
+-- Text categories:
+CASE WHEN Status = 'A' THEN 'Active'
+     WHEN Status = 'I' THEN 'Inactive'
+     ELSE 'Unknown'
+END AS StatusName
+
+-- Nested CASE:
+CASE WHEN Dept = 'CS' THEN
+  CASE WHEN Grade >= 85 THEN 'Top CS Student'
+       ELSE 'Regular CS Student'
+  END
+ELSE 'Other Department'
+END AS Classification
+
+### KEY POINTS
+- CASE returns values to GROUP BY
+- Category assignment before grouping
+- Percentages calculated from counts
+- ORDER BY ensures consistent order
+- Very useful for dashboards
+
+
+---
+## EXERCISE 40: Complex Aggregation - Student Performance Dashboard
+---
+### ANSWER
+
+SELECT 
+    S.StudentID,
+    S.Name,
+    COUNT(DISTINCT SC.CourseID) AS CourseCount,
+    ROUND(AVG(SC.Grade), 2) AS AvgGPA,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) AS AttendancePercent,
+    COUNT(CASE WHEN SC.Grade = 'F' THEN 1 ELSE NULL END) AS FailedCourses
+FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name
+ORDER BY AvgGPA DESC
+LIMIT 10;
+
+### EXPLANATION
+- COUNT(DISTINCT CourseID): Number of courses enrolled
+- AVG(Grade): Average grade across all courses
+- CASE with COUNT: Attendance percentage
+- CASE with COUNT: Count of failed courses
+- LEFT JOIN: Preserve students with no data
+- GROUP BY: Aggregate per student
+- ORDER BY AvgGPA: Top performers first
+- LIMIT 10: Top 10 students only
+
+### EXECUTION
+1. Join Students with StudentCourses and Attendance
+2. Group by student
+3. Calculate all metrics
+4. Order by GPA descending
+5. Limit to top 10
+6. Display comprehensive dashboard
+
+### SAMPLE OUTPUT
+StudentID | Name          | CourseCount | AvgGPA | Attendance | FailedCourses
+-----------|---------------|-------------|--------|------------|---------------
+1          | Aarav Kumar   | 6          | 3.95   | 95.00%     | 0
+2          | Ananya Gupta  | 6          | 3.87   | 92.00%     | 0
+3          | Arjun Singh   | 5          | 3.76   | 88.00%     | 1
+4          | Bhargav...    | 6          | 3.65   | 85.00%     | 1
+5          | Chitra Desai  | 6          | 3.58   | 82.00%     | 2
+6          | Deepak Nair   | 5          | 3.52   | 80.00%     | 2
+7          | Esha Patel    | 6          | 3.48   | 78.00%     | 1
+8          | Farhan Khan   | 5          | 3.42   | 76.00%     | 3
+9          | Gita Sharma   | 6          | 3.38   | 74.00%     | 2
+10         | Harsh Kumar   | 5          | 3.32   | 72.00%     | 4
+
+DASHBOARD INSIGHTS:
+Top Performer (Aarav Kumar):
+- Enrolled in 6 courses
+- Average GPA: 3.95
+- Attendance: 95%
+- Failed: 0 courses
+- Assessment: Excellent overall
+
+Pattern Analysis:
+- Strong correlation: High GPA with high attendance
+- Student 10 (Harsh Kumar) lower GPA, more failures
+- Suggests attendance impacts performance
+- Recommend intervention for low attendance
+
+MULTI-METRIC AGGREGATION:
+SELECT StudentID,
+       COUNT(DISTINCT CourseID) AS Courses,
+       AVG(Grade) AS AvgGrade,
+       SUM(Credits) AS TotalCredits,
+       MIN(Grade) AS LowestGrade,
+       MAX(Grade) AS HighestGrade,
+       STDDEV(Grade) AS GradeVariance,
+       COUNT(CASE WHEN Grade >= 80 THEN 1 END) AS HighGrades,
+       COUNT(CASE WHEN Grade < 70 THEN 1 END) AS LowGrades
+FROM StudentCourses
+GROUP BY StudentID
+ORDER BY AvgGrade DESC;
+
+DASHBOARD ### USE CASES
+-- Academic advisor: Identify struggling students
+WHERE AvgGPA < 2.0 OR FailedCourses > 2
+
+-- Dean: Monitor overall performance trends
+SELECT Year, AVG(AvgGPA), AVG(AttendancePercent)
+FROM DashboardData
+GROUP BY Year
+
+-- Faculty: Identify students needing support
+WHERE AttendancePercent < 70 AND AvgGPA < 3.0
+
+### KEY POINTS
+- Multiple aggregates in single query
+- LEFT JOIN preserves all students
+- DISTINCT for accurate counts
+- CASE for conditional counting
+- ORDER BY shows priorities
+- LIMIT controls result size
+- Ready for real dashboards
+
+
+---
+KEY CONCEPTS COVERED IN # BATCH 4:
+---
+1. GROUP BY single and multiple columns
+2. Aggregate functions (COUNT, SUM, AVG, MIN, MAX)
+3. HAVING clause for group filtering
+4. COUNT(DISTINCT) for unique values
+5. Subqueries in WHERE clause
+6. Correlated subqueries
+7. Nested subqueries (multi-level)
+8. CASE in GROUP BY for categorization
+9. Multiple aggregates in single query
+10. Performance dashboards and reporting
+
+BEST PRACTICES:
+- Always GROUP BY all non-aggregate columns
+- Use HAVING after GROUP BY for aggregate filtering
+- Use WHERE before GROUP BY for row filtering
+- Test subqueries independently first
+- Consider CTEs for complex subqueries
+- Use DISTINCT carefully (performance impact)
+- Order results logically
+- Comment complex aggregates
+- Verify null handling in aggregates
+
+COMMON MISTAKES:
+- Forgetting GROUP BY with aggregates
+- Mixing WHERE and HAVING incorrectly
+- Forgetting columns in GROUP BY
+- Not using DISTINCT when needed
+- Subqueries returning wrong data type
+- Performance issues with correlated subqueries
+- Incorrect null handling in aggregates
+- Not testing GROUP BY results
+
+PERFORMANCE TIPS:
+- Indexes on GROUP BY columns
+- Indexes on aggregate columns
+- WHERE before GROUP BY (filters first)
+- Avoid COUNT(*) when DISTINCT needed
+- Consider materialized views for complex dashboards
+- Test with realistic data volumes
+
+---
+END OF # BATCH 4 ANSWERS (Exercises 31-40)
+Total Progress: 40 of 50 exercises completed
+Next: Window functions, ranking, advanced analytics
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 5 ANSWERS (41-50)
+Difficulty Level: ADVANCED
+Solutions for window functions and advanced analytics
+---
+
+---
+## EXERCISE 41: ROW_NUMBER - Rank Students by GPA
+---
+### ANSWER
+
+SELECT 
+    D.DeptName,
+    ROW_NUMBER() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) AS RowNumber,
+    S.Name AS StudentName,
+    ROUND(AVG(SC.Grade), 2) AS GPA
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name, S.DeptID, D.DeptName, D.DeptID
+ORDER BY D.DeptName, RowNumber
+LIMIT 15;
+
+### EXPLANATION
+- ROW_NUMBER() assigns unique sequential number
+- PARTITION BY DeptID: Resets numbering per department
+- ORDER BY Grade DESC: Higher grades get lower numbers
+- Window function applies within each partition
+- Useful for finding top N per group
+- GROUP BY required for grade aggregation
+
+### EXECUTION
+1. Join tables and calculate average grade
+2. GROUP BY to aggregate per student
+3. ROW_NUMBER() assigns rank within department
+4. ORDER BY department then row number
+5. LIMIT to show top 3 per department
+
+### SAMPLE OUTPUT
+DeptName         | RowNumber | StudentName | GPA
+-----------------|-----------|-------------|-------
+Computer Science | 1         | Aarav Kumar | 3.95
+Computer Science | 2         | Ananya...   | 3.87
+Computer Science | 3         | Arjun Singh | 3.76
+Electronics      | 1         | Bhargav...  | 3.58
+Electronics      | 2         | Chitra...   | 3.52
+Electronics      | 3         | Deepak...   | 3.45
+
+WINDOW FUNCTION ### BREAKDOWN
+ROW_NUMBER() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC)
+
+- ROW_NUMBER(): Assigns 1, 2, 3, ... within each partition
+- PARTITION BY S.DeptID: Separate numbering per department
+- ORDER BY AVG(SC.Grade) DESC: Higher GPA = lower number
+- Result: Top students get RowNumber = 1 in each dept
+
+### KEY POINTS
+- ROW_NUMBER always unique (no ties)
+- PARTITION resets numbering
+- ORDER BY critical for ranking
+- Can use in WHERE clause with subquery
+- Efficient for large datasets
+
+
+---
+## EXERCISE 42: RANK and DENSE_RANK - Grade Rankings
+---
+### ANSWER
+
+SELECT 
+    S.Name AS StudentName,
+    ROUND(AVG(SC.Grade), 2) AS AvgGrade,
+    RANK() OVER (ORDER BY AVG(SC.Grade) DESC) AS Rank,
+    DENSE_RANK() OVER (ORDER BY AVG(SC.Grade) DESC) AS DenseRank
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name
+ORDER BY AvgGrade DESC;
+
+### EXPLANATION
+- RANK() skips numbers after ties
+- DENSE_RANK() doesn't skip numbers
+- Both order by same column
+- RANK: 1, 1, 3, 4, 5 (skip 2)
+- DENSE_RANK: 1, 1, 2, 3, 4 (no skip)
+- Use RANK for competitions
+- Use DENSE_RANK for reporting
+
+### EXECUTION
+1. Join Students with StudentCourses
+2. GROUP BY to aggregate grades per student
+3. Calculate both RANK and DENSE_RANK
+4. ORDER BY average grade descending
+5. Display both ranking methods
+
+### SAMPLE OUTPUT
+StudentName | AvgGrade | Rank | DenseRank
+------------|----------|------|----------
+Aarav Kumar | 3.95     | 1    | 1
+Ananya...   | 3.95     | 1    | 1
+Arjun Singh | 3.76     | 3    | 2
+Bhargav...  | 3.65     | 4    | 3
+Chitra...   | 3.58     | 5    | 4
+Deepak...   | 3.52     | 6    | 5
+
+### COMPARISON
+When students have same grade (3.95):
+- RANK assigns both: 1, 1
+- Next student gets: 3 (skip 2)
+- DENSE_RANK assigns both: 1, 1
+- Next student gets: 2 (no skip)
+
+### USE CASES
+- Sports rankings: Use RANK (Olympic medals)
+- Academic standings: Use DENSE_RANK (clearer grouping)
+- Performance tiers: Use DENSE_RANK
+- Competition results: Use RANK
+
+### KEY POINTS
+- RANK skips ranks after ties
+- DENSE_RANK maintains sequence
+- Same ORDER BY for both
+- Can combine in same query
+- Different use cases
+
+
+---
+## EXERCISE 43: LAG and LEAD - Compare Sequential Values
+---
+### ANSWER
+
+SELECT 
+    S.Name AS StudentName,
+    C.CourseName,
+    SC.Grade,
+    LAG(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID) AS PreviousGrade,
+    LEAD(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID) AS NextGrade
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+JOIN Courses C ON SC.CourseID = C.CourseID
+ORDER BY S.StudentID, SC.CourseID;
+
+### EXPLANATION
+- LAG() accesses previous row value
+- LEAD() accesses next row value
+- PARTITION BY isolates student sequences
+- ORDER BY determines row sequence
+- NULL for first row (LAG) and last row (LEAD)
+- Useful for trend analysis
+
+### EXECUTION
+1. Join Students, StudentCourses, Courses
+2. LAG accesses previous enrollment grade
+3. LEAD accesses next enrollment grade
+4. PARTITION BY student for separate sequences
+5. ORDER BY course for chronological order
+
+### SAMPLE OUTPUT
+StudentName | CourseName       | Grade | PreviousGrade | NextGrade
+------------|------------------|-------|---------------|----------
+Aarav Kumar | Database Systems | 92    | NULL          | 88
+Aarav Kumar | Data Structures  | 88    | 92            | 90
+Aarav Kumar | Algorithms       | 90    | 88            | NULL
+Ananya...   | Algorithms       | 90    | NULL          | 85
+Ananya...   | Database Systems | 85    | 90            | 92
+Ananya...   | Web Development  | 92    | 85            | NULL
+
+### GRADE TREND ANALYSIS
+Aarav Kumar trends:
+- Database (92) → Data Structures (88): Down 4 points
+- Data Structures (88) → Algorithms (90): Up 2 points
+- Pattern: Initially down, then recovering
+
+### ADVANCED VARIATIONS
+-- Offset by 2 rows:
+LAG(Grade, 2) OVER (PARTITION BY StudentID ORDER BY CourseID)
+
+-- With default value:
+LAG(Grade, 1, 0) OVER (PARTITION BY StudentID ORDER BY CourseID)
+
+-- Calculate change:
+SC.Grade - LAG(Grade) OVER (PARTITION BY StudentID ORDER BY CourseID) AS Change
+
+### KEY POINTS
+- LAG looks backward, LEAD looks forward
+- PARTITION BY groups sequences
+- ORDER BY determines direction
+- NULL handling important
+- Great for time series analysis
+
+
+---
+## EXERCISE 44: FIRST_VALUE and LAST_VALUE - Window Frame Analysis
+---
+### ANSWER
+
+SELECT 
+    S.Name AS StudentName,
+    C.CourseName,
+    SC.Grade,
+    FIRST_VALUE(C.CourseName) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS FirstCourse,
+    FIRST_VALUE(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS FirstGrade,
+    LAST_VALUE(C.CourseName) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS LastCourse,
+    LAST_VALUE(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS LastGrade,
+    LAST_VALUE(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) -
+    FIRST_VALUE(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS Change
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+JOIN Courses C ON SC.CourseID = C.CourseID
+ORDER BY S.StudentID, SC.CourseID;
+
+### EXPLANATION
+- FIRST_VALUE returns first value in window
+- LAST_VALUE returns last value in window
+- ROWS BETWEEN defines entire partition as window
+- Without frame spec, window ends at current row
+- Useful for comparison to extremes
+- Calculate improvement/decline
+
+### EXECUTION
+1. FIRST_VALUE on first course enrollment
+2. LAST_VALUE on last course enrollment
+3. Calculate grade change (Last - First)
+4. Display all values for comparison
+5. Window frame includes entire partition
+
+### SAMPLE OUTPUT
+StudentName | CourseName       | Grade | FirstCourse      | FirstGrade | LastCourse | LastGrade | Change
+------------|------------------|-------|------------------|------------|------------|-----------|--------
+Aarav Kumar | Database Systems | 92    | Database Systems | 92         | Algorithms | 90        | -2
+Aarav Kumar | Data Structures  | 88    | Database Systems | 92         | Algorithms | 90        | -2
+Aarav Kumar | Algorithms       | 90    | Database Systems | 92         | Algorithms | 90        | -2
+Ananya...   | Algorithms       | 90    | Algorithms       | 90         | Web Dev    | 85        | -5
+
+### PERFORMANCE ANALYSIS
+Aarav Kumar:
+- First course: Database Systems (92)
+- Last course: Algorithms (90)
+- Change: -2 (slight decline)
+- Assessment: Consistent performer, slight dip
+
+Ananya Gupta:
+- First course: Algorithms (90)
+- Last course: Web Dev (85)
+- Change: -5 (declining trend)
+- Assessment: Needs intervention
+
+### WINDOW FRAME SPECIFICATION
+-- Current row and after (default):
+ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+
+-- Previous rows only:
+ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+
+-- All rows:
+ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+
+### KEY POINTS
+- FIRST_VALUE not affected by ORDER BY
+- LAST_VALUE needs proper frame spec
+- Frame spec crucial for correct results
+- Compare to first/last for trends
+- Useful for progress tracking
+
+
+---
+## EXERCISE 45: SUM OVER - Running Total Calculation
+---
+### ANSWER
+
+SELECT 
+    S.Name AS StudentName,
+    F.Amount AS FeeAmount,
+    F.PaymentDate,
+    SUM(F.Amount) OVER (PARTITION BY S.StudentID ORDER BY F.PaymentDate
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS RunningTotal
+FROM Students S
+JOIN Fees F ON S.StudentID = F.StudentID
+ORDER BY S.StudentID, F.PaymentDate;
+
+### EXPLANATION
+- SUM() OVER creates running total
+- PARTITION BY isolates student sequences
+- ORDER BY PaymentDate orders chronologically
+- ROWS BETWEEN specifies frame: start to current row
+- Accumulates values as rows progress
+- Useful for payment tracking
+
+### EXECUTION
+1. Join Students with Fees
+2. Order by payment date chronologically
+3. SUM accumulates fees for each student
+4. Frame: UNBOUNDED PRECEDING to CURRENT ROW
+5. Running total shows cumulative amount
+
+### SAMPLE OUTPUT
+StudentName | PaymentDate | FeeAmount | RunningTotal
+------------|-------------|-----------|-------------
+Aarav Kumar | 2024-01-15  | 50000     | 50000
+Aarav Kumar | 2024-06-15  | 50000     | 100000
+Ananya...   | 2024-01-20  | 50000     | 50000
+Ananya...   | 2024-06-20  | 50000     | 100000
+Arjun Singh | 2024-02-10  | 50000     | 50000
+
+### CUMULATIVE ANALYSIS
+Aarav Kumar:
+- Payment 1: 50K, Total: 50K
+- Payment 2: 50K, Total: 100K
+
+Ananya Gupta:
+- Payment 1: 50K, Total: 50K
+- Payment 2: 50K, Total: 100K
+
+### FRAME OPTIONS
+-- Running total (accumulate forward):
+ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+
+-- Running average:
+AVG(Amount) OVER (PARTITION BY StudentID ORDER BY PaymentDate
+    ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)
+
+-- Total to end:
+SUM(Amount) OVER (PARTITION BY StudentID ORDER BY PaymentDate
+    ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)
+
+### KEY POINTS
+- Order by critical for running totals
+- Frame spec determines window
+- Multiple aggregates possible
+- Efficient for large datasets
+- Common in financial reports
+
+
+---
+## EXERCISE 46: PERCENT_RANK - Percentile Distribution
+---
+### ANSWER
+
+SELECT 
+    D.DeptName,
+    S.Name AS StudentName,
+    ROUND(AVG(SC.Grade), 2) AS GPA,
+    ROUND(PERCENT_RANK() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC), 4) AS PercentRank,
+    CASE 
+        WHEN PERCENT_RANK() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) <= 0.25 THEN 'Top 25%'
+        WHEN PERCENT_RANK() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) <= 0.50 THEN '25-50%'
+        WHEN PERCENT_RANK() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) <= 0.75 THEN '50-75%'
+        ELSE 'Bottom 25%'
+    END AS Quartile
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name, S.DeptID, D.DeptName
+ORDER BY D.DeptName, GPA DESC;
+
+### EXPLANATION
+- PERCENT_RANK() returns percentile position (0 to 1)
+- 0 = lowest, 1 = highest
+- PARTITION BY department for department-specific ranking
+- ORDER BY GPA for rank ordering
+- Useful for percentile classification
+- Convert to quartiles with CASE
+
+### EXECUTION
+1. Calculate average GPA per student
+2. PERCENT_RANK() within each department
+3. GROUP BY for aggregation
+4. CASE converts to quartile labels
+5. Display all metrics
+
+### SAMPLE OUTPUT
+DeptName         | StudentName | GPA  | PercentRank | Quartile
+-----------------|-------------|------|-------------|----------
+Computer Science | Aarav Kumar | 3.95 | 0.95        | Top 25%
+Computer Science | Ananya...   | 3.87 | 0.85        | Top 25%
+Computer Science | Arjun Singh | 3.76 | 0.75        | 25-50%
+Electronics      | Bhargav...  | 3.58 | 0.60        | 25-50%
+
+### PERCENTILE CALCULATION
+Computer Science (10 students):
+- Aarav: 0.95 (95th percentile) → Top 25%
+- Ananya: 0.85 (85th percentile) → Top 25%
+- Arjun: 0.75 (75th percentile) → 25-50%
+- Next: 0.60 (60th percentile) → 50-75%
+
+### PERFORMANCE TIERS
+- Top 25%: Excellent (0.75-1.00)
+- 25-50%: Good (0.50-0.75)
+- 50-75%: Average (0.25-0.50)
+- Bottom 25%: Below average (0.00-0.25)
+
+### KEY POINTS
+- Returns 0 to 1 scale
+- Good for percentile analysis
+- Different from NTILE
+- Partition for group comparison
+- Useful for percentile-based scholarships
+
+
+---
+## EXERCISE 47: NTILE - Distribution into Quantiles
+---
+### ANSWER
+
+SELECT 
+    D.DeptName,
+    S.Name AS StudentName,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance,
+    NTILE(4) OVER (PARTITION BY S.DeptID ORDER BY 
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2) DESC) AS Quartile
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name, S.DeptID, D.DeptName
+ORDER BY D.DeptName, Attendance DESC;
+
+### EXPLANATION
+- NTILE(4) divides into 4 equal groups
+- PARTITION BY department
+- ORDER BY attendance descending
+- Groups as evenly as possible
+- 1 = highest quartile, 4 = lowest
+- Good for equal-size grouping
+
+### EXECUTION
+1. Calculate attendance per student
+2. NTILE(4) divides into quartiles
+3. PARTITION BY department
+4. ORDER BY attendance descending
+5. Display quartile assignment
+
+### SAMPLE OUTPUT
+DeptName         | StudentName | Attendance | Quartile
+-----------------|-------------|------------|----------
+Computer Science | Aarav Kumar | 95%        | 1
+Computer Science | Ananya...   | 92%        | 1
+Computer Science | Arjun Singh | 88%        | 2
+Computer Science | Bhargav...  | 85%        | 2
+Electronics      | Chitra...   | 82%        | 3
+Electronics      | Deepak...   | 78%        | 4
+
+QUARTILE ### BREAKDOWN
+Computer Science (10 students):
+Quartile 1 (Top 25%): 95%, 92%, 90%, 88% (4 students)
+Quartile 2 (25-50%): 85%, 83%, 82%, 80% (3 students)
+Quartile 3 (50-75%): 78%, 76%, 74%, 72% (2 students)
+Quartile 4 (Bottom 25%): 70%, 68% (1 student)
+
+### NTILE VARIATIONS
+-- Deciles (10 groups):
+NTILE(10) OVER (PARTITION BY DeptID ORDER BY Attendance DESC)
+
+-- Percentiles (100 groups):
+NTILE(100) OVER (PARTITION BY DeptID ORDER BY Attendance DESC)
+
+-- Binary (2 groups):
+NTILE(2) OVER (ORDER BY Performance DESC)
+
+### KEY POINTS
+- Divides into N equal groups
+- Good for quota/percentile splits
+- Different from PERCENT_RANK
+- Equal-size groups (approximately)
+- Useful for performance tiers
+
+
+---
+## EXERCISE 48: Window Frame Specification - Moving Average
+---
+### ANSWER
+
+SELECT 
+    S.Name AS StudentName,
+    C.CourseName,
+    SC.Grade,
+    ROUND(AVG(SC.Grade) OVER (PARTITION BY S.StudentID ORDER BY SC.CourseID
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS MovingAvg3Course
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+JOIN Courses C ON SC.CourseID = C.CourseID
+ORDER BY S.StudentID, SC.CourseID;
+
+### EXPLANATION
+- Window frame specification controls calculation range
+- ROWS BETWEEN 2 PRECEDING AND CURRENT ROW = 3-course window
+- Moving average smooths grade trends
+- Considers current course and 2 previous
+- Eliminates noise from single outliers
+- Common in time-series analysis
+
+### EXECUTION
+1. Join Students with StudentCourses and Courses
+2. Define window: 2 preceding rows + current
+3. Calculate average within window
+4. PARTITION BY student for separate sequences
+5. ORDER BY CourseID for chronological order
+
+### SAMPLE OUTPUT
+StudentName | CourseName       | Grade | MovingAvg3Course
+------------|------------------|-------|------------------
+Aarav Kumar | Database Systems | 92    | 92.00
+Aarav Kumar | Data Structures  | 88    | 90.00
+Aarav Kumar | Algorithms       | 90    | 90.00
+Aarav Kumar | Web Development  | 85    | 87.67
+Aarav Kumar | Discrete Math    | 92    | 89.00
+
+### MOVING AVERAGE LOGIC
+Course 1 (92): Only 1 value → 92.00
+Course 2 (88): 2 values (92+88) → 90.00
+Course 3 (90): 3 values (92+88+90) → 90.00
+Course 4 (85): 3 values (88+90+85) → 87.67
+Course 5 (92): 3 values (90+85+92) → 89.00
+
+### TREND SMOOTHING
+Raw grades: 92, 88, 90, 85, 92 (volatile)
+Moving avg: 92, 90, 90, 87.67, 89 (smoother trend)
+
+FRAME VARIATIONS:
+-- 2-course moving average:
+ROWS BETWEEN 1 PRECEDING AND CURRENT ROW
+
+-- 5-course moving average:
+ROWS BETWEEN 4 PRECEDING AND CURRENT ROW
+
+-- Include future rows:
+ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+
+-- Current and forward:
+ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING
+
+### KEY POINTS
+- Frame spec critical for window behavior
+- ROWS vs RANGE differences
+- Moving averages smooth trends
+- Good for trend analysis
+- Performance impacts with large windows
+
+
+---
+## EXERCISE 49: Multiple Window Functions - Comprehensive Analytics
+---
+### ANSWER
+
+SELECT 
+    D.DeptName,
+    S.Name AS StudentName,
+    ROW_NUMBER() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) AS RowNum,
+    RANK() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) AS Rank,
+    ROUND(AVG(SC.Grade), 2) AS AvgGPA,
+    SUM(F.Amount) AS TotalFees,
+    ROUND(AVG(AVG(SC.Grade)) OVER (PARTITION BY S.DeptID), 2) AS DeptAvgGPA
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY S.StudentID, S.Name, S.DeptID, D.DeptID, D.DeptName
+ORDER BY D.DeptName, RowNum;
+
+### EXPLANATION
+- Multiple window functions in single query
+- ROW_NUMBER for unique ranking
+- RANK for competition ranking
+- AVG OVER for department average
+- SUM for aggregate data
+- Mix individual and aggregate metrics
+- Partition by department for grouping
+
+### EXECUTION
+1. Join all required tables
+2. GROUP BY for student aggregation
+3. Window functions for ranking/analytics
+4. AVG OVER calculates department average
+5. Display all metrics together
+
+### SAMPLE OUTPUT
+DeptName         | StudentName | RowNum | Rank | AvgGPA | TotalFees | DeptAvgGPA
+-----------------|-------------|--------|------|--------|-----------|----------
+Computer Science | Aarav Kumar | 1      | 1    | 3.95   | 100000    | 84.50
+Computer Science | Ananya...   | 2      | 2    | 3.87   | 100000    | 84.50
+Computer Science | Arjun Singh | 3      | 3    | 3.76   | 100000    | 84.50
+Electronics      | Bhargav...  | 1      | 1    | 3.58   | 100000    | 78.20
+
+COMPREHENSIVE METRICS:
+Computer Science:
+- Top student: Aarav Kumar (Row 1, Rank 1, GPA 3.95)
+- Dept avg: 84.50
+- Variation: Students range from 3.95 to 3.50
+- Total fees: $1,250,000 (125 students × $100K avg)
+
+### INSIGHTS FROM MULTIPLE FUNCTIONS
+- ROW_NUMBER identifies top performer per department
+- RANK shows competitive position with ties
+- AvgGPA shows individual performance
+- TotalFees shows financial contribution
+- DeptAvgGPA shows relative position to dept
+
+### KEY POINTS
+- Multiple window functions same query
+- Independent partitions allowed
+- Different ORDER BY per function
+- Combine with GROUP BY and JOIN
+- Efficient for comprehensive reporting
+
+
+---
+## EXERCISE 50: Query Optimization and Performance - Index Strategy
+---
+### ANSWER
+
+-- ANALYSIS: Original Complex Query (Unoptimized)
+-- Query: Join 5 tables, group, aggregate, window functions
+
+SELECT 
+    D.DeptName,
+    S.StudentID,
+    S.Name,
+    COUNT(DISTINCT SC.CourseID) AS Courses,
+    ROUND(AVG(SC.Grade), 2) AS AvgGrade,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) AS Attendance,
+    SUM(F.Amount) AS TotalFees,
+    ROW_NUMBER() OVER (PARTITION BY S.DeptID ORDER BY AVG(SC.Grade) DESC) AS Rank
+FROM Departments D
+JOIN Students S ON D.DeptID = S.DeptID
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+WHERE S.Status = 'Active'
+GROUP BY D.DeptID, D.DeptName, S.StudentID, S.Name, S.DeptID
+ORDER BY D.DeptName, Rank;
+
+### PERFORMANCE ANALYSIS
+
+BEFORE OPTIMIZATION:
+- Estimated query cost: 2,500 units
+- Execution time: 2.5 seconds
+- Rows scanned: 1,250,000 (StudentCourses full table scan)
+- Rows scanned: 600,000 (Attendance full table scan)
+- Execution plan: Multiple nested loops
+- I/O operations: High (disk intensive)
+
+IDENTIFIED PERFORMANCE ISSUES:
+1. No index on StudentCourses(StudentID, CourseID, Grade)
+   → Results in full table scan
+2. No index on Attendance(StudentID, Status, AttendanceID)
+   → Results in full table scan
+3. No index on Fees(StudentID, Amount)
+   → Results in full table scan
+4. No index on Students(DeptID, Status)
+   → Results in full table scan
+5. No index on StudentCourses(StudentID) for GROUP BY
+   → Inefficient aggregation
+
+### INDEX RECOMMENDATIONS
+
+-- Index 1: StudentCourses - Composite index
+CREATE INDEX idx_sc_student_course_grade 
+ON StudentCourses(StudentID, CourseID, Grade);
+
+-- Index 2: Attendance - Composite index
+CREATE INDEX idx_att_student_status 
+ON Attendance(StudentID, Status, AttendanceID);
+
+-- Index 3: Fees - Simple index
+CREATE INDEX idx_fees_student 
+ON Fees(StudentID, Amount);
+
+-- Index 4: Students - Composite index
+CREATE INDEX idx_students_dept_status 
+ON Students(DeptID, Status, StudentID);
+
+-- Index 5: Departments - Primary
+-- Already indexed on DeptID (PRIMARY KEY)
+
+AFTER OPTIMIZATION:
+- Estimated query cost: 850 units (66% reduction)
+- Execution time: 0.8 seconds (68% faster)
+- Rows scanned: 125,000 (StudentCourses seek instead of scan)
+- Rows scanned: 45,000 (Attendance seek instead of scan)
+- Execution plan: Index seeks, hash joins
+- I/O operations: Minimal (memory efficient)
+
+QUERY EXECUTION PLAN ### COMPARISON
+
+#### BEFORE (Unoptimized)
+1. Table Scan [Departments] → 50 rows
+2. Nested Loop → Table Scan [Students] → 477 rows (WHERE Status='Active')
+3. Nested Loop → Table Scan [StudentCourses] → 1,250,000 rows (full scan!)
+4. Nested Loop → Table Scan [Attendance] → 600,000 rows (full scan!)
+5. Nested Loop → Table Scan [Fees] → 1,000 rows
+6. Hash Aggregate → Count Distinct, Sum, Avg
+7. Window Spool (ROW_NUMBER)
+8. Sort → Final result
+
+Cost progression:
+  Scan Departments: 10 units
+  Scan Students: 150 units
+  Scan StudentCourses: 1,800 units (MAJOR)
+  Scan Attendance: 450 units (MAJOR)
+  Scan Fees: 80 units
+  Aggregation: 10 units
+  Total: 2,500 units
+
+#### AFTER (Optimized)
+1. Index Seek [idx_students_dept_status] → 477 rows
+2. Index Seek [idx_sc_student_course_grade] → 1,250 rows (indexed lookup)
+3. Index Seek [idx_att_student_status] → 45,000 rows (indexed lookup)
+4. Index Seek [idx_fees_student] → 1,000 rows (indexed lookup)
+5. Hash Join [Students → StudentCourses]
+6. Hash Join [← Attendance]
+7. Hash Join [← Fees]
+8. Hash Aggregate → Count Distinct, Sum, Avg
+9. Window Spool (ROW_NUMBER)
+10. Sort → Final result
+
+Cost progression:
+  Seek Students: 5 units
+  Seek StudentCourses: 40 units (MUCH BETTER)
+  Seek Attendance: 120 units (MUCH BETTER)
+  Seek Fees: 30 units
+  Hash joins: 420 units
+  Aggregation: 10 units
+  Window functions: 225 units
+  Total: 850 units
+
+PERFORMANCE IMPROVEMENTS:
+1. StudentCourses scan → seek: 1,800 → 40 units (98% reduction)
+2. Attendance scan → seek: 450 → 120 units (73% reduction)
+3. Overall query cost: 2,500 → 850 units (66% reduction)
+4. Execution time: 2.5s → 0.8s (68% faster)
+5. Memory usage: 250MB → 80MB (68% reduction)
+6. CPU time: 2.0s → 0.6s (70% reduction)
+
+### ALTERNATIVE OPTIMIZATION APPROACHES
+
+-- Approach 1: Materialized View (for frequent queries)
+CREATE MATERIALIZED VIEW vw_student_performance AS
+SELECT 
+    S.StudentID, S.Name, D.DeptName,
+    COUNT(DISTINCT SC.CourseID) AS Courses,
+    AVG(SC.Grade) AS AvgGrade,
+    COUNT(DISTINCT A.AttendanceID) AS AttendanceDays,
+    SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) AS PresentDays,
+    SUM(F.Amount) AS TotalFees
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+WHERE S.Status = 'Active'
+GROUP BY S.StudentID, S.Name, S.DeptID, D.DeptName;
+
+-- Then query becomes simple:
+SELECT 
+    DeptName, StudentID, Name, Courses, AvgGrade,
+    ROUND(100 * PresentDays / NULLIF(AttendanceDays, 0), 2) AS Attendance,
+    TotalFees,
+    ROW_NUMBER() OVER (PARTITION BY DeptName ORDER BY AvgGrade DESC) AS Rank
+FROM vw_student_performance
+ORDER BY DeptName, Rank;
+
+Cost: 50 units (98% reduction!)
+
+-- Approach 2: Partitioning (for very large tables)
+CREATE TABLE StudentCourses_Partitioned (...)
+PARTITION BY RANGE (StudentID)
+(
+    PARTITION p1 VALUES LESS THAN (100),
+    PARTITION p2 VALUES LESS THAN (200),
+    ...
+);
+
+-- Approach 3: Column Store Index (for analytics)
+CREATE COLUMNSTORE INDEX idx_cs_studentcourses
+ON StudentCourses (StudentID, CourseID, Grade);
+
+### MAINTENANCE RECOMMENDATIONS
+1. Schedule index rebuilds weekly
+2. Monitor index fragmentation (>30% = rebuild)
+3. Update statistics daily
+4. Archive old attendance data (>2 years)
+5. Monitor slow query log
+
+### INDEXING BEST PRACTICES
+- Index = 20-30% of table size max
+- Composite indexes: most selective first
+- Avoid indexing low-cardinality columns
+- Index columns in WHERE, JOIN, GROUP BY first
+- Monitor index usage and remove unused
+- Balance read performance vs write performance
+
+### KEY POINTS
+- Query optimization essential for performance
+- Indexes are primary tuning tool
+- Composite indexes beat multiple single indexes
+- Seek >>> Scan (generally)
+- Window functions need careful index strategy
+- Regular maintenance critical
+- Materialized views best for complex aggregates
+
+
+---
+## SUMMARY - # BATCH 5 WINDOW FUNCTIONS
+---
+
+Window Functions enable:
+- Ranking across groups (ROW_NUMBER, RANK, DENSE_RANK)
+- Sequential analysis (LAG, LEAD)
+- Boundary values (FIRST_VALUE, LAST_VALUE)
+- Running calculations (SUM, AVG)
+- Percentile analysis (PERCENT_RANK, NTILE)
+- Complex frame specifications (ROWS/RANGE BETWEEN)
+
+Execution time comparison (100K rows):
+- Subqueries: 3.2 seconds
+- Self-joins: 1.8 seconds
+- Window functions: 0.4 seconds (8x faster!)
+
+Common use cases:
+- Leaderboards and rankings
+- Trend analysis and moving averages
+- Cohort analysis
+- Running totals and balances
+- Percentile classifications
+- YTD/YoY comparisons
+
+Performance is critical - use indexes!
+
+---
+END OF # BATCH 5 ANSWERS (Exercises 41-50)
+COURSE COMPLETE: All 50 SQL DML exercises finished!
+
+Summary of 50-exercise course:
+- Batch 1 (1-10): Basic SELECT operations
+- Batch 2 (11-20): UPDATE and JOINs
+- Batch 3 (21-30): DELETE and constraints
+- Batch 4 (31-40): Aggregates and GROUP BY
+- Batch 5 (41-50): Window functions and optimization
+
+Total progression:
+Beginner (SELECT basics) → Intermediate (DML ops) → Advanced (Analytics)
+
+Next steps:
+- Practice with real data
+- Optimize slow queries
+- Study transactions and locking
+- Learn stored procedures
+- Explore database design
+
+---

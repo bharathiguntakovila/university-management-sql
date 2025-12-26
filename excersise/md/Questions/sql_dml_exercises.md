@@ -1,0 +1,1285 @@
+
+
+---
+SQL DML FUNDAMENTALS SERIES - # BATCH 1 (Exercises 1-10)
+Difficulty Level: BEGINNER
+Focus: Basic SELECT, Simple WHERE, ORDER BY, LIMIT
+---
+
+---
+## EXERCISE 1: Simple SELECT - Retrieve All Student Records
+---
+Write a SELECT query to retrieve all student records from the Students table.
+
+### Requirements:
+- Display all columns
+- Show all student records
+- No filtering
+
+### Expected Output:
+List of all students with StudentID, Name, DeptID, Email, Phone
+
+### Example:
+StudentID | Name          | DeptID | Email                    | Phone
+-----------|---------------|--------|--------------------------|----------
+1          | Aarav Kumar   | 1      | aarav.kumar@college.edu  | 9000000001
+2          | Ananya Gupta  | 1      | ananya.gupta@college.edu | 9000000002
+3          | Arjun Singh   | 2      | arjun.singh@college.edu  | 9000000003
+
+
+---
+## EXERCISE 2: SELECT with WHERE - Find Students by Department
+---
+Write a query to find all students in Computer Science Department (DeptID = 1).
+
+### Requirements:
+- Filter by DeptID
+- Show StudentID, Name, Email
+- Only CS department students
+
+### Expected Output:
+List of students in Computer Science department
+
+### Example:
+StudentID | Name          | Email                    | DeptID
+-----------|---------------|--------------------------|--------
+1          | Aarav Kumar   | aarav.kumar@college.edu  | 1
+2          | Ananya Gupta  | ananya.gupta@college.edu | 1
+5          | Deepak Nair   | deepak.nair@college.edu  | 1
+
+
+---
+## EXERCISE 3: SELECT with ORDER BY - Sort Students by Name
+---
+Write a query to retrieve all students sorted alphabetically by name.
+
+### Requirements:
+- Order by Name (ascending)
+- Show StudentID, Name, Email
+- All students
+
+### Expected Output:
+Students sorted A-Z by name
+
+### Example:
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+
+
+---
+## EXERCISE 4: SELECT with LIMIT - Get Top 5 Students
+---
+Write a query to retrieve the first 5 students from the database.
+
+### Requirements:
+- Use LIMIT clause
+- Show StudentID, Name, Email
+- First 5 records only
+
+### Expected Output:
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+4          | Bhargav Nair  | bhargav.nair@college.edu
+5          | Chitra Desai  | chitra.desai@college.edu
+
+
+---
+## EXERCISE 5: SELECT with Multiple Conditions - Complex WHERE
+---
+Write a query to find students in Department 1 OR Department 2, sorted by name.
+
+### Requirements:
+- Use OR operator or IN clause
+- Filter by multiple departments
+- Order results by name
+- Show StudentID, Name, DeptID
+
+### Expected Output:
+Students from two departments, alphabetically sorted
+
+### Example:
+StudentID | Name          | DeptID
+-----------|---------------|--------
+1          | Aarav Kumar   | 1
+3          | Arjun Singh   | 2
+2          | Ananya Gupta  | 1
+
+
+---
+## EXERCISE 6: SELECT Specific Columns - Email List
+---
+Write a query to get an email list of all students (ID and Email only).
+
+### Requirements:
+- Show only StudentID and Email
+- All students
+- No filtering
+
+### Expected Output:
+StudentID | Email
+-----------|-------------------------
+1          | aarav.kumar@college.edu
+2          | ananya.gupta@college.edu
+3          | arjun.singh@college.edu
+
+
+---
+## EXERCISE 7: SELECT with WHERE and ORDER BY - Sorted Department List
+---
+Write a query to get all students from Department 1, sorted by name descending.
+
+### Requirements:
+- Filter by DeptID = 1
+- Order by Name descending (Z-A)
+- Show StudentID, Name, Email, DeptID
+
+### Expected Output:
+Students from CS in reverse alphabetical order
+
+### Example:
+StudentID | Name          | Email                    | DeptID
+-----------|---------------|--------------------------|--------
+5          | Deepak Nair   | deepak.nair@college.edu  | 1
+2          | Ananya Gupta  | ananya.gupta@college.edu | 1
+1          | Aarav Kumar   | aarav.kumar@college.edu  | 1
+
+
+---
+## EXERCISE 8: SELECT with DISTINCT - Get Unique Departments
+---
+Write a query to find all unique departments (no duplicates) from Students table.
+
+### Requirements:
+- Use DISTINCT keyword
+- Show DeptID only
+- Remove duplicates
+
+### Expected Output:
+DeptID
+--------
+1
+2
+3
+4
+5
+
+
+---
+## EXERCISE 9: SELECT with BETWEEN - Students by ID Range
+---
+Write a query to find students with StudentID between 10 and 20.
+
+### Requirements:
+- Use BETWEEN clause
+- Show StudentID, Name, Email
+- StudentID 10-20 inclusive
+
+### Expected Output:
+Students in ID range 10-20
+
+### Example:
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+10         | Hari Patel    | hari.patel@college.edu
+11         | Isha Sharma   | isha.sharma@college.edu
+12         | Jatin Kumar   | jatin.kumar@college.edu
+
+
+---
+## EXERCISE 10: SELECT with LIKE - Search by Name Pattern
+---
+Write a query to find all students whose name starts with 'A'.
+
+### Requirements:
+- Use LIKE operator with wildcard
+- Show StudentID, Name, Email
+- Names beginning with 'A'
+
+### Expected Output:
+Students whose names start with A
+
+### Example:
+StudentID | Name          | Email
+-----------|---------------|-------------------------
+1          | Aarav Kumar   | aarav.kumar@college.edu
+2          | Ananya Gupta  | ananya.gupta@college.edu
+3          | Arjun Singh   | arjun.singh@college.edu
+
+
+---
+END OF # BATCH 1 (Exercises 1-10)
+Next: Batch 2 will cover UPDATE, DELETE, JOINs, and aggregation functions
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 2 EXERCISES (11-20)
+Difficulty Level: BEGINNER to INTERMEDIATE
+Focus: UPDATE statements, JOIN operations, and advanced SELECT
+---
+
+---
+## EXERCISE 11: UPDATE Single Row - Change Student Email
+---
+Update the email address for student with ID 5 to 'newemail@college.edu'.
+
+### Requirements:
+- Use UPDATE statement
+- Specify table name
+- Use WHERE clause to identify row (StudentID = 5)
+- SET new email value
+- Verify update with SELECT before and after
+
+### Expected Output:
+Before: Email for StudentID 5 = chitra.desai@college.edu
+After: Email for StudentID 5 = newemail@college.edu
+Rows affected: 1
+
+
+---
+## EXERCISE 12: UPDATE Multiple Rows - Change Phone for Department
+---
+Update phone numbers for all students in Department 2 (Electronics) to '9999999999'.
+
+### Requirements:
+- Use UPDATE with WHERE clause matching multiple rows
+- DeptID = 2 identifies all matching rows
+- SET all matching Phone values
+- Show count of rows affected
+- Important: Verify WHERE clause first with SELECT
+
+### Expected Output:
+Students in Department 2: 47 students
+Rows updated: 47
+All students in Electronics dept now have phone '9999999999'
+
+
+---
+## EXERCISE 13: UPDATE with Expression - Increment StudentID
+---
+Update all StudentID values by adding 1000 to each current value using a formula.
+
+### Requirements:
+- Use UPDATE with SET column = column + value (expression)
+- Calculate new value based on current value
+- Apply to all rows (careful with no WHERE clause!)
+- Use transactions to be safe
+- Show before/after values
+
+Note: This is a destructive operation - use with caution!
+
+### Expected Output:
+StudentID before: 1, 2, 3, 4, 5...
+StudentID after: 1001, 1002, 1003, 1004, 1005...
+
+
+---
+## EXERCISE 14: UPDATE with CASE Statement - Conditional Updates
+---
+Update Grade for all courses based on current Grade value:
+- If Grade >= 80, set to 'A'
+- If Grade >= 70, set to 'B'
+- If Grade >= 60, set to 'C'
+- Otherwise, set to 'F'
+
+### Requirements:
+- Use UPDATE with CASE statement in SET clause
+- Apply conditional logic
+- Update StudentCourses table
+- Count rows updated in each grade category
+- Show sample updated records
+
+### Expected Output:
+Grades updated:
+- Grade 'A': 45 records updated
+- Grade 'B': 62 records updated
+- Grade 'C': 88 records updated
+- Grade 'F': 15 records updated
+Total: 210 records updated
+
+
+---
+## EXERCISE 15: UPDATE with JOIN - Update Fee Amounts by Department
+---
+Update Fee Amount in Fees table based on Student's Department:
+- Computer Science (DeptID=1): Increase by 10%
+- Electronics (DeptID=2): Increase by 5%
+- Other departments: Increase by 2%
+
+### Requirements:
+- Use UPDATE with JOIN
+- Match Students and Fees tables
+- Apply different updates by department
+- Use CASE for conditional increase
+- Count total amount changed
+
+### Expected Output:
+Fees updated by department:
+- CS dept: 125 fees updated, $1,250,000 → $1,375,000 (+10%)
+- Electronics: 118 fees updated, $750,000 → $787,500 (+5%)
+- Other: 234 fees updated, $2,000,000 → $2,040,000 (+2%)
+Total amount change: +$407,500
+
+
+---
+## EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
+---
+Retrieve all students with their enrolled courses.
+
+### Requirements:
+- Join Students and StudentCourses tables
+- Include StudentCourses with Courses table
+- Display: StudentID, Name, CourseName, Grade
+- Order by StudentID and CourseName
+- Show all enrollments with course details
+
+### Expected Output:
+StudentID | Name         | CourseName           | Grade
+-----------|--------------|----------------------|-------
+1          | Aarav Kumar  | Database Systems     | 92
+1          | Aarav Kumar  | Data Structures      | 88
+2          | Ananya Gupta | Database Systems     | 85
+2          | Ananya Gupta | Algorithms           | 90
+
+
+---
+## EXERCISE 17: SELECT with LEFT JOIN - Students Without Courses
+---
+Find all students who have NOT enrolled in any courses.
+
+### Requirements:
+- Use LEFT JOIN between Students and StudentCourses
+- WHERE StudentCourses.StudentID IS NULL
+- Display StudentID, Name, Email
+- Order by Name
+- This identifies students with no enrollments
+
+### Expected Output:
+StudentID | Name        | Email
+-----------|-------------|-------------------------
+150        | Not Enrolled| noenroll@college.edu
+175        | Nobody Yet  | nobody@college.edu
+200        | Waiting     | waiting@college.edu
+
+
+---
+## EXERCISE 18: SELECT with Multiple JOINs - Complete Student Course Info
+---
+Create comprehensive student course information including:
+- Student name and ID
+- Course name and ID
+- Department name
+- Faculty name
+- Grade and attendance info
+
+### Requirements:
+- Join: Students → StudentCourses → Courses → Departments
+- Join: Students → Attendance (aggregate attendance rate)
+- Join: Courses → Faculty (through Classes table)
+- Calculate attendance percentage
+- Display 20 records with all details
+
+### Expected Output:
+StudentID | StudentName | CourseName | DeptName         | FacultyName | Grade | Attendance
+-----------|------------|------------|------------------|------------|-------|----------
+1          | Aarav Kumar | Database   | Computer Science | Dr. Smith  | 92    | 95%
+1          | Aarav Kumar | Data Struc | Computer Science | Dr. Jones  | 88    | 92%
+
+
+---
+## EXERCISE 19: UPDATE with Subquery - Update Based on Aggregate
+---
+Update all students' status based on their attendance:
+- Attendance >= 90%: Status = 'Excellent'
+- Attendance >= 75%: Status = 'Good'
+- Attendance >= 60%: Status = 'Average'
+- Attendance < 60%: Status = 'At Risk'
+
+### Requirements:
+- Use subquery to calculate attendance per student
+- Join subquery results to Students table
+- Update Status column
+- Show distribution of new statuses
+- Verify with COUNT of each status
+
+### Expected Output:
+Status updated:
+- Excellent: 95 students
+- Good: 142 students
+- Average: 168 students
+- At Risk: 72 students
+Total: 477 students updated
+
+
+---
+## EXERCISE 20: SELECT with UNION - Combine Multiple Queries
+---
+Create a combined report of:
+1. Top 5 students by GPA (from StudentCourses)
+2. Top 5 students by Attendance (from Attendance)
+
+### Requirements:
+- Use UNION to combine two SELECT queries
+- Both queries must return same column count/types
+- Include a 'Category' column to identify source
+- Add ranking within each category
+- Order final result by Category then Rank
+
+### Expected Output:
+Rank | StudentID | Name          | Category   | Score
+------|-----------|---------------|------------|-------
+1    | 1         | Aarav Kumar   | GPA        | 3.95
+2    | 5         | Chitra Desai  | GPA        | 3.87
+3    | 8         | Deepak Nair   | GPA        | 3.76
+...
+1    | 3         | Arjun Singh   | Attendance | 98%
+2    | 7         | Gita Sharma   | Attendance | 97%
+3    | 10        | Harsh Kumar   | Attendance | 96%
+
+
+---
+KEY CONCEPTS FOR # BATCH 2:
+---
+1. UPDATE statement basics (single and multiple rows)
+2. UPDATE with expressions (calculations)
+3. UPDATE with CASE for conditional logic
+4. UPDATE with JOIN for related data updates
+5. INNER JOIN syntax and usage
+6. LEFT JOIN for finding non-matching rows
+7. Multiple JOINs in single query
+8. Subqueries in UPDATE statements
+9. UNION to combine query results
+10. Data modification with constraints
+
+COMPLEXITY PROGRESSION:
+- Ex 11: Basic UPDATE (1 row)
+- Ex 12: UPDATE multiple rows with WHERE
+- Ex 13: UPDATE with expressions
+- Ex 14: UPDATE with CASE statement
+- Ex 15: UPDATE with JOIN (advanced)
+- Ex 16: INNER JOIN (2 tables)
+- Ex 17: LEFT JOIN (finding missing data)
+- Ex 18: Multiple JOINs (4+ tables)
+- Ex 19: UPDATE with subquery
+- Ex 20: UNION combining queries
+
+PRACTICE NOTES:
+- Always backup data before UPDATE
+- Test WHERE clause with SELECT first
+- Use transactions for safety
+- Verify row count changes
+- Understand JOIN types (INNER, LEFT, RIGHT, FULL)
+- UNION requires compatible column types
+- ORDER BY can reference combined columns
+- Use DISTINCT in JOINs to avoid duplicates
+
+---
+END OF # BATCH 2 EXERCISES (11-20)
+Next: DELETE statements, more complex JOINs, aggregations
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 3 EXERCISES (21-30)
+Difficulty Level: INTERMEDIATE
+Focus: DELETE statements, constraints, data validation, and integrity
+---
+
+---
+## EXERCISE 21: DELETE Single Row - Remove Specific Student
+---
+Delete the student record with StudentID = 100 from the Students table.
+
+### Requirements:
+- Use DELETE statement
+- Specify exact WHERE condition (StudentID = 100)
+- Verify row exists before deletion
+- Show affected row before and after
+- Confirm deletion with COUNT
+
+### Expected Output:
+Before: Student record exists (StudentID = 100, Name = 'John Doe')
+After: Record is removed, no rows with StudentID = 100
+Rows deleted: 1
+
+
+---
+## EXERCISE 22: DELETE Multiple Rows - Remove All Students Without Courses
+---
+Delete all students who have NO course enrollments (no records in StudentCourses).
+
+### Requirements:
+- Find students with no matching StudentCourses records
+- Use DELETE with subquery or JOIN
+- Count affected rows
+- Verify deletion doesn't cascade incorrectly
+- Show student names deleted
+
+### Expected Output:
+Students without courses identified: 27
+Students deleted: 27
+Remaining students: 450
+Example deleted: "Not Enrolled", "Nobody Yet", "Waiting"
+
+
+---
+## EXERCISE 23: DELETE with JOIN - Remove Courses in Specific Department
+---
+Delete all courses belonging to a specific department (e.g., DeptID = 5).
+
+### Requirements:
+- Use DELETE with JOIN
+- Match Courses to Departments table
+- Delete only courses from Department 5
+- Verify related data implications
+- Count total records deleted
+
+### Expected Output:
+Courses in Department 5: 8 courses
+Courses deleted: 8
+Remaining courses: 42
+
+
+---
+## EXERCISE 24: DELETE with Subquery - Remove Low Attendance Students
+---
+Delete all students whose attendance is below 40% across all classes.
+
+### Requirements:
+- Calculate attendance percentage per student
+- Identify students below 40% threshold
+- Delete matching student records
+- Use subquery to identify candidates
+- Count deleted records and remaining students
+
+### Expected Output:
+Students with attendance < 40%: 12
+Students deleted: 12
+Remaining students: 465
+Lowest attendance deleted: 35%, 28%, 22%
+
+
+---
+## EXERCISE 25: DELETE with Condition - Remove Failed Courses
+---
+Delete all StudentCourse records where Grade = 'F' (failed courses).
+
+### Requirements:
+- Target StudentCourses table (not Students)
+- WHERE Grade = 'F'
+- Count failed courses before deletion
+- Keep student records intact
+- Show count of deleted enrollment records
+
+### Expected Output:
+StudentCourse records with Grade 'F': 45
+Records deleted: 45
+Remaining enrollments: 1205
+Students affected: 42 (still in system)
+
+
+---
+## EXERCISE 26: Data Constraint - Foreign Key Deletion Cascading
+---
+Demonstrate data constraints and CASCADE behavior when deleting parent records.
+
+### Requirements:
+- Delete a Department record
+- Observe what happens to dependent Students
+- Delete a Course record
+- Observe what happens to StudentCourses enrollments
+- Compare CASCADE vs RESTRICT vs SET NULL
+- Document constraint rules
+
+### Expected Output:
+Scenario 1: DELETE Department (with CASCADE)
+- Department deleted
+- All Students in that dept: 47 records deleted
+- Related StudentCourses: 180 records cascaded deleted
+
+Scenario 2: DELETE Department (with RESTRICT)
+- Deletion blocked with error
+- Reason: 47 student records still reference this dept
+
+
+---
+## EXERCISE 27: DELETE All Matching Conditions - Attendance Cleanup
+---
+Delete all attendance records older than 2024-12-31 from specific classes.
+
+### Requirements:
+- Delete from Attendance table
+- WHERE attendencedate < '2024-12-31' AND ClassID IN (101, 102, 103)
+- Count records before and after
+- Verify data integrity remains
+- Show impact on attendance statistics
+
+### Expected Output:
+Attendance records before: 600,000
+Attendance records matching criteria: 45,000
+Records deleted: 45,000
+Attendance records after: 555,000
+Classes affected: 3
+
+
+---
+## EXERCISE 28: DELETE with Complex Condition - Clean Invalid Records
+---
+Delete records with data quality issues:
+- StudentCourses where StudentID doesn't exist in Students
+- StudentCourses where CourseID doesn't exist in Courses
+- Attendance where StudentID doesn't exist in Students
+
+### Requirements:
+- Identify orphaned records (referential integrity issues)
+- Use subqueries with NOT IN
+- Delete invalid records
+- Count records deleted
+- Validate remaining data consistency
+
+### Expected Output:
+Orphaned StudentCourses: 3 records
+Orphaned Attendance: 5 records
+Total invalid records: 8
+Records deleted: 8
+Data validation: PASSED
+
+
+---
+## EXERCISE 29: DELETE and TRANSACTION - Safe Deletion with Rollback
+---
+Demonstrate transaction control with DELETE for safe data modification.
+
+### Requirements:
+- Use BEGIN, COMMIT, ROLLBACK
+- Delete a set of records
+- Review deletion before commit
+- Show capability to undo with ROLLBACK
+- Commit after verification
+- Log the transaction
+
+### Expected Output:
+Transaction Start: 2024-01-15 10:30:00
+Rows selected for deletion: 15
+Transaction Status: PENDING
+After Review: COMMIT
+Rows deleted: 15
+Transaction Status: COMMITTED
+Action: Can no longer ROLLBACK
+
+
+---
+## EXERCISE 30: DELETE vs UPDATE - When to Use Which
+---
+Compare DELETE and UPDATE operations and determine appropriate usage.
+
+### Requirements:
+- Show DELETE usage: Completely remove records
+- Show UPDATE usage: Change record status instead
+- Compare data retention in both approaches
+- Show advantages of soft-delete (UPDATE) vs hard-delete (DELETE)
+- Audit trail implications
+
+### Expected Output:
+Scenario 1: Hard Delete (DELETE)
+- Remove 10 failed students from database
+- Students table: 477 → 467 records
+- Problem: No audit trail, can't recover data
+
+Scenario 2: Soft Delete (UPDATE Status = 'Inactive')
+- Mark 10 failed students as inactive
+- Students table: Still 477 records
+- Benefit: Audit trail, can reactivate, referential integrity intact
+- Query active only: WHERE Status = 'Active'
+
+
+---
+KEY CONCEPTS FOR # BATCH 3:
+---
+1. DELETE statement basics (single and multiple rows)
+2. DELETE with WHERE conditions
+3. DELETE with subqueries
+4. DELETE with JOIN
+5. Foreign key constraints and CASCADE behavior
+6. Referential integrity violations
+7. Orphaned records (data quality)
+8. Transaction control (BEGIN, COMMIT, ROLLBACK)
+9. Soft delete vs hard delete patterns
+10. Data validation and cleanup
+
+COMPLEXITY PROGRESSION:
+- Ex 21: DELETE single row (basic)
+- Ex 22: DELETE multiple rows (with subquery)
+- Ex 23: DELETE with JOIN (cross-table)
+- Ex 24: DELETE with aggregate condition (complex)
+- Ex 25: DELETE on junction table
+- Ex 26: Constraint cascading (understanding implications)
+- Ex 27: DELETE complex conditions (cleanup)
+- Ex 28: DELETE orphaned data (data quality)
+- Ex 29: DELETE with transactions (safety)
+- Ex 30: DELETE strategy comparison (architectural)
+
+CRITICAL SAFETY NOTES:
+- DELETE is PERMANENT (usually no undo!)
+- Always test WHERE with SELECT first
+- Use transactions for large deletions
+- Back up before major deletes
+- Check foreign key constraints
+- Verify row count before/after
+- Consider soft-delete (UPDATE) for audit trails
+- CASCADE can delete more than expected
+- Test on small dataset first
+
+---
+END OF # BATCH 3 EXERCISES (21-30)
+Next: Complex filtering, transactions, optimization
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 4 EXERCISES (31-40)
+Difficulty Level: INTERMEDIATE to ADVANCED
+Focus: Complex filtering, aggregate functions, GROUP BY, HAVING, subqueries
+---
+
+---
+## EXERCISE 31: GROUP BY and COUNT - Student Enrollment Distribution
+---
+Find the number of students enrolled in each course.
+
+### Requirements:
+- Count enrollments per course
+- Join StudentCourses with Courses table
+- Display CourseName and enrollment count
+- Order by count descending
+- Include courses with 0 enrollments
+
+### Expected Output:
+CourseName            | EnrollmentCount
+----------------------|----------------
+Database Systems      | 145
+Algorithms            | 128
+Data Structures       | 110
+Web Development       | 87
+Discrete Math         | 0
+
+
+---
+## EXERCISE 32: GROUP BY Multiple Columns - Student Grades by Course
+---
+Get grade distribution (A, B, C, F) for each course.
+
+### Requirements:
+- Group by Course and Grade
+- Count occurrences of each grade per course
+- Display CourseName, Grade, StudentCount
+- Order by CourseName, Grade
+- Show all grade combinations
+
+### Expected Output:
+CourseName       | Grade | StudentCount
+-----------------|-------|-------------
+Algorithms       | A     | 34
+Algorithms       | B     | 56
+Algorithms       | C     | 28
+Algorithms       | F     | 10
+Database Systems | A     | 45
+... (and so on)
+
+
+---
+## EXERCISE 33: HAVING Clause - Filter Groups
+---
+Find courses with more than 100 students enrolled.
+
+### Requirements:
+- Use GROUP BY for aggregation
+- Use HAVING to filter groups (not WHERE)
+- Count enrollments per course
+- Only show courses with > 100 students
+- Order by enrollment count
+
+### Expected Output:
+CourseName            | EnrollmentCount | AvgGrade
+----------------------|-----------------|----------
+Database Systems      | 145             | 82.5
+Algorithms            | 128             | 79.3
+Data Structures       | 110             | 81.2
+
+
+---
+## EXERCISE 34: Aggregate Functions - Department Statistics
+---
+Calculate min, max, average, and count for student grades per department.
+
+### Requirements:
+- Use MIN(), MAX(), AVG(), COUNT() functions
+- Group by Department
+- Include DeptName and all statistics
+- Order by average grade descending
+- Show total students per dept
+
+### Expected Output:
+DeptName             | AvgGrade | MinGrade | MaxGrade | StudentCount
+----------------------|----------|----------|----------|---------------
+Computer Science     | 84.5     | 35       | 98       | 125
+Electronics          | 78.2     | 42       | 95       | 98
+Information Tech     | 80.3     | 38       | 97       | 102
+
+
+---
+## EXERCISE 35: SUM and AVG with GROUP BY - Fee Analysis
+---
+Calculate total and average fees collected per department.
+
+### Requirements:
+- Use SUM() for total fees
+- Use AVG() for average fees
+- Group by Department
+- Calculate also: count of students, count of fee records
+- Show financial metrics per department
+
+### Expected Output:
+DeptName             | StudentCount | FeeRecords | TotalFees   | AvgFeePerStudent
+----------------------|--------------|-----------|-------------|------------------
+Computer Science     | 125          | 250       | $12,500,000 | $100,000
+Electronics          | 98           | 196       | $9,800,000  | $100,000
+Information Tech     | 102          | 204       | $10,200,000 | $100,000
+
+
+---
+## EXERCISE 36: DISTINCT with Aggregates - Unique Value Counts
+---
+Find number of unique students per course and unique grades per student.
+
+### Requirements:
+- Use COUNT(DISTINCT StudentID) for unique students per course
+- Use COUNT(DISTINCT Grade) for unique grades per student
+- Show courses with diverse grades
+- Display variety metrics
+- Order by uniqueness
+
+### Expected Output:
+CourseName            | UniqueStudents | UniqueGrades
+----------------------|----------------|-------------
+Database Systems      | 145            | 4
+Algorithms            | 128            | 4
+Web Development       | 87             | 3
+
+
+---
+## EXERCISE 37: Subquery in WHERE - Complex Filtering
+---
+Find all students who scored above the average grade in their course.
+
+### Requirements:
+- Calculate average grade per course
+- Find students exceeding their course average
+- Use subquery in WHERE clause
+- Display StudentName, CourseName, Grade, CourseAverage
+- Order by course then grade
+
+### Expected Output:
+StudentName | CourseName       | Grade | CourseAverage
+------------|------------------|-------|---------------
+Aarav Kumar | Database Systems | 92    | 82.5
+Ananya...   | Algorithms       | 90    | 79.3
+Arjun Singh | Data Structures  | 88    | 81.2
+
+
+---
+## EXERCISE 38: Nested Subqueries - Multi-Level Filtering
+---
+Find students in departments where average attendance exceeds 75%.
+
+### Requirements:
+- Calculate average attendance per department
+- Filter departments with > 75% attendance
+- Find all students in those departments
+- Use nested subqueries
+- Display DeptName, StudentName, AttendancePercent
+
+### Expected Output:
+DeptName         | StudentName | AttendancePercent
+-----------------|-------------|------------------
+Computer Science | Aarav Kumar | 95%
+Computer Science | Ananya...   | 92%
+Electronics      | Arjun Singh | 88%
+
+
+---
+## EXERCISE 39: CASE in GROUP BY - Categorize and Count
+---
+Categorize students by attendance level and count in each category.
+
+### Requirements:
+- Use CASE to create attendance categories
+- Excellent: >= 90%, Good: 75-90%, Average: 60-75%, Poor: < 60%
+- Count students in each category
+- Show category and student count
+- Include percentage of total
+
+### Expected Output:
+AttendanceCategory | StudentCount | PercentageOfTotal
+-------------------|--------------|------------------
+Excellent          | 95           | 20%
+Good               | 142          | 30%
+Average            | 168          | 35%
+Poor               | 72           | 15%
+Total              | 477          | 100%
+
+
+---
+## EXERCISE 40: Complex Aggregation - Student Performance Dashboard
+---
+Create a comprehensive student performance report with multiple metrics.
+
+### Requirements:
+- Calculate: total courses, average GPA, attendance rate, failed courses
+- Join multiple tables (Students, Courses, Attendance, Grades)
+- Group by student with multiple aggregates
+- Show top 10 students by GPA
+- Include all metrics in single query
+
+### Expected Output:
+StudentID | Name          | CourseCount | AvgGPA | Attendance | FailedCourses
+-----------|---------------|-------------|--------|------------|---------------
+1          | Aarav Kumar   | 6          | 3.95   | 95%        | 0
+2          | Ananya Gupta  | 6          | 3.87   | 92%        | 0
+3          | Arjun Singh   | 5          | 3.76   | 88%        | 1
+
+
+---
+KEY CONCEPTS FOR # BATCH 4:
+---
+1. GROUP BY single and multiple columns
+2. Aggregate functions: COUNT, SUM, AVG, MIN, MAX
+3. HAVING clause for filtering groups
+4. DISTINCT in aggregate functions
+5. Subqueries in WHERE clause
+6. Nested subqueries (multiple levels)
+7. CASE statements in aggregation
+8. Multiple JOINs with aggregates
+9. Complex filtering conditions
+10. Performance dashboard queries
+
+COMPLEXITY PROGRESSION:
+- Ex 31: Basic GROUP BY with COUNT
+- Ex 32: GROUP BY multiple columns
+- Ex 33: HAVING for group filtering
+- Ex 34: Multiple aggregate functions
+- Ex 35: SUM and AVG with GROUP BY
+- Ex 36: DISTINCT with aggregates
+- Ex 37: Subquery in WHERE (compare to aggregate)
+- Ex 38: Nested subqueries (multi-level)
+- Ex 39: CASE in GROUP BY (categorization)
+- Ex 40: Complex multi-table aggregation (dashboard)
+
+AGGREGATE FUNCTION SYNTAX:
+- COUNT(): Count rows (includes NULL by default)
+- COUNT(column): Count non-NULL values
+- COUNT(DISTINCT column): Count unique values
+- SUM(column): Total of numeric values
+- AVG(column): Average of numeric values
+- MIN(column): Minimum value
+- MAX(column): Maximum value
+- GROUP_CONCAT(): Concatenate values (MySQL)
+- STRING_AGG(): Concatenate values (PostgreSQL)
+
+COMMON PATTERNS:
+- GROUP BY followed by ORDER BY for sorting results
+- HAVING after GROUP BY for filtering aggregates
+- WHERE before GROUP BY for filtering rows
+- DISTINCT to eliminate duplicates
+- Multiple aggregates in single query
+- CASE for conditional aggregation
+
+---
+END OF # BATCH 4 EXERCISES (31-40)
+Next: Window functions, ranking, advanced analytics
+---
+
+
+---
+SQL DML FUNDAMENTALS - # BATCH 5 EXERCISES (41-50)
+Difficulty Level: ADVANCED
+Focus: Window functions, ranking, advanced analytics, and optimization
+---
+
+---
+## EXERCISE 41: ROW_NUMBER - Rank Students by GPA
+---
+Assign a unique row number to each student ranked by GPA within their department.
+
+### Requirements:
+- Use ROW_NUMBER() window function
+- Partition by Department
+- Order by GPA descending
+- Display StudentName, GPA, DeptName, and RowNumber
+- Show top 3 students per department
+
+### Expected Output:
+DeptName         | RowNumber | StudentName | GPA
+-----------------|-----------|-------------|-------
+Computer Science | 1         | Aarav Kumar | 3.95
+Computer Science | 2         | Ananya...   | 3.87
+Computer Science | 3         | Arjun Singh | 3.76
+Electronics      | 1         | Bhargav...  | 3.58
+Electronics      | 2         | Chitra...   | 3.52
+
+
+---
+## EXERCISE 42: RANK and DENSE_RANK - Grade Rankings
+---
+Compare RANK() and DENSE_RANK() for handling tied scores.
+
+### Requirements:
+- Use RANK() and DENSE_RANK() window functions
+- Rank students by average grade
+- Show differences when students have same grade
+- Display StudentName, AvgGrade, Rank, DenseRank
+- Explain difference between RANK and DENSE_RANK
+
+### Expected Output:
+StudentName | AvgGrade | Rank | DenseRank
+------------|----------|------|----------
+Aarav Kumar | 3.95     | 1    | 1
+Ananya...   | 3.95     | 1    | 1
+Arjun Singh | 3.76     | 3    | 2
+Bhargav...  | 3.65     | 4    | 3
+
+
+---
+## EXERCISE 43: LAG and LEAD - Compare Sequential Values
+---
+Use LAG and LEAD to compare a student's grades with previous and next enrollments.
+
+### Requirements:
+- Use LAG() to get previous course grade
+- Use LEAD() to get next course grade
+- Order by enrollment date
+- Display StudentName, CourseName, Grade, PreviousGrade, NextGrade
+- Analyze grade trends over time
+
+### Expected Output:
+StudentName | CourseName       | Grade | PreviousGrade | NextGrade
+------------|------------------|-------|---------------|----------
+Aarav Kumar | Database Systems | 92    | NULL          | 88
+Aarav Kumar | Data Structures  | 88    | 92            | 90
+Aarav Kumar | Algorithms       | 90    | 88            | NULL
+
+
+---
+## EXERCISE 44: FIRST_VALUE and LAST_VALUE - Window Frame Analysis
+---
+Use FIRST_VALUE and LAST_VALUE to compare against first and last values in window.
+
+### Requirements:
+- Get first course grade and last course grade per student
+- Calculate improvement/decline
+- Display StudentName, FirstCourse, FirstGrade, LastCourse, LastGrade, Change
+- Order by student, then chronologically
+- Show improvement metrics
+
+### Expected Output:
+StudentName | FirstCourse      | FirstGrade | LastCourse | LastGrade | Change
+------------|------------------|------------|------------|-----------|--------
+Aarav Kumar | Database Systems | 92         | Algorithms | 90        | -2
+Ananya...   | Algorithms       | 90         | Web Dev    | 85        | -5
+Arjun Singh | Data Structures  | 88         | Database   | 92        | +4
+
+
+---
+## EXERCISE 45: SUM OVER - Running Total Calculation
+---
+Calculate running totals of fees collected per student over time.
+
+### Requirements:
+- Use SUM() OVER window function
+- Create running total of fees chronologically
+- Partition by Student
+- Order by payment date
+- Display StudentName, FeeAmount, RunningTotal, PaymentDate
+
+### Expected Output:
+StudentName | PaymentDate | FeeAmount | RunningTotal
+------------|-------------|-----------|-------------
+Aarav Kumar | 2024-01-15  | 50000     | 50000
+Aarav Kumar | 2024-06-15  | 50000     | 100000
+Ananya...   | 2024-01-20  | 50000     | 50000
+Ananya...   | 2024-06-20  | 50000     | 100000
+
+
+---
+## EXERCISE 46: PERCENT_RANK - Percentile Distribution
+---
+Calculate percentile rank of students based on GPA.
+
+### Requirements:
+- Use PERCENT_RANK() window function
+- Rank all students by GPA
+- Calculate percentage position within department
+- Display StudentName, GPA, PercentRank, DeptName
+- Show quartile classifications
+
+### Expected Output:
+DeptName         | StudentName | GPA  | PercentRank | Quartile
+-----------------|-------------|------|-------------|----------
+Computer Science | Aarav Kumar | 3.95 | 0.95        | Top 5%
+Computer Science | Ananya...   | 3.87 | 0.85        | Top 15%
+Computer Science | Arjun Singh | 3.76 | 0.75        | Top 25%
+
+
+---
+## EXERCISE 47: NTILE - Distribution into Quantiles
+---
+Divide students into quartiles based on attendance.
+
+### Requirements:
+- Use NTILE(4) to divide into 4 equal groups
+- Partition by Department
+- Order by attendance percentage
+- Display StudentName, Attendance, Quartile, DeptName
+- Show distribution across quartiles
+
+### Expected Output:
+DeptName         | StudentName | Attendance | Quartile
+-----------------|-------------|------------|----------
+Computer Science | Aarav Kumar | 95%        | 1
+Computer Science | Ananya...   | 92%        | 1
+Computer Science | Arjun Singh | 88%        | 2
+Computer Science | Bhargav...  | 85%        | 3
+
+
+---
+## EXERCISE 48: Window Frame Specification - Moving Average
+---
+Calculate moving average of student grades across courses (3-course window).
+
+### Requirements:
+- Use window frame: ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+- Calculate 3-course moving average
+- Order chronologically by enrollment
+- Display StudentName, CourseName, Grade, MovingAvg
+- Show trend smoothing
+
+### Expected Output:
+StudentName | CourseName       | Grade | MovingAvg
+------------|------------------|-------|----------
+Aarav Kumar | Database Systems | 92    | 92.00
+Aarav Kumar | Data Structures  | 88    | 90.00
+Aarav Kumar | Algorithms       | 90    | 90.00
+Aarav Kumar | Web Development  | 85    | 87.67
+
+
+---
+## EXERCISE 49: Multiple Window Functions - Comprehensive Analytics
+---
+Combine multiple window functions for comprehensive student analytics.
+
+### Requirements:
+- Use ROW_NUMBER, RANK, AVG, SUM in same query
+- Rank students and show running statistics
+- Partition by department with multiple aggregates
+- Display all metrics in single result set
+- Show both individual and aggregate data
+
+### Expected Output:
+DeptName         | StudentName | RowNum | Rank | AvgGPA | TotalFees | DeptAvgGPA
+-----------------|-------------|--------|------|--------|-----------|----------
+Computer Science | Aarav Kumar | 1      | 1    | 3.95   | 100000    | 84.5
+Computer Science | Ananya...   | 2      | 2    | 3.87   | 100000    | 84.5
+Computer Science | Arjun Singh | 3      | 3    | 3.76   | 100000    | 84.5
+
+
+---
+## EXERCISE 50: Query Optimization and Performance - Index Strategy
+---
+Optimize a complex query with indexes, execution plans, and best practices.
+
+### Requirements:
+- Analyze complex multi-join query execution plan
+- Identify missing indexes for improved performance
+- Rewrite query for optimal execution
+- Compare query cost before and after optimization
+- Document performance improvements (time, resources)
+
+### Expected Output:
+Query Analysis:
+- Original query cost: 2,500 units
+- Optimized query cost: 850 units
+- Performance improvement: 66% faster
+- Index recommendations implemented: 5 indexes
+- Execution time: 2.5s → 0.8s
+
+Before Optimization:
+- Full table scan on StudentCourses (150,000 rows)
+- Nested loop join with Courses
+- Nested loop join with Students
+
+After Optimization:
+- Index on StudentCourses(StudentID, CourseID, Grade)
+- Index on Courses(CourseID, DeptID)
+- Index on Students(StudentID, DeptID)
+- Index on Attendance(StudentID, Status, AttendanceDate)
+- Execution plan: Seek instead of scan
+
+
+---
+KEY CONCEPTS FOR # BATCH 5:
+---
+1. ROW_NUMBER() - Unique row numbers
+2. RANK() and DENSE_RANK() - Ranking with ties
+3. LAG() and LEAD() - Access previous/next rows
+4. FIRST_VALUE() and LAST_VALUE() - Window boundaries
+5. SUM() OVER - Running totals
+6. AVG() OVER - Moving averages
+7. PERCENT_RANK() - Percentile position
+8. NTILE() - Quantile distribution
+9. Window frame specification (ROWS/RANGE)
+10. Query optimization and performance tuning
+
+COMPLEXITY PROGRESSION:
+- Ex 41: Basic ROW_NUMBER partitioning
+- Ex 42: RANK vs DENSE_RANK comparison
+- Ex 43: LAG/LEAD for sequential analysis
+- Ex 44: FIRST_VALUE/LAST_VALUE comparison
+- Ex 45: Running totals with SUM OVER
+- Ex 46: Percentile ranking
+- Ex 47: NTILE for distribution
+- Ex 48: Window frames (ROWS BETWEEN)
+- Ex 49: Multiple window functions combined
+- Ex 50: Query optimization and indexing
+
+WINDOW FUNCTION SYNTAX:
+function() OVER (
+    [PARTITION BY column]
+    [ORDER BY column [ASC|DESC]]
+    [ROWS|RANGE BETWEEN ... AND ...]
+)
+
+COMMON PATTERNS:
+- PARTITION BY for grouping
+- ORDER BY for ordering within partition
+- ROWS BETWEEN for frame specification
+- Multiple window functions in single query
+- Combining with WHERE, GROUP BY, HAVING
+
+PERFORMANCE CONSIDERATIONS:
+- Window functions efficient for large datasets
+- Avoid nested window functions if possible
+- Use proper indexing on PARTITION BY columns
+- ORDER BY heavily impacts performance
+- Frame specification affects computation
+
+---
+END OF # BATCH 5 EXERCISES (41-50)
+Course Complete: All 50 SQL DML exercises finished
+Topics: SELECT, UPDATE, DELETE, Aggregates, Window Functions
+---

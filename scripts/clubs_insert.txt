@@ -1,0 +1,71 @@
+-- Clubs Data Insert Script
+-- Generated: 2025-12-25 20:37:18
+-- Total Records: 30
+
+-- ============================================
+-- Data Summary:
+-- Total Clubs: 30
+--
+-- Club List:
+--   1. Computer Science Club
+--   2. Photography Club
+--   3. Debate Club
+--   4. Science Club
+--   5. Cultural Club
+--   6. Sports Club
+--   7. Coding Bootcamp
+--   8. Art & Design Club
+--   9. Music Club
+--   10. Drama Club
+--   11. Environmental Club
+--   12. Entrepreneurship Club
+--   13. Mathematics Club
+--   14. Electronics Club
+--   15. Film Making Club
+--   16. Robotics Club
+--   17. Dance Club
+--   18. Chess Club
+--   19. Astronomy Club
+--   20. Literature Club
+--   21. Business Club
+--   22. Social Service Club
+--   23. Gaming Club
+--   24. Fitness Club
+--   25. Cooking Club
+--   26. Travel Club
+--   27. Tech Innovation Lab
+--   28. Leadership Forum
+--   29. Volunteer Network
+--   30. Language Exchange Club
+-- ============================================
+
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (1, 'Computer Science Club', 192);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (2, 'Photography Club', 399);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (3, 'Debate Club', 354);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (4, 'Science Club', 244);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (5, 'Cultural Club', 5);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (6, 'Sports Club', 467);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (7, 'Coding Bootcamp', 456);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (8, 'Art & Design Club', 413);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (9, 'Music Club', 242);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (10, 'Drama Club', 394);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (11, 'Environmental Club', 211);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (12, 'Entrepreneurship Club', 321);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (13, 'Mathematics Club', 144);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (14, 'Electronics Club', 386);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (15, 'Film Making Club', 167);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (16, 'Robotics Club', 62);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (17, 'Dance Club', 358);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (18, 'Chess Club', 357);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (19, 'Astronomy Club', 389);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (20, 'Literature Club', 453);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (21, 'Business Club', 461);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (22, 'Social Service Club', 123);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (23, 'Gaming Club', 173);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (24, 'Fitness Club', 355);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (25, 'Cooking Club', 152);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (26, 'Travel Club', 443);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (27, 'Tech Innovation Lab', 231);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (28, 'Leadership Forum', 197);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (29, 'Volunteer Network', 224);
+INSERT INTO Clubs (ClubID, ClubName, PresidentID) VALUES (30, 'Language Exchange Club', 58);

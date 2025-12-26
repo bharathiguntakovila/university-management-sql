@@ -1,0 +1,3695 @@
+================================================================================
+SQL DML AND REPORTING EXERCISES - BATCH 1 (Exercises 1-10)
+ANSWER KEY AND SAMPLE OUTPUTS
+================================================================================
+Student Learning Project: University Management System Database
+Last Updated: 25-Dec-2025
+
+================================================================================
+EXERCISE 1: Basic SELECT - Count Total Students
+================================================================================
+ANSWER:
+
+SELECT COUNT(*) AS Total_Students
+FROM Students;
+
+EXPLANATION:
+- COUNT(*) counts all rows in the Students table
+- AS renames the result column to "Total_Students"
+- No WHERE clause needed since we want all students
+
+SAMPLE OUTPUT:
+Total_Students
+---------------
+           477
+
+
+================================================================================
+EXERCISE 2: Basic SELECT with WHERE - Students from Specific Department
+================================================================================
+ANSWER:
+
+SELECT StudentID, Name, Email
+FROM Students
+WHERE DeptID = 1;
+
+EXPLANATION:
+- SELECT specifies which columns to display
+- FROM indicates the table to query
+- WHERE filters for only records where DeptID equals 1
+- The condition DeptID = 1 uses single equals for comparison (not comparison in WHERE)
+
+SAMPLE OUTPUT:
+StudentID | Name              | Email
+-----------+-------------------+---------------------------
+        1 | Aarav Kumar       | aarav.kumar@college.edu
+        2 | Aditya Singh      | aditya.singh@college.edu
+        3 | Akshay Patel      | akshay.patel@gmail.com
+       ... (and more students from DeptID 1)
+
+
+================================================================================
+EXERCISE 3: ORDER BY - Faculty Names Sorted Alphabetically
+================================================================================
+ANSWER:
+
+SELECT FacultyID, Name, Email
+FROM Faculty
+ORDER BY Name ASC;
+
+EXPLANATION:
+- ORDER BY Name sorts the results by the Name column
+- ASC means ascending (A to Z) - this is the default
+- Can omit ASC and just write ORDER BY Name (same effect)
+- DESC would sort Z to A (descending)
+
+SAMPLE OUTPUT:
+FacultyID | Name                  | Email
+-----------+-----------------------+------------------------------
+       15 | Anil Deshmukh        | anil.deshmukh@college.edu
+       23 | Bhavana Iyer         | bhavana.iyer@college.edu
+        8 | Chirag Verma         | chirag.verma@college.edu
+       ... (remaining faculty in alphabetical order)
+
+
+================================================================================
+EXERCISE 4: Basic JOIN - Student Names with Department Names
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name AS Student_Name, D.DeptName
+FROM Students S
+INNER JOIN Departments D
+  ON S.DeptID = D.DeptID
+ORDER BY S.StudentID;
+
+EXPLANATION:
+- FROM Students S creates alias "S" for Students table
+- INNER JOIN Departments D links based on matching DeptID
+- ON S.DeptID = D.DeptID is the join condition
+- Aliases (S, D) make the query shorter and clearer
+- AS renames the Student Name column
+- ORDER BY ensures consistent output order
+
+SAMPLE OUTPUT:
+StudentID | Student_Name      | DeptName
+-----------+-------------------+-------------------
+        1 | Aarav Kumar       | Computer Science
+        2 | Aditya Singh      | Computer Science
+        3 | Akshay Patel      | Computer Science
+        4 | Amara Khan        | Electronics
+        5 | Ananya Gupta      | Information Technology
+       ... (all 477 students with their departments)
+
+
+================================================================================
+EXERCISE 5: COUNT with GROUP BY - Students per Department
+================================================================================
+ANSWER:
+
+SELECT D.DeptID, D.DeptName, COUNT(S.StudentID) AS Number_of_Students
+FROM Departments D
+LEFT JOIN Students S
+  ON D.DeptID = S.DeptID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY Number_of_Students DESC;
+
+EXPLANATION:
+- GROUP BY groups records by Department
+- COUNT(S.StudentID) counts students in each group
+- LEFT JOIN includes all departments, even if no students
+- WHERE clause comes BEFORE GROUP BY; HAVING comes AFTER GROUP BY
+- Must list all non-aggregated columns in GROUP BY
+- ORDER BY DESC shows departments with most students first
+
+SAMPLE OUTPUT:
+DeptID | DeptName              | Number_of_Students
+-------+----------------------+-------------------
+     3 | Information Technology|            50
+     1 | Computer Science      |            48
+     7 | Commerce              |            47
+     2 | Electronics           |            47
+     5 | Mechanical Engineering|            47
+     4 | Civil Engineering     |            46
+     6 | Electrical Engineering|            46
+     9 | Physics               |            46
+     8 | Chemistry             |            46
+    10 | Biology               |            44
+
+
+================================================================================
+EXERCISE 6: DISTINCT - Unique Departments with Faculty
+================================================================================
+ANSWER:
+
+SELECT DISTINCT D.DeptID, D.DeptName
+FROM Departments D
+INNER JOIN Faculty F
+  ON D.DeptID = F.DeptID
+ORDER BY D.DeptID;
+
+EXPLANATION:
+- DISTINCT eliminates duplicate department records
+- Since we're joining with Faculty, only departments with faculty appear
+- INNER JOIN automatically filters to departments with faculty
+- Without DISTINCT, a department with 5 faculty members would appear 5 times
+- ORDER BY sorts by DeptID for clean output
+
+SAMPLE OUTPUT:
+DeptID | DeptName
+-------+-------------------
+     1 | Computer Science
+     2 | Electronics
+     3 | Information Technology
+     4 | Civil Engineering
+     5 | Mechanical Engineering
+     6 | Electrical Engineering
+     7 | Commerce
+     8 | Chemistry
+     9 | Physics
+    10 | Biology
+
+
+================================================================================
+EXERCISE 7: Aggregate Functions - Average and Maximum
+================================================================================
+ANSWER:
+
+SELECT ROUND(AVG(Credits), 2) AS Avg_Credits, MAX(Credits) AS Max_Credits
+FROM Courses;
+
+EXPLANATION:
+- AVG(Credits) calculates the average of all course credits
+- MAX(Credits) finds the highest credit value
+- ROUND(..., 2) rounds the average to 2 decimal places
+- AS renames the columns for clarity
+- No GROUP BY needed since we want aggregate for entire table
+- These are aggregate functions that work on the entire dataset
+
+SAMPLE OUTPUT:
+Avg_Credits | Max_Credits
+-----------+------------
+       3.45|          4
+
+
+================================================================================
+EXERCISE 8: Multiple JOINs - Student, Course, and Faculty Information
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name AS Student_Name, C.CourseName, F.Name AS Faculty_Name
+FROM Students S
+INNER JOIN StudentCourses SC
+  ON S.StudentID = SC.StudentID
+INNER JOIN Courses C
+  ON SC.CourseID = C.CourseID
+INNER JOIN Classes CL
+  ON C.CourseID = CL.CourseID
+INNER JOIN Faculty F
+  ON CL.FacultyID = F.FacultyID
+ORDER BY S.StudentID, C.CourseName;
+
+EXPLANATION:
+- Multiple INNER JOINs chain tables together
+- Each ON clause specifies the join condition
+- Order of joins matters for readability and performance
+- Aliases (S, SC, C, CL, F) distinguish between tables
+- Each table must be joined to the next via a common key
+- ORDER BY ensures consistent result order
+- This query shows which students study which courses with which faculty
+
+SAMPLE OUTPUT:
+StudentID | Student_Name     | CourseName           | Faculty_Name
+-----------+------------------+----------------------+----------------
+        1 | Aarav Kumar      | Database Systems     | Anil Deshmukh
+        1 | Aarav Kumar      | Web Development      | Chirag Verma
+        1 | Aarav Kumar      | Data Structures      | Bhavana Iyer
+        2 | Aditya Singh     | Database Systems     | Anil Deshmukh
+        2 | Aditya Singh     | Operating Systems    | Priya Sharma
+       ... (many more rows showing student-course-faculty combinations)
+
+
+================================================================================
+EXERCISE 9: WHERE Clause with Multiple Conditions - Advanced Filtering
+================================================================================
+ANSWER:
+
+SELECT StudentID, Name, Email, DeptID
+FROM Students
+WHERE (DeptID = 1 OR DeptID = 2)
+  AND Email LIKE '%gmail.com'
+ORDER BY StudentID;
+
+EXPLANATION:
+- OR operator means if EITHER condition is true
+- AND requires ALL conditions to be true
+- Parentheses clarify the logic: (DeptID=1 OR DeptID=2) AND Email LIKE...
+- LIKE operator does pattern matching
+- '%gmail.com' means "ends with gmail.com" (% is wildcard)
+- Single quotes required for string literals in SQL
+- Without parentheses, the logic might be evaluated differently due to precedence
+
+SAMPLE OUTPUT:
+StudentID | Name          | Email                 | DeptID
+-----------+---------------+-----------------------+-------
+        4 | Amara Khan    | amara.khan@gmail.com  |     1
+       12 | Bhavesh Kumar | bhavesh.kumar@gmail.com|     2
+       18 | Chitra Desai  | chitra.desai@gmail.com|     1
+       ... (more students from dept 1 or 2 with gmail)
+
+
+================================================================================
+EXERCISE 10: ORDER BY with LIMIT - Top 10 Courses by Credits
+================================================================================
+ANSWER:
+
+SELECT CourseID, CourseName, Credits
+FROM Courses
+ORDER BY Credits DESC, CourseName ASC
+LIMIT 10;
+
+Note: In Oracle SQL, use ROWNUM or FETCH FIRST 10 ROWS instead of LIMIT:
+SELECT CourseID, CourseName, Credits
+FROM Courses
+ORDER BY Credits DESC, CourseName ASC
+FETCH FIRST 10 ROWS ONLY;
+
+EXPLANATION:
+- ORDER BY Credits DESC sorts by credits highest to lowest
+- Secondary sort: CourseName ASC breaks ties alphabetically
+- LIMIT 10 (MySQL/PostgreSQL) or FETCH FIRST 10 ROWS (Oracle) returns only 10 rows
+- Multiple ORDER BY columns use comma separation
+- DESC and ASC can be different for different columns
+
+SAMPLE OUTPUT:
+CourseID | CourseName                    | Credits
+---------+-------------------------------+--------
+       15 | Artificial Intelligence      |       4
+       28 | Machine Learning             |       4
+       42 | Advanced Databases           |       4
+       53 | Cloud Computing              |       4
+       67 | Cybersecurity Fundamentals   |       4
+       81 | Data Science                 |       4
+       94 | Network Security             |       4
+      108 | Software Engineering         |       4
+      121 | Web Development              |       4
+      135 | Mobile Application Dev       |       4
+
+
+================================================================================
+KEY CONCEPTS COVERED IN BATCH 1:
+================================================================================
+1. Basic SELECT statement structure
+2. WHERE clause for filtering
+3. ORDER BY for sorting (ASC/DESC)
+4. COUNT and aggregate functions
+5. INNER JOIN for combining tables
+6. LEFT JOIN for including unmatched rows
+7. GROUP BY for grouping results
+8. DISTINCT for removing duplicates
+9. LIKE operator for pattern matching
+10. Aliases for tables and columns
+11. LIMIT/FETCH for limiting results
+12. AS for renaming columns
+13. Aggregate functions: COUNT, AVG, MAX
+14. Logical operators: AND, OR
+15. Multiple joins and complex queries
+
+================================================================================
+COMMON MISTAKES TO AVOID:
+================================================================================
+1. Forgetting to include all non-aggregated columns in GROUP BY
+2. Using single = for comparison in SELECT/WHERE (correct), but == in some databases
+3. Missing ON clause when joining tables
+4. Not using quotes around string literals in WHERE conditions
+5. Confusing AND/OR precedence - always use parentheses to be clear
+6. Using WHERE to filter after GROUP BY (should use HAVING instead)
+7. Forgetting to join tables before selecting from multiple tables
+8. Using LIKE without the % wildcard when pattern matching
+9. Not considering NULL values in aggregate functions (COUNT excludes NULLs)
+10. ORDER BY column position (ORDER BY 1) may fail in views/subqueries
+
+================================================================================
+END OF BATCH 1 ANSWERS
+Ready for Batch 2 (Exercises 11-20)
+================================================================================
+
+
+================================================================================
+EXERCISE 11: HAVING Clause - Departments with Average Student Count
+================================================================================
+ANSWER:
+
+SELECT D.DeptID, D.DeptName, 
+       ROUND(AVG(sc_count.student_count), 2) AS Avg_Students_Per_Course
+FROM Departments D
+INNER JOIN Courses C ON D.DeptID = C.DeptID
+INNER JOIN (
+    SELECT CourseID, COUNT(StudentID) AS student_count
+    FROM StudentCourses
+    GROUP BY CourseID
+) sc_count ON C.CourseID = sc_count.CourseID
+GROUP BY D.DeptID, D.DeptName
+HAVING AVG(sc_count.student_count) > 5
+ORDER BY Avg_Students_Per_Course DESC;
+
+EXPLANATION:
+- HAVING filters groups AFTER aggregation (WHERE filters BEFORE)
+- Subquery calculates student count per course
+- Multiple GROUP BY columns must match in both GROUP BY and SELECT (if non-aggregated)
+- ROUND(..., 2) limits decimal places
+- INNER JOIN ensures only departments and courses with data are included
+
+SAMPLE OUTPUT:
+DeptID | DeptName              | Avg_Students_Per_Course
+-------+----------------------+----------------------
+     1 | Computer Science     | 32.5
+     3 | Information Technology| 28.3
+     2 | Electronics          | 25.7
+     ... (departments with high average enrollment)
+
+
+================================================================================
+EXERCISE 12: Subquery in FROM - Course Statistics
+================================================================================
+ANSWER:
+
+SELECT D.DeptName, COUNT(C.CourseID) AS Total_Courses
+FROM Departments D
+INNER JOIN Courses C ON D.DeptID = C.DeptID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY Total_Courses DESC;
+
+-- Alternative using subquery in FROM:
+SELECT subq.DeptName, COUNT(subq.CourseID) AS Total_Courses
+FROM (
+    SELECT D.DeptID, D.DeptName, C.CourseID
+    FROM Departments D
+    INNER JOIN Courses C ON D.DeptID = C.DeptID
+) subq
+GROUP BY subq.DeptID, subq.DeptName
+ORDER BY Total_Courses DESC;
+
+EXPLANATION:
+- Subquery (derived table) in FROM clause must have an alias (subq)
+- The subquery executes first, then the outer query uses its results
+- Both queries achieve same result; second shows explicit subquery technique
+- Subqueries make complex logic easier to read and debug
+
+SAMPLE OUTPUT:
+DeptName              | Total_Courses
+----------------------+---------------
+Computer Science     | 15
+Electronics          | 14
+Information Technology| 13
+Civil Engineering    | 12
+Mechanical Engineering| 12
+Electrical Engineering| 11
+Commerce             | 11
+Chemistry            | 10
+Physics              | 9
+Biology              | 8
+
+
+================================================================================
+EXERCISE 13: Subquery in WHERE - Students with Many Courses
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name, COUNT(SC.CourseID) AS Number_of_Courses
+FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+GROUP BY S.StudentID, S.Name
+HAVING COUNT(SC.CourseID) > 5
+ORDER BY Number_of_Courses DESC;
+
+-- Alternative with subquery in WHERE:
+SELECT S.StudentID, S.Name, 
+       (SELECT COUNT(*) FROM StudentCourses SC WHERE SC.StudentID = S.StudentID) AS Number_of_Courses
+FROM Students S
+WHERE S.StudentID IN (
+    SELECT StudentID FROM StudentCourses 
+    GROUP BY StudentID 
+    HAVING COUNT(CourseID) > 5
+)
+ORDER BY Number_of_Courses DESC;
+
+EXPLANATION:
+- Subquery in WHERE returns list of StudentIDs meeting the criteria
+- IN operator checks if StudentID is in the subquery result set
+- Scalar subquery in SELECT counts courses for each student
+- HAVING clause filters AFTER grouping (applied to aggregates)
+- First method is typically more efficient
+
+SAMPLE OUTPUT:
+StudentID | Name          | Number_of_Courses
+-----------+---------------+------------------
+        1 | Aarav Kumar   | 10
+        5 | Ananya Gupta  | 9
+        8 | Bhargav Singh | 8
+       12 | Chitra Desai  | 8
+       ... (students with more than 5 courses)
+
+
+================================================================================
+EXERCISE 14: UNION - Combine Faculty and Staff Names
+================================================================================
+ANSWER:
+
+SELECT Name, 'Faculty' AS Role
+FROM Faculty
+UNION
+SELECT Name, Role
+FROM Staff
+ORDER BY Name;
+
+EXPLANATION:
+- UNION combines result sets from multiple SELECT statements
+- Column count and data types must match between queries
+- UNION removes duplicates automatically
+- UNION ALL keeps duplicates if needed
+- ORDER BY in UNION applies to final combined result
+- First query explicitly assigns 'Faculty' as role
+
+SAMPLE OUTPUT:
+Name                  | Role
+----------------------+---------------------------
+Anil Deshmukh        | Faculty
+Accountant           | Staff
+Admin Officer        | Staff
+Anita Verma          | Faculty
+Bhavana Iyer         | Faculty
+Clerk                | Staff
+Chirag Verma         | Faculty
+Counselor            | Staff
+... (all faculty and staff combined and sorted)
+
+
+================================================================================
+EXERCISE 15: CASE Statement - Student Grade Classification
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, C.CourseName, 
+       CAST(SC.Grade AS NUMBER) AS ActualGrade,
+       CASE 
+           WHEN CAST(SC.Grade AS NUMBER) >= 90 THEN 'A - Excellent'
+           WHEN CAST(SC.Grade AS NUMBER) >= 80 THEN 'B - Good'
+           WHEN CAST(SC.Grade AS NUMBER) >= 70 THEN 'C - Average'
+           WHEN CAST(SC.Grade AS NUMBER) >= 60 THEN 'D - Below Average'
+           ELSE 'F - Fail'
+       END AS GradeClassification
+FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+INNER JOIN Courses C ON SC.CourseID = C.CourseID
+WHERE SC.Grade IS NOT NULL
+ORDER BY S.StudentID, ActualGrade DESC;
+
+EXPLANATION:
+- CASE statement provides conditional logic in SELECT
+- WHEN/THEN pairs test conditions in order
+- First matching WHEN executes; remaining are skipped
+- ELSE handles cases not matching any WHEN (optional)
+- CAST converts data types as needed
+- WHERE SC.Grade IS NOT NULL excludes students without grades
+
+SAMPLE OUTPUT:
+StudentID | CourseName      | ActualGrade | GradeClassification
+-----------+-----------------+-------------+-------------------
+        1 | Database Systems|          92 | A - Excellent
+        1 | Web Development |          88 | B - Good
+        1 | Data Structures |          75 | C - Average
+        2 | Database Systems|          85 | B - Good
+        2 | Operating Systems|         78 | C - Average
+       ... (all student grades with classifications)
+
+
+================================================================================
+EXERCISE 16: Self JOIN - Faculty as Department Head
+================================================================================
+ANSWER:
+
+SELECT D.DeptName, 
+       HEAD.Name AS HeadFacultyName,
+       OTHER.Name AS OtherFacultyName
+FROM Departments D
+INNER JOIN Faculty HEAD ON D.HeadID = HEAD.FacultyID
+INNER JOIN Faculty OTHER ON D.DeptID = OTHER.DeptID
+WHERE HEAD.FacultyID <> OTHER.FacultyID
+ORDER BY D.DeptName, HEAD.Name, OTHER.Name;
+
+EXPLANATION:
+- Self JOIN references same table twice with different aliases (HEAD, OTHER)
+- First JOIN finds the department head
+- Second JOIN finds all faculty in the department
+- WHERE HEAD.FacultyID <> OTHER.FacultyID excludes head from other faculty list
+- <> means "not equal to" (same as !=)
+- Shows hierarchy: head and their colleagues
+
+SAMPLE OUTPUT:
+DeptName              | HeadFacultyName   | OtherFacultyName
+----------------------+-------------------+------------------
+Computer Science     | Anil Deshmukh     | Bhavana Iyer
+Computer Science     | Anil Deshmukh     | Chirag Verma
+Computer Science     | Anil Deshmukh     | Priya Sharma
+Electronics          | Chirag Verma      | Anil Deshmukh
+Electronics          | Chirag Verma      | Rahul Chopra
+... (each head with colleagues from their department)
+
+
+================================================================================
+EXERCISE 17: Complex Aggregation - Courses with Specific Enrollment Range
+================================================================================
+ANSWER:
+
+SELECT C.CourseID, C.CourseName, D.DeptName, 
+       COUNT(SC.StudentID) AS Student_Count
+FROM Courses C
+INNER JOIN Departments D ON C.DeptID = D.DeptID
+LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+WHERE D.DeptID IN (1, 2, 3)
+GROUP BY C.CourseID, C.CourseName, D.DeptID, D.DeptName
+HAVING COUNT(SC.StudentID) BETWEEN 20 AND 50
+ORDER BY Student_Count DESC;
+
+EXPLANATION:
+- WHERE filters rows BEFORE grouping (departments 1, 2, 3)
+- GROUP BY aggregates by course
+- HAVING filters groups AFTER aggregation (enrollment 20-50)
+- BETWEEN inclusive on both ends: 20 <= count <= 50
+- LEFT JOIN includes courses even with 0 enrollments (for accurate count)
+- IN operator checks if DeptID matches any value in list (1, 2, or 3)
+
+SAMPLE OUTPUT:
+CourseID | CourseName         | DeptName         | Student_Count
+---------+--------------------+------------------+---------------
+       5 | Database Systems   | Computer Science | 48
+       8 | Web Development    | Computer Science | 45
+      12 | Networks           | Electronics      | 42
+      15 | Control Systems    | Electronics      | 38
+      18 | Microprocessors    | Electronics      | 35
+      22 | Programming        | Information Tech | 30
+      25 | Software Systems   | Computer Science | 28
+       ... (courses with 20-50 students from depts 1-3)
+
+
+================================================================================
+EXERCISE 18: LEFT JOIN with IS NULL - Unassigned Students
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name, S.Email
+FROM Students S
+LEFT JOIN StudentHostel SH ON S.StudentID = SH.StudentID
+WHERE SH.StudentID IS NULL
+ORDER BY S.StudentID;
+
+EXPLANATION:
+- LEFT JOIN keeps all rows from left table (Students) even if no match
+- When no match exists, joined columns are NULL
+- WHERE SH.StudentID IS NULL finds students with no hostel assignment
+- IS NULL/IS NOT NULL check for null values (don't use = NULL)
+- This pattern is common for finding unmatched/orphan records
+
+SAMPLE OUTPUT:
+StudentID | Name          | Email
+-----------+---------------+---------------------
+        7 | Ankit Kumar   | ankit.kumar@college.edu
+       15 | Bhavna Singh  | bhavna.singh@college.edu
+       23 | Chiranjeev    | chiranjeev@college.edu
+       31 | Deepika Nair  | deepika.nair@college.edu
+       ... (all students without hostel assignments)
+
+
+================================================================================
+EXERCISE 19: Window Function - Student Rank by Attendance
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name, D.DeptName,
+       ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+             COUNT(A.AttendanceID), 2) AS Attendance_Percentage,
+       ROW_NUMBER() OVER (PARTITION BY D.DeptID ORDER BY 
+             100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+             COUNT(A.AttendanceID) DESC) AS Rank_Within_Dept
+FROM Students S
+INNER JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+ORDER BY D.DeptID, Rank_Within_Dept;
+
+EXPLANATION:
+- Window function ROW_NUMBER() assigns sequential numbers
+- PARTITION BY groups before numbering (rank within each department)
+- ORDER BY within OVER determines ranking order
+- CASE calculates attendance percentage
+- Each department has its own ranking (1, 2, 3, ...)
+- Window functions work with GROUP BY for complex analytics
+
+SAMPLE OUTPUT:
+StudentID | Name          | DeptName         | Attendance_% | Rank
+-----------+---------------+------------------+-------------+-----
+        1 | Aarav Kumar   | Computer Science | 95.00       |  1
+        5 | Ananya Gupta  | Computer Science | 92.50       |  2
+       10 | Bhargav Singh | Computer Science | 88.75       |  3
+        3 | Akshay Patel  | Computer Science | 85.50       |  4
+       .. | (continuing for each department)
+
+
+================================================================================
+EXERCISE 20: Complex JOIN with Aggregation - Student Performance
+================================================================================
+ANSWER:
+
+SELECT S.StudentID, S.Name, 
+       COUNT(DISTINCT SC.CourseID) AS Total_Courses,
+       ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS Avg_Grade,
+       MAX(CAST(SC.Grade AS NUMBER)) AS Highest_Grade,
+       MIN(CAST(SC.Grade AS NUMBER)) AS Lowest_Grade
+FROM Students S
+INNER JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+WHERE SC.Grade IS NOT NULL
+GROUP BY S.StudentID, S.Name
+ORDER BY Avg_Grade DESC, Total_Courses DESC;
+
+EXPLANATION:
+- COUNT(DISTINCT CourseID) counts unique courses
+- Multiple aggregate functions in one query
+- AVG/MAX/MIN work on the same grouped data
+- WHERE SC.Grade IS NOT NULL excludes incomplete enrollments
+- GROUP BY StudentID and Name (all non-aggregated columns required)
+- ORDER BY multiple columns for complex sorting
+
+SAMPLE OUTPUT:
+StudentID | Name          | Total_Courses | Avg_Grade | Highest | Lowest
+-----------+---------------+---------------+-----------+-------+--------
+        1 | Aarav Kumar   |            10 |     88.50 |      95 |     82
+        5 | Ananya Gupta  |             9 |     86.75 |      92 |     78
+       12 | Chitra Desai  |             8 |     84.25 |      90 |     75
+        8 | Bhargav Singh |             7 |     82.10 |      88 |     70
+       15 | Deepak Nair   |             6 |     79.50 |      85 |     68
+       ... (students ranked by average grade)
+
+
+================================================================================
+KEY CONCEPTS COVERED IN BATCH 2:
+================================================================================
+1. HAVING clause for post-aggregation filtering
+2. Subqueries in FROM clause (derived tables)
+3. Subqueries in WHERE clause with IN operator
+4. Scalar subqueries in SELECT
+5. UNION to combine result sets
+6. UNION ALL vs UNION
+7. CASE statements for conditional logic
+8. Self JOINs for hierarchy and relationships
+9. Multiple aggregate functions in single query
+10. BETWEEN operator for range checking
+11. IN operator for list matching
+12. IS NULL / IS NOT NULL for null checking
+13. Window functions (ROW_NUMBER, RANK, etc.)
+14. PARTITION BY in window functions
+15. Complex multi-join scenarios with aggregation
+16. CAST for data type conversion
+17. WHERE vs HAVING differences
+18. LEFT JOIN with null filtering patterns
+19. DISTINCT in aggregate functions
+20. Complex ORDER BY with multiple criteria
+
+================================================================================
+COMMON MISTAKES IN BATCH 2:
+================================================================================
+1. Using WHERE instead of HAVING to filter aggregates
+2. Forgetting to include all non-aggregated columns in GROUP BY
+3. NULL handling in aggregates (COUNT(*) vs COUNT(column))
+4. Missing alias for subqueries in FROM clause
+5. Column count mismatch in UNION queries
+6. Using = NULL instead of IS NULL
+7. Incorrect CASE WHEN condition ordering (falls through)
+8. Self JOIN without aliases to distinguish table copies
+9. Forgetting join conditions with multiple tables
+10. Window function syntax errors with OVER clause
+
+================================================================================
+END OF BATCH 2 ANSWERS
+Ready for Batch 3 (Exercises 21-30)
+================================================================================
+
+
+================================================================================
+EXERCISE 21: INSERT Statement - Adding New Student Records
+================================================================================
+ANSWER:
+
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone)
+VALUES (478, 'Rohit Sharma', 2, 'rohit.sharma@college.edu', '9876543210');
+
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone)
+VALUES (479, 'Priya Chopra', 5, 'priya.chopra@gmail.com', '9876543211');
+
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone)
+VALUES (480, 'Arjun Verma', 3, 'arjun.verma@college.edu', NULL);
+
+-- Verify the insertions
+SELECT * FROM Students WHERE StudentID >= 478;
+
+EXPLANATION:
+- INSERT INTO specifies table and column names
+- VALUES provides data for each column in order
+- NULL is used for optional Phone field (omit or use NULL)
+- Each INSERT creates one new row
+- StudentID should match PRIMARY KEY sequence (478, 479, 480)
+- Email field must match UNIQUE constraint (no duplicates)
+- SELECT after INSERT verifies successful insertion
+
+SAMPLE OUTPUT:
+StudentID | Name            | DeptID | Email                      | Phone
+-----------+-----------------+--------+----------------------------+-------------
+       478 | Rohit Sharma    |      2 | rohit.sharma@college.edu   | 9876543210
+       479 | Priya Chopra    |      5 | priya.chopra@gmail.com     | 9876543211
+       480 | Arjun Verma     |      3 | arjun.verma@college.edu    | NULL
+
+
+================================================================================
+EXERCISE 22: UPDATE Statement - Modify Student Records
+================================================================================
+ANSWER:
+
+-- Update 1: Change phone of student 100
+UPDATE Students
+SET Phone = '9999888877'
+WHERE StudentID = 100;
+
+-- Update 2: Change email of student 250
+UPDATE Students
+SET Email = 'newemail.student@college.edu'
+WHERE StudentID = 250;
+
+-- Update 3: Change department for 5 students from Dept 4 to Dept 6
+UPDATE Students
+SET DeptID = 6
+WHERE StudentID IN (101, 102, 103, 104, 105);
+
+-- Verify the updates
+SELECT StudentID, Name, Email, Phone, DeptID
+FROM Students
+WHERE StudentID IN (100, 250, 101, 102, 103, 104, 105)
+ORDER BY StudentID;
+
+EXPLANATION:
+- UPDATE specifies the table to modify
+- SET defines which columns change and new values
+- WHERE condition identifies which rows to update
+- IN operator allows multiple StudentID values in one WHERE
+- Multiple UPDATE statements can be chained
+- SELECT verifies the changes were applied
+- Important: Always use WHERE to prevent updating all rows!
+
+SAMPLE OUTPUT:
+StudentID | Name              | Email                          | Phone       | DeptID
+-----------+-------------------+--------------------------------+-------------+-------
+       100 | [Original Name]   | [Original Email]               | 9999888877  |   [Dept]
+       101 | [Original Name]   | [Original Email]               | [Original]  |     6
+       102 | [Original Name]   | [Original Email]               | [Original]  |     6
+       103 | [Original Name]   | [Original Email]               | [Original]  |     6
+       104 | [Original Name]   | [Original Email]               | [Original]  |     6
+       105 | [Original Name]   | [Original Email]               | [Original]  |     6
+       250 | [Original Name]   | newemail.student@college.edu   | [Original]  |   [Dept]
+
+
+================================================================================
+EXERCISE 23: DELETE Statement - Remove Course Enrollment
+================================================================================
+ANSWER:
+
+-- Delete 1: Remove enrollments for Course 10 with no grades
+-- First, verify what will be deleted
+SELECT COUNT(*) AS Records_To_Delete
+FROM StudentCourses
+WHERE CourseID = 10 AND Grade IS NULL;
+
+-- Then perform the delete
+DELETE FROM StudentCourses
+WHERE CourseID = 10 AND Grade IS NULL;
+
+-- Delete 2: Remove unpaid fees from Dept 8 that are overdue
+-- First verify what will be deleted
+SELECT COUNT(*) AS Unpaid_Fees
+FROM Fees
+WHERE StudentID IN (
+    SELECT StudentID FROM Students WHERE DeptID = 8
+)
+AND PaidDate IS NULL
+AND DueDate < TRUNC(SYSDATE);
+
+-- Then perform the delete
+DELETE FROM Fees
+WHERE StudentID IN (
+    SELECT StudentID FROM Students WHERE DeptID = 8
+)
+AND PaidDate IS NULL
+AND DueDate < TRUNC(SYSDATE);
+
+-- Verify deletions
+SELECT COUNT(*) FROM StudentCourses WHERE CourseID = 10;
+SELECT COUNT(*) FROM Fees WHERE StudentID IN 
+    (SELECT StudentID FROM Students WHERE DeptID = 8);
+
+EXPLANATION:
+- DELETE removes rows from a table
+- WHERE clause identifies which rows to delete
+- CRITICAL: Always check COUNT before deleting to avoid mistakes
+- Subqueries help identify related records
+- Grade IS NULL finds un-graded enrollments
+- SYSDATE (today) compared with DueDate identifies overdue items
+- PaidDate IS NULL identifies unpaid fees
+- SELECT after DELETE verifies removal
+
+SAMPLE OUTPUT:
+-- Before deletion verification:
+Records_To_Delete: 12
+Unpaid_Fees: 8
+
+-- After deletion verification:
+COUNT(*) for StudentCourses where CourseID=10: 5
+COUNT(*) for Fees from Dept 8: 42
+
+
+================================================================================
+EXERCISE 24: CREATE VIEW - Student Enrollment Summary
+================================================================================
+ANSWER:
+
+CREATE OR REPLACE VIEW StudentEnrollmentSummary AS
+SELECT 
+    S.StudentID,
+    S.Name AS Student_Name,
+    D.DeptName,
+    COUNT(DISTINCT SC.CourseID) AS Total_Courses_Enrolled,
+    COUNT(DISTINCT SC_Club.ClubID) AS Total_Clubs_Joined,
+    ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS Average_Grade,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Percentage
+FROM Students S
+INNER JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN StudentClubs SC_Club ON S.StudentID = SC_Club.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+ORDER BY S.StudentID;
+
+-- Query the view
+SELECT * FROM StudentEnrollmentSummary
+WHERE Total_Courses_Enrolled > 0
+ORDER BY Average_Grade DESC;
+
+EXPLANATION:
+- CREATE OR REPLACE VIEW creates reusable saved query
+- VIEW name should be descriptive (StudentEnrollmentSummary)
+- AS keyword precedes the SELECT statement
+- LEFT JOINs include students even without enrollments
+- DISTINCT in COUNT avoids counting duplicates
+- NULLIF prevents division by zero in attendance calculation
+- GROUP BY all non-aggregated columns
+- View can be queried like a table: SELECT * FROM view_name
+- Views simplify complex queries and ensure consistency
+
+SAMPLE OUTPUT:
+StudentID | Student_Name   | DeptName              | Total_Courses | Total_Clubs | Avg_Grade | Attendance_%
+-----------+----------------+----------------------+---------------+-------------+-----------+---------------
+        1 | Aarav Kumar    | Computer Science     |            10 |           3 |     88.50 |         95.00
+        5 | Ananya Gupta   | Information Technology|             9 |           2 |     86.75 |         92.50
+        8 | Bhargav Singh  | Civil Engineering    |             7 |           4 |     82.10 |         88.75
+       12 | Chitra Desai   | Mechanical Engineer  |             8 |           3 |     84.25 |         90.00
+
+
+================================================================================
+EXERCISE 25: VIEW with Payment Status - Fee Payment View
+================================================================================
+ANSWER:
+
+CREATE OR REPLACE VIEW PendingFeePayments AS
+SELECT 
+    S.StudentID,
+    S.Name AS Student_Name,
+    C.CourseName,
+    F.Amount AS Fee_Amount,
+    F.DueDate,
+    CASE 
+        WHEN F.PaidDate IS NOT NULL THEN 0
+        WHEN TRUNC(SYSDATE) > F.DueDate THEN TRUNC(SYSDATE) - F.DueDate
+        ELSE 0
+    END AS Days_Overdue,
+    CASE 
+        WHEN F.PaidDate IS NOT NULL THEN 'Paid'
+        WHEN TRUNC(SYSDATE) > F.DueDate THEN 'Overdue'
+        ELSE 'Pending'
+    END AS Payment_Status
+FROM Fees F
+INNER JOIN Students S ON F.StudentID = S.StudentID
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Courses C ON SC.CourseID = C.CourseID
+WHERE F.PaidDate IS NULL
+ORDER BY Days_Overdue DESC, S.StudentID;
+
+-- Query the view
+SELECT * FROM PendingFeePayments
+WHERE Days_Overdue > 30
+ORDER BY Days_Overdue DESC;
+
+EXPLANATION:
+- CASE statement creates calculated Payment_Status column
+- TRUNC(SYSDATE) gets today's date without time component
+- Days_Overdue calculation: today minus DueDate if overdue, else 0
+- WHERE F.PaidDate IS NULL filters for unpaid fees only
+- LEFT JOIN on courses handles students with no course enrollment
+- ORDER BY sorts first by days overdue, then by student for readability
+- Useful for billing and collection management
+
+SAMPLE OUTPUT:
+StudentID | Student_Name  | CourseName        | Fee_Amount | DueDate    | Days_Overdue | Payment_Status
+-----------+---------------+-------------------+------------+------------+--------------+----------------
+       100 | Rajesh Kumar  | Database Systems  |    50000.00| 15-AUG-2024|            132 | Overdue
+        45 | Priya Sharma  | Web Development   |    50000.00| 15-AUG-2024|            132 | Overdue
+       200 | Arjun Singh   | Data Structures   |    50000.00| 15-AUG-2024|            132 | Overdue
+       150 | Deepak Nair   | Operating Systems |    50000.00| 15-JAN-2025|             10 | Pending
+
+
+================================================================================
+EXERCISE 26: Complex Analysis - Student Performance by Department
+================================================================================
+ANSWER:
+
+SELECT 
+    D.DeptName,
+    COUNT(DISTINCT S.StudentID) AS Total_Students,
+    ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS Average_GPA,
+    COUNT(DISTINCT CASE 
+        WHEN (SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) * 100 / 
+              NULLIF(COUNT(A.AttendanceID), 0)) > 80 
+        THEN S.StudentID 
+    END) AS Students_Above_80_Attendance,
+    COUNT(DISTINCT CASE 
+        WHEN (SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) * 100 / 
+              NULLIF(COUNT(A.AttendanceID), 0)) < 75 
+        THEN S.StudentID 
+    END) AS Students_Below_75_Attendance,
+    ROUND(AVG(CASE 
+        WHEN F.PaidDate IS NOT NULL 
+        THEN CAST(F.PaidDate AS DATE) - CAST(F.DueDate AS DATE)
+        ELSE NULL
+    END), 2) AS Avg_Payment_Delay_Days
+FROM Departments D
+INNER JOIN Students S ON D.DeptID = S.DeptID
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY Average_GPA DESC;
+
+EXPLANATION:
+- Complex aggregation with multiple CASE conditions
+- COUNT(DISTINCT CASE...) counts students meeting specific conditions
+- Subquery-like logic embedded in CASE for conditional counting
+- NULLIF prevents division by zero in attendance calculation
+- Date subtraction calculates payment delay in days
+- DISTINCT ensures students counted only once per department
+- Useful for departmental performance analysis and reporting
+
+SAMPLE OUTPUT:
+DeptName              | Total_Students | Average_GPA | Above_80_%_Attend | Below_75_%_Attend | Avg_Payment_Delay
+----------------------+----------------+-------------+-------------------+-------------------+------------------
+Computer Science     | 48             | 81.50      | 32                | 5                 | 12.3
+Information Technology| 50             | 80.75      | 30                | 6                 | 14.2
+Electronics          | 47             | 78.90      | 25                | 8                 | 15.5
+Civil Engineering    | 46             | 76.45      | 20                | 12                | 18.7
+Mechanical Engineering| 47             | 75.80      | 18                | 14                | 19.2
+
+
+================================================================================
+EXERCISE 27: Hierarchical Query - Faculty Reporting Chain
+================================================================================
+ANSWER:
+
+SELECT 
+    F.FacultyID,
+    F.Name AS Faculty_Name,
+    D.HeadID,
+    H.Name AS Department_Head_Name,
+    D.DeptName,
+    CASE WHEN F.FacultyID = D.HeadID THEN 'Department Head'
+         ELSE 'Faculty Member'
+    END AS Position
+FROM Faculty F
+INNER JOIN Departments D ON F.DeptID = D.DeptID
+LEFT JOIN Faculty H ON D.HeadID = H.FacultyID
+ORDER BY D.DeptName, 
+         CASE WHEN F.FacultyID = D.HeadID THEN 0 ELSE 1 END,
+         F.Name;
+
+-- Alternative: Show only non-head faculty with their heads
+SELECT 
+    F.FacultyID AS Faculty_ID,
+    F.Name AS Faculty_Name,
+    H.FacultyID AS Head_ID,
+    H.Name AS Reports_To,
+    D.DeptName
+FROM Faculty F
+INNER JOIN Departments D ON F.DeptID = D.DeptID
+INNER JOIN Faculty H ON D.HeadID = H.FacultyID
+WHERE F.FacultyID <> D.HeadID
+ORDER BY D.DeptName, F.Name;
+
+EXPLANATION:
+- Self-join with Departments to show reporting relationships
+- LEFT JOIN handles departments without assigned heads
+- CASE statement identifies heads vs regular faculty
+- ORDER BY sorts by department first, heads before faculty
+- Filtering F.FacultyID <> D.HeadID excludes heads from faculty list
+- Shows clear hierarchy: who reports to whom in each department
+
+SAMPLE OUTPUT:
+FacultyID | Faculty_Name     | Head_ID | Department_Head_Name | DeptName             | Position
+-----------+------------------+---------+----------------------+----------------------+-------------------
+        1 | Anil Deshmukh    | 1       | Anil Deshmukh        | Computer Science     | Department Head
+        5 | Bhavana Iyer     | 1       | Anil Deshmukh        | Computer Science     | Faculty Member
+        8 | Chirag Verma     | 1       | Anil Deshmukh        | Computer Science     | Faculty Member
+       10 | Priya Sharma     | 1       | Anil Deshmukh        | Computer Science     | Faculty Member
+
+
+================================================================================
+EXERCISE 28: Data Validation - Find Anomalies
+================================================================================
+ANSWER:
+
+-- Anomaly 1: Students with multiple emails (should not happen)
+SELECT StudentID, COUNT(DISTINCT Email) AS Email_Count
+FROM Students
+GROUP BY StudentID
+HAVING COUNT(DISTINCT Email) > 1;
+-- Expected: No results (single email per student)
+
+-- Anomaly 2: Courses with zero enrollment
+SELECT C.CourseID, C.CourseName, COUNT(SC.StudentID) AS Enrollment_Count
+FROM Courses C
+LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+GROUP BY C.CourseID, C.CourseName
+HAVING COUNT(SC.StudentID) = 0
+ORDER BY C.CourseID;
+
+-- Anomaly 3: Faculty not assigned to any department
+SELECT FacultyID, Name, DeptID
+FROM Faculty
+WHERE DeptID IS NULL OR DeptID NOT IN (SELECT DeptID FROM Departments)
+ORDER BY FacultyID;
+
+-- Anomaly 4: Students in multiple hostels
+SELECT StudentID, COUNT(DISTINCT RoomID) AS Room_Count
+FROM StudentHostel
+GROUP BY StudentID
+HAVING COUNT(DISTINCT RoomID) > 1
+ORDER BY StudentID;
+
+-- Anomaly 5: Duplicate course enrollments
+SELECT StudentID, CourseID, COUNT(*) AS Enrollment_Count
+FROM StudentCourses
+GROUP BY StudentID, CourseID
+HAVING COUNT(*) > 1
+ORDER BY StudentID, CourseID;
+
+EXPLANATION:
+- Anomaly 1: Each student should have exactly one email
+- Anomaly 2: Courses should have at least some enrollment
+- Anomaly 3: Foreign key constraint should prevent this
+- Anomaly 4: Composite PK should prevent multiple room assignments
+- Anomaly 5: Composite PK should prevent duplicate enrollments
+- These queries identify data integrity issues requiring correction
+- Useful for database maintenance and auditing
+
+SAMPLE OUTPUT (assuming data quality is good):
+-- Anomaly 2 Results:
+CourseID | CourseName         | Enrollment_Count
+---------+--------------------+-------------------
+       42 | Advanced Calculus  | 0
+       73 | Quantum Computing  | 0
+
+-- Anomaly 4 Results:
+StudentID | Room_Count
+-----------+------------
+      156 | 2
+      289 | 2
+
+
+================================================================================
+EXERCISE 29: Monthly Report - March 2024 Attendance
+================================================================================
+ANSWER:
+
+SELECT 
+    S.StudentID,
+    S.Name AS Student_Name,
+    D.DeptName,
+    SUM(CASE WHEN A.Status = 'PRESENT' AND 
+             EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+             EXTRACT(YEAR FROM A.attendencedate) = 2024
+        THEN 1 ELSE 0 END) AS Days_Present_March,
+    SUM(CASE WHEN A.Status = 'ABSENT' AND 
+             EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+             EXTRACT(YEAR FROM A.attendencedate) = 2024
+        THEN 1 ELSE 0 END) AS Days_Absent_March,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+               EXTRACT(YEAR FROM A.attendencedate) = 2024
+        THEN 1 END) AS Total_Class_Days_March,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' AND 
+                         EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                         EXTRACT(YEAR FROM A.attendencedate) = 2024
+                    THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(CASE WHEN EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                            EXTRACT(YEAR FROM A.attendencedate) = 2024
+                       THEN 1 END), 0), 2) AS March_Attendance_Percentage,
+    CASE 
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' AND 
+                                   EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                                   EXTRACT(YEAR FROM A.attendencedate) = 2024
+                              THEN 1 ELSE 0 END) / 
+             NULLIF(COUNT(CASE WHEN EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                               EXTRACT(YEAR FROM A.attendencedate) = 2024
+                          THEN 1 END), 0), 2) >= 85 THEN 'Good'
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' AND 
+                                   EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                                   EXTRACT(YEAR FROM A.attendencedate) = 2024
+                              THEN 1 ELSE 0 END) / 
+             NULLIF(COUNT(CASE WHEN EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                               EXTRACT(YEAR FROM A.attendencedate) = 2024
+                          THEN 1 END), 0), 2) >= 70 THEN 'Average'
+        ELSE 'Poor'
+    END AS Performance_Flag
+FROM Students S
+INNER JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+HAVING COUNT(CASE WHEN EXTRACT(MONTH FROM A.attendencedate) = 3 AND
+                  EXTRACT(YEAR FROM A.attendencedate) = 2024
+             THEN 1 END) > 0
+ORDER BY March_Attendance_Percentage DESC, S.StudentID;
+
+EXPLANATION:
+- EXTRACT(MONTH FROM date) and EXTRACT(YEAR FROM date) filter by date parts
+- Multiple SUM with CASE conditions provide different attendance metrics
+- Performance flags use nested CASE for categorization
+- HAVING filters to show only students with March attendance records
+- Order by attendance percentage descending for visibility
+- Useful for monthly attendance reporting and performance tracking
+
+SAMPLE OUTPUT:
+StudentID | Student_Name  | DeptName             | Days_Present | Days_Absent | Total_Days | Attendance_% | Performance
+-----------+---------------+----------------------+--------------+-------------+------------+--------------+---------------
+        1 | Aarav Kumar   | Computer Science     | 19           | 1           | 20         | 95.00        | Good
+        5 | Ananya Gupta  | Information Technology| 18           | 2           | 20         | 90.00        | Good
+       10 | Bhargav Singh | Civil Engineering    | 17           | 3           | 20         | 85.00        | Good
+       15 | Chitra Desai  | Mechanical Engineer  | 14           | 6           | 20         | 70.00        | Average
+       20 | Deepak Nair   | Electronics          | 12           | 8           | 20         | 60.00        | Poor
+
+
+================================================================================
+EXERCISE 30: Advanced Analytics - Scholarship Eligibility
+================================================================================
+ANSWER:
+
+SELECT 
+    S.StudentID,
+    S.Name AS Student_Name,
+    ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS Average_Grade,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Percentage,
+    SUM(CASE WHEN F.PaidDate IS NULL THEN F.Amount ELSE 0 END) AS Outstanding_Fees,
+    CASE 
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 85 AND 
+             (100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+              NULLIF(COUNT(A.AttendanceID), 0)) >= 90 AND
+             SUM(CASE WHEN F.PaidDate IS NULL THEN F.Amount ELSE 0 END) = 0
+        THEN 'Full Merit'
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 85 THEN 'Excellent Scholar'
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 75 THEN 'Merit Scholar'
+        WHEN (100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+              NULLIF(COUNT(A.AttendanceID), 0)) >= 90 THEN 'Attendance Scholar'
+        ELSE 'Not Eligible'
+    END AS Scholarship_Category,
+    CASE 
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 85 AND 
+             (100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+              NULLIF(COUNT(A.AttendanceID), 0)) >= 90 AND
+             SUM(CASE WHEN F.PaidDate IS NULL THEN F.Amount ELSE 0 END) = 0
+        THEN 40000
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 85 THEN 50000
+        WHEN AVG(CAST(SC.Grade AS NUMBER)) >= 75 THEN 30000
+        WHEN (100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+              NULLIF(COUNT(A.AttendanceID), 0)) >= 90 THEN 20000
+        ELSE 0
+    END AS Scholarship_Amount
+FROM Students S
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY S.StudentID, S.Name
+HAVING 
+    (AVG(CAST(SC.Grade AS NUMBER)) >= 75) OR
+    ((100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+      NULLIF(COUNT(A.AttendanceID), 0)) >= 90)
+ORDER BY Scholarship_Amount DESC, S.StudentID;
+
+EXPLANATION:
+- Complex nested CASE for multi-criteria scholarship logic
+- Full Merit requires excellent grades (85+), excellent attendance (90+), no outstanding fees
+- Excellent Scholar: Grade >= 85 only
+- Merit Scholar: Grade 75-84
+- Attendance Scholar: Attendance >= 90% (any grade)
+- Outstanding_Fees calculated as unpaid amount (PaidDate IS NULL)
+- HAVING filters to show only eligible students
+- ORDER BY scholarship amount descending for priority ranking
+- Useful for financial aid administration and scholarship awarding
+
+SAMPLE OUTPUT:
+StudentID | Student_Name   | Avg_Grade | Attendance_% | Outstanding_Fees | Scholarship_Category | Scholarship_Amount
+-----------+----------------+-----------+--------------+------------------+----------------------+--------------------
+        1 | Aarav Kumar    | 88.50     | 95.00        | 0                | Full Merit           | 40000
+        5 | Ananya Gupta   | 86.75     | 92.50        | 0                | Excellent Scholar   | 50000
+       10 | Bhargav Singh  | 85.10     | 88.75        | 0                | Excellent Scholar   | 50000
+       15 | Chitra Desai   | 82.25     | 90.00        | 0                | Merit Scholar      | 30000
+       20 | Deepak Nair    | 78.50     | 92.00        | 5000.00          | Attendance Scholar   | 20000
+       25 | Erica Wong     | 75.75     | 88.50        | 10000.00         | Merit Scholar       | 30000
+
+
+================================================================================
+KEY CONCEPTS COVERED IN BATCH 3:
+================================================================================
+1. INSERT statement with VALUES
+2. INSERT with multiple rows
+3. NULL value handling in INSERT
+4. UPDATE statement with WHERE clause
+5. UPDATE with IN operator for multiple rows
+6. DELETE statement with WHERE clause
+7. DELETE with subqueries
+8. CREATE VIEW syntax
+9. CREATE OR REPLACE VIEW
+10. VIEW queries using SELECT FROM view
+11. Complex aggregation in views
+12. CASE statements in views
+13. LEFT JOINs with multiple tables
+14. DISTINCT in aggregate functions
+15. Complex HAVING clauses
+16. Data validation queries
+17. Anomaly detection patterns
+18. Date functions: EXTRACT, SYSDATE, TRUNC
+19. Date arithmetic (subtraction)
+20. Window functions in analysis
+21. NULLIF for preventing division by zero
+22. Multi-level CASE statements
+23. Reporting queries
+24. Business logic in SQL
+25. Performance-critical queries
+
+================================================================================
+COMMON MISTAKES IN BATCH 3:
+================================================================================
+1. Forgetting WHERE clause in UPDATE/DELETE (modifies all rows!)
+2. Not verifying with COUNT before DELETE
+3. Missing column list in INSERT (assumes all columns in order)
+4. NULL vs 'NULL' string (NULL for no value, 'NULL' is string)
+5. View name conflicts with existing table names
+6. Circular dependencies in views (view A -> view B -> view A)
+7. Incorrect date format comparisons
+8. Using = NULL instead of IS NULL in UPDATE/DELETE
+9. Not testing views after creation
+10. Complex nested CASE leading to hard-to-read code
+11. Forgetting GROUP BY when using aggregate functions
+12. HAVING without GROUP BY
+13. Subquery returning multiple rows for single-row context
+14. Missing ON clause when joining multiple tables
+15. Not considering performance of complex views with many JOINs
+
+================================================================================
+END OF BATCH 3 ANSWERS
+Ready for Batch 4 (Exercises 31-40)
+================================================================================
+
+
+================================================================================
+EXERCISE 31: Transaction Control - COMMIT and ROLLBACK
+================================================================================
+ANSWER:
+
+-- Transaction: Bulk Student Data Update
+BEGIN TRANSACTION;
+
+SAVEPOINT sp1;
+
+-- Step 1: Insert 5 new students
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone) 
+VALUES (481, 'Student One', 1, 'student1@college.edu', '9000000001');
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone) 
+VALUES (482, 'Student Two', 2, 'student2@college.edu', '9000000002');
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone) 
+VALUES (483, 'Student Three', 3, 'student3@college.edu', NULL);
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone) 
+VALUES (484, 'Student Four', 4, 'student4@college.edu', '9000000004');
+INSERT INTO Students (StudentID, Name, DeptID, Email, Phone) 
+VALUES (485, 'Student Five', 5, 'student5@college.edu', '9000000005');
+
+-- Verify inserts
+SELECT COUNT(*) FROM Students WHERE StudentID >= 481;
+
+SAVEPOINT sp2;
+
+-- Step 2: Update student emails (example: 10 students)
+UPDATE Students
+SET Email = CONCAT(Name, '@newemail.college.edu')
+WHERE StudentID IN (1, 2, 3, 4, 5, 10, 15, 20, 25, 30);
+
+-- Verify updates
+SELECT StudentID, Email FROM Students WHERE StudentID IN (1, 5, 10, 25, 30);
+
+SAVEPOINT sp3;
+
+-- Step 3: Delete obsolete enrollments (before transaction)
+SELECT COUNT(*) FROM StudentCourses WHERE Grade IS NULL;
+
+DELETE FROM StudentCourses
+WHERE CourseID IN (SELECT CourseID FROM Courses WHERE DeptID = 10)
+  AND StudentID NOT IN (SELECT StudentID FROM Students WHERE DeptID = 10);
+
+-- Step 4: Commit if everything successful
+COMMIT;
+
+-- If error occurs, can rollback:
+-- ROLLBACK TO SAVEPOINT sp2;  -- Roll back to before email updates
+-- ROLLBACK;  -- Roll back entire transaction
+
+EXPLANATION:
+- BEGIN/START TRANSACTION marks transaction start
+- SAVEPOINT creates rollback points within transaction
+- ROLLBACK TO restores to specific savepoint
+- COMMIT finalizes all changes permanently
+- ROLLBACK undoes all changes since transaction start
+- Essential for data consistency in multi-step operations
+- Used when data must all succeed or all fail together
+
+SAMPLE OUTPUT:
+Transaction started successfully
+5 new students inserted
+10 student emails updated
+52 duplicate enrollments deleted
+Transaction COMMITTED successfully
+
+
+================================================================================
+EXERCISE 32: Stored Procedure - Student Registration
+================================================================================
+ANSWER:
+
+CREATE PROCEDURE RegisterStudent (
+    p_name VARCHAR2,
+    p_deptid NUMBER,
+    p_email VARCHAR2,
+    p_phone VARCHAR2,
+    OUT p_student_id NUMBER,
+    OUT p_message VARCHAR2
+)
+AS
+    v_dept_exists NUMBER;
+    v_email_exists NUMBER;
+    v_new_student_id NUMBER;
+BEGIN
+    -- Validate department exists
+    SELECT COUNT(*) INTO v_dept_exists
+    FROM Departments
+    WHERE DeptID = p_deptid;
+    
+    IF v_dept_exists = 0 THEN
+        p_message := 'ERROR: Department ID ' || p_deptid || ' does not exist';
+        p_student_id := NULL;
+        RETURN;
+    END IF;
+    
+    -- Check if email already registered
+    SELECT COUNT(*) INTO v_email_exists
+    FROM Students
+    WHERE Email = p_email;
+    
+    IF v_email_exists > 0 THEN
+        p_message := 'ERROR: Email ' || p_email || ' already registered';
+        p_student_id := NULL;
+        RETURN;
+    END IF;
+    
+    -- Get next StudentID
+    SELECT MAX(StudentID) + 1 INTO v_new_student_id FROM Students;
+    
+    -- Insert new student
+    INSERT INTO Students (StudentID, Name, DeptID, Email, Phone)
+    VALUES (v_new_student_id, p_name, p_deptid, p_email, p_phone);
+    
+    p_student_id := v_new_student_id;
+    p_message := 'SUCCESS: Student ' || p_name || ' registered with ID ' || v_new_student_id;
+    
+    COMMIT;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        p_message := 'ERROR: ' || SQLERRM;
+        p_student_id := NULL;
+END RegisterStudent;
+
+-- Test the procedure
+DECLARE
+    v_sid NUMBER;
+    v_msg VARCHAR2(500);
+BEGIN
+    RegisterStudent('Aakash Sharma', 1, 'aakash.sharma@college.edu', '9876543201', v_sid, v_msg);
+    DBMS_OUTPUT.PUT_LINE('Result: ' || v_msg || ' StudentID: ' || v_sid);
+END;
+
+EXPLANATION:
+- CREATE PROCEDURE defines reusable SQL block
+- IN parameters accept input values
+- OUT parameters return results
+- DECLARE section declares local variables
+- INTO keyword stores query results in variables
+- IF/ELSE provides conditional logic
+- EXCEPTION catches and handles errors
+- SQLERRM returns error message
+- ROLLBACK on exception ensures data consistency
+
+SAMPLE OUTPUT:
+Result: SUCCESS: Student Aakash Sharma registered with ID 486 StudentID: 486
+Result: ERROR: Email duplicate@college.edu already registered StudentID: NULL
+Result: ERROR: Department ID 99 does not exist StudentID: NULL
+
+
+================================================================================
+EXERCISE 33: Stored Function - Calculate GPA
+================================================================================
+ANSWER:
+
+CREATE FUNCTION CalculateStudentGPA (p_student_id NUMBER)
+RETURN DECIMAL
+AS
+    v_avg_grade DECIMAL;
+    v_gpa DECIMAL;
+    v_grade_count NUMBER;
+BEGIN
+    -- Get count of grades
+    SELECT COUNT(*)
+    INTO v_grade_count
+    FROM StudentCourses
+    WHERE StudentID = p_student_id AND Grade IS NOT NULL;
+    
+    -- Handle no grades case
+    IF v_grade_count = 0 THEN
+        RETURN 0.0;
+    END IF;
+    
+    -- Calculate average grade
+    SELECT AVG(CAST(Grade AS NUMBER))
+    INTO v_avg_grade
+    FROM StudentCourses
+    WHERE StudentID = p_student_id AND Grade IS NOT NULL;
+    
+    -- Convert to GPA scale (0-4.0)
+    IF v_avg_grade >= 90 THEN
+        v_gpa := 4.0;
+    ELSIF v_avg_grade >= 80 THEN
+        v_gpa := 3.0;
+    ELSIF v_avg_grade >= 70 THEN
+        v_gpa := 2.0;
+    ELSIF v_avg_grade >= 60 THEN
+        v_gpa := 1.0;
+    ELSE
+        v_gpa := 0.0;
+    END IF;
+    
+    RETURN v_gpa;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN NULL;
+END CalculateStudentGPA;
+
+-- Test the function
+SELECT StudentID, Name, 
+       CalculateStudentGPA(StudentID) AS GPA
+FROM Students
+WHERE StudentID <= 20
+ORDER BY GPA DESC;
+
+EXPLANATION:
+- CREATE FUNCTION defines reusable computation
+- RETURN specifies return data type
+- INTO stores query results in variable
+- IF/ELSIF/ELSE converts numeric grade to GPA scale
+- NULL handling for students with no grades
+- Can be used in SELECT clause like built-in functions
+- EXCEPTION returns NULL on error
+- More efficient than calculating in application code
+
+SAMPLE OUTPUT:
+StudentID | Name            | GPA
+-----------+-----------------+-----
+        1 | Aarav Kumar     | 4.0
+        5 | Ananya Gupta    | 4.0
+       10 | Bhargav Singh   | 3.0
+       15 | Chitra Desai    | 3.0
+       20 | Deepak Nair     | 2.0
+
+
+================================================================================
+EXERCISE 34: Trigger - Audit Trail
+================================================================================
+ANSWER:
+
+-- Create audit log table first
+CREATE TABLE AuditLog (
+    AuditID NUMBER PRIMARY KEY,
+    TableName VARCHAR2(50),
+    OperationType VARCHAR2(10),
+    OldValue VARCHAR2(500),
+    NewValue VARCHAR2(500),
+    ColumnName VARCHAR2(50),
+    PK_StudentID NUMBER,
+    ChangedBy VARCHAR2(100),
+    ChangeDate TIMESTAMP DEFAULT SYSDATE
+);
+
+-- Create sequence for audit IDs
+CREATE SEQUENCE AuditLog_Seq START WITH 1;
+
+-- Create trigger for Student updates
+CREATE TRIGGER StudentAuditLog
+AFTER INSERT OR UPDATE OR DELETE ON Students
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO AuditLog 
+        VALUES (
+            AuditLog_Seq.NEXTVAL,
+            'Students',
+            'INSERT',
+            NULL,
+            'ID:' || :NEW.StudentID || ' Name:' || :NEW.Name,
+            'ALL',
+            :NEW.StudentID,
+            USER,
+            SYSDATE
+        );
+    END IF;
+    
+    IF UPDATING THEN
+        IF :OLD.Name <> :NEW.Name THEN
+            INSERT INTO AuditLog VALUES (
+                AuditLog_Seq.NEXTVAL, 'Students', 'UPDATE',
+                :OLD.Name, :NEW.Name, 'Name',
+                :NEW.StudentID, USER, SYSDATE
+            );
+        END IF;
+        IF :OLD.Email <> :NEW.Email THEN
+            INSERT INTO AuditLog VALUES (
+                AuditLog_Seq.NEXTVAL, 'Students', 'UPDATE',
+                :OLD.Email, :NEW.Email, 'Email',
+                :NEW.StudentID, USER, SYSDATE
+            );
+        END IF;
+        IF :OLD.DeptID <> :NEW.DeptID THEN
+            INSERT INTO AuditLog VALUES (
+                AuditLog_Seq.NEXTVAL, 'Students', 'UPDATE',
+                TO_CHAR(:OLD.DeptID), TO_CHAR(:NEW.DeptID), 'DeptID',
+                :NEW.StudentID, USER, SYSDATE
+            );
+        END IF;
+    END IF;
+    
+    IF DELETING THEN
+        INSERT INTO AuditLog VALUES (
+            AuditLog_Seq.NEXTVAL, 'Students', 'DELETE',
+            'ID:' || :OLD.StudentID || ' Name:' || :OLD.Name,
+            NULL, 'ALL',
+            :OLD.StudentID, USER, SYSDATE
+        );
+    END IF;
+END StudentAuditLog;
+
+-- Query audit log
+SELECT AuditID, TableName, OperationType, ColumnName, 
+       OldValue, NewValue, ChangedBy, ChangeDate
+FROM AuditLog
+ORDER BY AuditID DESC;
+
+EXPLANATION:
+- AFTER TRIGGER fires after successful data modification
+- FOR EACH ROW triggers for every affected row
+- INSERTING/UPDATING/DELETING conditions identify operation
+- :OLD references pre-change values (UPDATE/DELETE only)
+- :NEW references post-change values (INSERT/UPDATE only)
+- Creates audit trail for compliance and debugging
+- Useful for tracking who changed what and when
+- Impacts INSERT/UPDATE performance (extra writes)
+
+SAMPLE OUTPUT:
+AuditID | TableName | OperationType | ColumnName | OldValue  | NewValue | ChangedBy | ChangeDate
+--------|-----------|---------------|------------|-----------|----------|-----------|-------------------
+      1 | Students  | INSERT        | ALL        | NULL      | ID:481...| SCOTT     | 25-DEC-2025 10:30
+      2 | Students  | UPDATE        | Email      | old@...   | new@...  | SCOTT     | 25-DEC-2025 10:31
+      3 | Students  | DELETE        | ALL        | ID:481... | NULL     | SCOTT     | 25-DEC-2025 10:32
+
+
+================================================================================
+EXERCISE 35: Complex JOIN with Subquery - Multi-Level Reporting
+================================================================================
+ANSWER:
+
+-- Comprehensive Department Dashboard
+SELECT
+    -- Department Info
+    D.DeptID,
+    D.DeptName,
+    (SELECT Name FROM Faculty WHERE FacultyID = D.HeadID) AS DeptHead,
+    
+    -- Student Metrics
+    (SELECT COUNT(*) FROM Students WHERE DeptID = D.DeptID) AS TotalStudents,
+    
+    -- Academic Performance
+    (SELECT ROUND(AVG(CAST(Grade AS NUMBER)), 2)
+     FROM StudentCourses SC
+     JOIN Students S ON SC.StudentID = S.StudentID
+     WHERE S.DeptID = D.DeptID) AS AvgGPA,
+    
+    -- Attendance Metrics
+    (SELECT ROUND(100 * SUM(CASE WHEN Status = 'PRESENT' THEN 1 ELSE 0 END) /
+            NULLIF(COUNT(*), 0), 2)
+     FROM Attendance A
+     JOIN StudentCourses SC ON A.StudentID = SC.StudentID
+     JOIN Students S ON SC.StudentID = S.StudentID
+     WHERE S.DeptID = D.DeptID) AS AvgAttendance,
+    
+    -- Financial Metrics
+    (SELECT COUNT(*) FROM Fees F
+     JOIN Students S ON F.StudentID = S.StudentID
+     WHERE S.DeptID = D.DeptID AND F.PaidDate IS NULL) AS UnpaidFees,
+    
+    -- Faculty Workload
+    (SELECT COUNT(DISTINCT ClassID) FROM Classes C
+     JOIN Faculty F ON C.FacultyID = F.FacultyID
+     WHERE F.DeptID = D.DeptID) AS CoursesSections,
+    
+    -- Enrollment Trend
+    (SELECT COUNT(*) FROM StudentCourses SC
+     JOIN Courses C ON SC.CourseID = C.CourseID
+     WHERE C.DeptID = D.DeptID) AS TotalEnrollments
+    
+FROM Departments D
+ORDER BY AvgGPA DESC;
+
+-- Top 5 Students per Department
+WITH RankedStudents AS (
+    SELECT
+        D.DeptID,
+        D.DeptName,
+        S.StudentID,
+        S.Name,
+        ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS GPA,
+        ROW_NUMBER() OVER (PARTITION BY D.DeptID 
+                          ORDER BY AVG(CAST(SC.Grade AS NUMBER)) DESC) AS Rank
+    FROM Departments D
+    JOIN Students S ON D.DeptID = S.DeptID
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    GROUP BY D.DeptID, D.DeptName, S.StudentID, S.Name
+)
+SELECT DeptID, DeptName, StudentID, Name, GPA
+FROM RankedStudents
+WHERE Rank <= 5
+ORDER BY DeptID, Rank;
+
+EXPLANATION:
+- Scalar subqueries in SELECT return single value per row
+- Correlated subqueries reference outer table (D.DeptID)
+- WITH clause creates temporary named result set
+- ROW_NUMBER() OVER (PARTITION BY...) ranks within group
+- Multiple aggregation levels: department, student, course
+- Useful for executive dashboards and KPI reporting
+- Performance tip: Create indexes on join columns
+
+SAMPLE OUTPUT:
+DeptID | DeptName              | TotalStudents | AvgGPA | AvgAttendance | UnpaidFees | CoursesSections | TotalEnrollments
+-------+----------------------+---------------+--------+---------------+------------+----------------+------------------
+     1 | Computer Science     | 48            | 81.50  | 88.75        | 12         | 15             | 432
+     2 | Electronics          | 47            | 78.90  | 86.25        | 15         | 14             | 388
+     3 | Information Technology| 50            | 80.75  | 89.50        | 10         | 16             | 456
+
+
+================================================================================
+EXERCISE 36: Index Creation and Performance Analysis
+================================================================================
+ANSWER:
+
+-- Create indexes on frequently queried columns
+
+-- Index 1: Students by Email (UNIQUE for constraint)
+CREATE UNIQUE INDEX idx_students_email ON Students(Email);
+
+-- Index 2: StudentCourses compound index
+CREATE INDEX idx_studentcourses_pk ON StudentCourses(StudentID, CourseID);
+
+-- Index 3: Attendance for date range queries
+CREATE INDEX idx_attendance_date ON Attendance(StudentID, attendencedate);
+
+-- Index 4: Fees payment tracking
+CREATE INDEX idx_fees_paid ON Fees(StudentID, PaidDate);
+
+-- Index 5: Faculty by Department
+CREATE INDEX idx_faculty_dept ON Faculty(DeptID);
+
+-- Performance Analysis Before Index
+-- Run this slow query and note execution time
+SELECT COUNT(*)
+FROM Attendance A
+JOIN Students S ON A.StudentID = S.StudentID
+WHERE S.Email = 'student123@college.edu'
+  AND A.attendencedate BETWEEN '01-JAN-2024' AND '31-DEC-2024';
+
+-- Verify indexes exist
+SELECT index_name, table_name, column_name
+FROM user_ind_columns
+WHERE table_name IN ('Students', 'StudentCourses', 'Attendance', 'Fees')
+ORDER BY table_name, index_name;
+
+-- Drop index if needed (for testing)
+-- DROP INDEX idx_students_email;
+
+-- Performance tip: Monitor index fragmentation
+-- SELECT index_name, leaf_blocks, deleted_leaf_blocks
+-- FROM index_stats;
+
+EXPLANATION:
+- CREATE INDEX speeds up WHERE, JOIN, ORDER BY clauses
+- UNIQUE INDEX enforces uniqueness (PRIMARY KEY, UNIQUE constraints)
+- Composite indexes (multiple columns) useful for multi-column filters
+- Trade-off: Faster SELECT but slower INSERT/UPDATE/DELETE
+- Index on StudentID for Attendance since heavily filtered
+- Index on Email in Students for user lookups
+- Date index for attendance date range queries
+- Indexes increase storage and maintenance overhead
+- Monitor index usage and drop unused indexes
+
+SAMPLE OUTPUT:
+Index created: idx_students_email
+Index created: idx_studentcourses_pk
+Index created: idx_attendance_date
+Index created: idx_fees_paid
+Index created: idx_faculty_dept
+
+Query execution time before index: 2.34 seconds
+Query execution time after index: 0.23 seconds
+Performance improvement: 90% faster
+
+
+================================================================================
+EXERCISE 37: Data Migration - Merge Course Sections
+================================================================================
+ANSWER:
+
+-- Merge CourseID 51 into CourseID 50
+
+BEGIN TRANSACTION;
+SAVEPOINT sp_merge_start;
+
+-- Step 1: Copy StudentCourses (avoid duplicates)
+INSERT INTO StudentCourses (StudentID, CourseID, Grade)
+SELECT DISTINCT SC.StudentID, 50, SC.Grade
+FROM StudentCourses SC
+WHERE SC.CourseID = 51
+  AND SC.StudentID NOT IN (
+      SELECT StudentID FROM StudentCourses WHERE CourseID = 50
+  );
+
+SAVEPOINT sp_after_courses;
+
+-- Step 2: Update Attendance records
+UPDATE Attendance
+SET ClassID = (SELECT ClassID FROM Classes WHERE CourseID = 50 LIMIT 1)
+WHERE ClassID IN (SELECT ClassID FROM Classes WHERE CourseID = 51);
+
+SAVEPOINT sp_after_attendance;
+
+-- Step 3: Merge Fees (combine duplicates)
+UPDATE Fees F1
+SET Amount = (SELECT F1.Amount + COALESCE(F2.Amount, 0)
+              FROM Fees F2
+              WHERE F2.StudentID = F1.StudentID
+                AND F2.StudentID NOT IN (
+                    SELECT StudentID FROM StudentCourses WHERE CourseID = 50
+                )
+              LIMIT 1)
+WHERE StudentID IN (
+    SELECT DISTINCT StudentID FROM StudentCourses WHERE CourseID = 51
+);
+
+SAVEPOINT sp_after_fees;
+
+-- Step 4: Archive old records
+INSERT INTO CourseArchive
+SELECT * FROM StudentCourses WHERE CourseID = 51;
+
+-- Step 5: Delete merged records
+DELETE FROM StudentCourses WHERE CourseID = 51;
+DELETE FROM Classes WHERE CourseID = 51;
+
+-- Verification
+SELECT COUNT(*) AS Students_In_Course_50
+FROM StudentCourses WHERE CourseID = 50;
+
+SELECT COUNT(*) AS Attendance_Records
+FROM Attendance 
+WHERE ClassID IN (SELECT ClassID FROM Classes WHERE CourseID = 50);
+
+COMMIT;
+
+EXPLANATION:
+- INSERT...SELECT bulk copy with conditions
+- NOT IN prevents duplicate enrollments
+- UPDATE on joined tables modifies records
+- Archive table preserves historical data
+- Transaction ensures consistency
+- SAVEPOINT allows partial rollback if step fails
+- Verification queries confirm data integrity
+- Log process for audit trail
+
+SAMPLE OUTPUT:
+Migration Log:
+- Students copied from Course 51: 42
+- Attendance records updated: 1680
+- Duplicate enrollments skipped: 3
+- Fees merged: 42
+- Records archived: 42
+- Migration completed successfully
+
+
+================================================================================
+EXERCISE 38: Batch Processing - Monthly Fee Generation
+================================================================================
+ANSWER:
+
+BEGIN TRANSACTION;
+
+DECLARE
+    v_next_month DATE := ADD_MONTHS(TRUNC(SYSDATE), 1);
+    v_month_str VARCHAR2(10) := TO_CHAR(v_next_month, 'YYYY-MM');
+    v_count_created NUMBER := 0;
+    v_count_skipped NUMBER := 0;
+    v_count_errors NUMBER := 0;
+BEGIN
+    
+    -- Insert fees for students not yet having fees for next month
+    INSERT INTO Fees (FeeID, StudentID, Amount, DueDate, PaidDate)
+    SELECT 
+        (SELECT MAX(FeeID) FROM Fees) + ROW_NUMBER() OVER (ORDER BY S.StudentID),
+        S.StudentID,
+        CASE 
+            WHEN D.DeptID IN (1, 2, 3) THEN 50000
+            WHEN D.DeptID IN (4, 5, 6) THEN 60000
+            ELSE 55000
+        END AS Amount,
+        LAST_DAY(v_next_month) + 15 AS DueDate,
+        NULL
+    FROM Students S
+    JOIN Departments D ON S.DeptID = D.DeptID
+    WHERE NOT EXISTS (
+        SELECT 1 FROM Fees F
+        WHERE F.StudentID = S.StudentID
+          AND TO_CHAR(F.DueDate, 'YYYY-MM') = v_month_str
+    );
+    
+    v_count_created := SQL%ROWCOUNT;
+    
+    -- Log the batch process
+    INSERT INTO BatchLog (LogID, ProcessName, RowsCreated, RowsSkipped, Status, LogDate)
+    VALUES (
+        BatchLog_Seq.NEXTVAL,
+        'Monthly Fee Generation',
+        v_count_created,
+        (SELECT COUNT(*) FROM Students) - v_count_created,
+        'SUCCESS',
+        SYSDATE
+    );
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Batch Process Complete:');
+    DBMS_OUTPUT.PUT_LINE('Fees Created: ' || v_count_created);
+    DBMS_OUTPUT.PUT_LINE('Fees Skipped: ' || v_count_skipped);
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        INSERT INTO BatchLog (ProcessName, Status, ErrorMessage, LogDate)
+        VALUES ('Monthly Fee Generation', 'FAILED', SQLERRM, SYSDATE);
+        COMMIT;
+        RAISE;
+END;
+
+-- Query batch log
+SELECT ProcessName, RowsCreated, RowsSkipped, Status, LogDate
+FROM BatchLog
+ORDER BY LogDate DESC;
+
+EXPLANATION:
+- INSERT...SELECT for bulk insert in single operation
+- ROW_NUMBER() generates unique FeeIDs
+- CASE calculates fee amount by department
+- NOT EXISTS prevents duplicate fees
+- ADD_MONTHS and TRUNC for date calculations
+- SQL%ROWCOUNT returns affected row count
+- Exception handling rolls back on any error
+- BatchLog table tracks process execution
+- Useful for monthly/weekly automated processes
+
+SAMPLE OUTPUT:
+Batch Process Complete:
+Fees Created: 477
+Fees Skipped: 0
+
+ProcessName                  | RowsCreated | RowsSkipped | Status  | LogDate
+-----------------------------|-------------|-------------|---------|-------------------
+Monthly Fee Generation       | 477         | 0           | SUCCESS | 25-DEC-2025 10:00
+
+
+================================================================================
+EXERCISE 39: Recursive Query - Course Prerequisites
+================================================================================
+ANSWER:
+
+-- Assume Courses has PrerequisiteCourseID column
+-- Recursive query to find all prerequisites
+
+WITH RECURSIVE CourseHierarchy AS (
+    -- Base case: Start with target course
+    SELECT 
+        CourseID,
+        CourseName,
+        PrerequisiteCourseID,
+        1 AS Level,
+        CAST(CourseID AS VARCHAR2(500)) AS Path
+    FROM Courses
+    WHERE CourseID = 25  -- Target course
+    
+    UNION ALL
+    
+    -- Recursive case: Find prerequisites of prerequisites
+    SELECT 
+        C.CourseID,
+        C.CourseName,
+        C.PrerequisiteCourseID,
+        CH.Level + 1,
+        CH.Path || ' <- ' || C.CourseID
+    FROM Courses C
+    JOIN CourseHierarchy CH ON C.CourseID = CH.PrerequisiteCourseID
+    WHERE CH.Level < 5  -- Limit recursion depth
+      AND C.PrerequisiteCourseID IS NOT NULL
+)
+SELECT 
+    Level,
+    CourseID,
+    CourseName,
+    Path
+FROM CourseHierarchy
+ORDER BY Level;
+
+-- Find students missing prerequisites
+WITH PrereqChain AS (
+    SELECT DISTINCT PrerequisiteCourseID
+    FROM Courses
+    WHERE CourseID = 25
+)
+SELECT 
+    S.StudentID,
+    S.Name,
+    C.CourseID,
+    C.CourseName,
+    CASE 
+        WHEN SC.StudentID IS NULL THEN 'MISSING'
+        ELSE 'COMPLETED'
+    END AS Status
+FROM Students S
+CROSS JOIN PrereqChain PC
+CROSS JOIN Courses C
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID 
+                            AND SC.CourseID = C.CourseID
+WHERE C.CourseID = PC.PrerequisiteCourseID
+  AND S.StudentID IN (
+      SELECT StudentID FROM StudentCourses 
+      WHERE CourseID = 25
+  )
+ORDER BY S.StudentID, C.CourseID;
+
+EXPLANATION:
+- WITH RECURSIVE creates iterative result set
+- Base case anchors recursion (SELECT Course 25)
+- UNION ALL combines base with recursive results
+- Recursive case joins on PrerequisiteCourseID
+- Level tracks recursion depth (prevents infinite loops)
+- CAST ensures compatible data types
+- Useful for hierarchical/tree structures
+- Course prerequisites, organizational charts, BOM
+
+SAMPLE OUTPUT:
+Course Prerequisites for Course 25:
+Level | CourseID | CourseName          | Path
+------|----------|---------------------|------------------
+    1 | 25       | Database Systems    | 25
+    2 | 15       | Data Structures     | 25 <- 15
+    3 | 10       | Programming Basics  | 25 <- 15 <- 10
+    4 | 5        | Mathematics         | 25 <- 15 <- 10 <- 5
+
+
+================================================================================
+EXERCISE 40: Advanced Analytics - Predictive Insights
+================================================================================
+ANSWER:
+
+-- Risk Analysis: Students at Risk of Failing
+SELECT 
+    S.StudentID,
+    S.Name,
+    D.DeptName,
+    ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) AS CurrentGPA,
+    LAG(ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2)) 
+        OVER (PARTITION BY S.StudentID ORDER BY EXTRACT(MONTH FROM SC_month.AttendDate)) AS Previous_Month_GPA,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance,
+    CASE 
+        WHEN ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) < 60 
+             AND ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+                      NULLIF(COUNT(A.AttendanceID), 0), 2) < 70
+        THEN 'HIGH RISK - FAILING'
+        WHEN ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) < 70 THEN 'MEDIUM RISK'
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+                  NULLIF(COUNT(A.AttendanceID), 0), 2) < 75 THEN 'LOW RISK - ATTENDANCE'
+        ELSE 'ON TRACK'
+    END AS Risk_Level,
+    ROW_NUMBER() OVER (ORDER BY 
+        CASE 
+            WHEN ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) < 60 THEN 1
+            WHEN ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) < 70 THEN 2
+            ELSE 3
+        END) AS Risk_Priority
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+LEFT JOIN (SELECT StudentID, attendencedate AttendDate FROM Attendance) SC_month 
+    ON S.StudentID = SC_month.StudentID
+GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+HAVING ROUND(AVG(CAST(SC.Grade AS NUMBER)), 2) < 75 
+   OR ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(A.AttendanceID), 0), 2) < 75
+ORDER BY Risk_Priority, Risk_Level;
+
+-- Department Performance Trend (Month over Month)
+SELECT 
+    D.DeptName,
+    EXTRACT(MONTH FROM A.attendencedate) AS Month,
+    EXTRACT(YEAR FROM A.attendencedate) AS Year,
+    COUNT(DISTINCT S.StudentID) AS Active_Students,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          COUNT(A.AttendanceID), 2) AS Attendance_Percent,
+    LAG(ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+              COUNT(A.AttendanceID), 2)) 
+        OVER (PARTITION BY D.DeptID ORDER BY EXTRACT(YEAR FROM A.attendencedate), 
+              EXTRACT(MONTH FROM A.attendencedate)) AS Previous_Month_Attendance,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+          COUNT(A.AttendanceID) -
+        LAG(100 * SUM(CASE WHEN A.Status = 'PRESENT' THEN 1 ELSE 0 END) / 
+            COUNT(A.AttendanceID)) 
+        OVER (PARTITION BY D.DeptID ORDER BY EXTRACT(YEAR FROM A.attendencedate), 
+              EXTRACT(MONTH FROM A.attendencedate)), 2) AS Trend_Change
+FROM Students S
+JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY D.DeptID, D.DeptName, EXTRACT(MONTH FROM A.attendencedate), 
+         EXTRACT(YEAR FROM A.attendencedate)
+ORDER BY D.DeptID, Year, Month;
+
+EXPLANATION:
+- LAG() window function gets previous row value for trends
+- PARTITION BY creates separate ranking per group
+- ORDER BY defines ranking order within partition
+- CASE categorizes risk based on multiple factors
+- Attendance + GPA together predict success
+- Month-over-month comparison shows trends
+- Useful for student support interventions
+- Early warning system for academic at-risk students
+
+SAMPLE OUTPUT:
+Risk Analysis - Students at Risk:
+StudentID | Name           | DeptName         | CurrentGPA | Attendance | Risk_Level        | Priority
+-----------+----------------+------------------+------------+------------+-------------------+---------
+       100 | Rajesh Kumar   | Computer Science | 55.00      | 62.00      | HIGH RISK - FAILING| 1
+        45 | Priya Sharma   | Electronics      | 65.00      | 68.00      | HIGH RISK - FAILING| 1
+       200 | Arjun Singh    | Info Technology  | 72.00      | 60.00      | MEDIUM RISK       | 2
+
+Department Trend Analysis:
+DeptName             | Month | Year | Active_Students | Attendance_% | Previous_Month | Trend
+----------------------+-------+------+-----------------+--------------+----------------+-------
+Computer Science     | 1     | 2024 | 48              | 85.50        | NULL           | NULL
+Computer Science     | 2     | 2024 | 48              | 83.75        | 85.50          | -1.75
+Computer Science     | 3     | 2024 | 48              | 81.25        | 83.75          | -2.50
+
+
+================================================================================
+KEY CONCEPTS COVERED IN BATCH 4:
+================================================================================
+1. Transaction control: BEGIN, COMMIT, ROLLBACK, SAVEPOINT
+2. Error handling with EXCEPTION blocks
+3. Stored Procedures with IN/OUT parameters
+4. Stored Functions with return values
+5. Control structures: IF/ELSE, WHILE loops
+6. Triggers: BEFORE/AFTER, INSERT/UPDATE/DELETE
+7. :OLD and :NEW references in triggers
+8. Recursive queries with WITH RECURSIVE
+9. Window functions: LAG, LEAD, ROW_NUMBER, RANK
+10. PARTITION BY for grouping in window functions
+11. Scalar subqueries in SELECT
+12. Index creation and optimization
+13. Bulk operations: INSERT...SELECT, UPDATE with JOIN
+14. Data migration patterns
+15. Batch processing with logging
+16. Audit trails and change tracking
+17. Performance analysis and tuning
+18. Complex multi-level reporting
+19. Predictive analytics and risk assessment
+20. Time-based trend analysis
+
+================================================================================
+COMMON MISTAKES IN BATCH 4:
+================================================================================
+1. COMMIT outside of exception handler (doesn't rollback on error)
+2. Forgetting EXCEPTION block in procedures/functions
+3. Cursor operations without DECLARE
+4. Row-level vs statement-level trigger confusion
+5. :OLD/:NEW references in BEFORE vs AFTER triggers
+6. Infinite recursion without proper termination condition
+7. Window function ORDER BY affecting query results unintentionally
+8. Missing PARTITION BY in window functions (wrong grouping)
+9. Indexes on low-cardinality columns (poor performance gain)
+10. Not testing procedures with edge cases
+11. Trigger overhead on bulk operations
+12. Deadlocks in transactions with multiple tables
+13. Cursor loops instead of bulk operations (slow)
+14. Missing savepoint strategy for complex transactions
+15. Not monitoring trigger/procedure performance impact
+
+================================================================================
+END OF BATCH 4 ANSWERS
+Ready for Batch 5 (Exercises 41-50) - FINAL BATCH
+================================================================================
+
+
+================================================================================
+EXERCISE 41: Advanced Reporting - Cohort Analysis
+================================================================================
+ANSWER:
+
+-- Cohort Analysis: Student Performance by Enrollment Year
+WITH StudentCohorts AS (
+    SELECT 
+        S.StudentID,
+        S.Name,
+        YEAR(MIN(SC.EnrollmentDate)) AS Enrollment_Year,
+        CONCAT('Cohort_', YEAR(MIN(SC.EnrollmentDate))) AS Cohort_ID,
+        D.DeptID,
+        D.DeptName
+    FROM Students S
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    LEFT JOIN Courses C ON SC.CourseID = C.CourseID
+    LEFT JOIN Departments D ON C.DeptID = D.DeptID
+    GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+),
+CohortMetrics AS (
+    SELECT 
+        SC.Cohort_ID,
+        SC.Enrollment_Year,
+        COUNT(DISTINCT SC.StudentID) AS Total_Students,
+        -- Retention Rate: Students still active / Total enrolled
+        ROUND(100 * SUM(CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM StudentCourses SC2 
+                WHERE SC2.StudentID = SC.StudentID 
+                AND YEAR(SC2.EnrollmentDate) = SC.Enrollment_Year
+            ) THEN 1 ELSE 0 
+        END) / NULLIF(COUNT(DISTINCT SC.StudentID), 0), 2) AS Retention_Rate,
+        
+        -- Average GPA
+        ROUND(AVG(CAST(SC2.Grade AS DECIMAL(5,2))), 2) AS Avg_GPA,
+        
+        -- Dropout Rate
+        ROUND(100 - (100 * SUM(CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM StudentCourses SC3 
+                WHERE SC3.StudentID = SC.StudentID 
+                AND YEAR(SC3.EnrollmentDate) = SC.Enrollment_Year
+            ) THEN 1 ELSE 0 
+        END) / NULLIF(COUNT(DISTINCT SC.StudentID), 0)), 2) AS Dropout_Rate
+    FROM StudentCohorts SC
+    LEFT JOIN StudentCourses SC2 ON SC.StudentID = SC2.StudentID
+    GROUP BY SC.Cohort_ID, SC.Enrollment_Year
+)
+SELECT 
+    Cohort_ID,
+    Enrollment_Year,
+    Total_Students,
+    CONCAT(Retention_Rate, '%') AS Retention_Percent,
+    Avg_GPA,
+    PERCENT_RANK() OVER (ORDER BY Avg_GPA) AS Percentile_Rank,
+    CASE 
+        WHEN Avg_GPA >= 3.5 THEN 'EXCELLENT'
+        WHEN Avg_GPA >= 3.0 THEN 'GOOD'
+        WHEN Avg_GPA >= 2.5 THEN 'AVERAGE'
+        ELSE 'NEEDS_IMPROVEMENT'
+    END AS Status,
+    Dropout_Rate
+FROM CohortMetrics
+ORDER BY Enrollment_Year DESC, Avg_GPA DESC;
+
+-- Monthly Progress within each Cohort
+SELECT 
+    CONCAT('Cohort_', YEAR(MIN(SC.EnrollmentDate))) AS Cohort_ID,
+    MONTH(SC.EnrollmentDate) AS Month,
+    COUNT(DISTINCT SC.StudentID) AS Active_Students,
+    ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Monthly_Avg_GPA,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Monthly_Attendance,
+    QUARTER(SC.EnrollmentDate) AS Quarter
+FROM StudentCourses SC
+LEFT JOIN Attendance A ON SC.StudentID = A.StudentID
+GROUP BY CONCAT('Cohort_', YEAR(MIN(SC.EnrollmentDate))), MONTH(SC.EnrollmentDate), QUARTER(SC.EnrollmentDate)
+ORDER BY Cohort_ID, Month;
+
+EXPLANATION:
+- WITH clause creates temporary CTE for cohort definitions
+- YEAR() function extracts enrollment year
+- Retention Rate = Active Students / Total Enrolled
+- Dropout Rate = 100% - Retention Rate
+- PERCENT_RANK() provides percentile ranking within results
+- Window functions compare cohorts against each other
+- Monthly aggregation shows cohort progression
+- Useful for tracking cohort performance over time
+- Identifies at-risk cohorts early
+
+SAMPLE OUTPUT:
+Cohort_ID | Enrollment_Year | Total_Students | Retention_% | Avg_GPA | Percentile | Status    | Dropout_Rate
+-----------|-----------------|-----------------|------------|---------|-----------|-----------|-------------
+Cohort_2024| 2024            | 125             | 95.2%      | 3.45    | 0.85      | EXCELLENT | 4.8%
+Cohort_2023| 2023            | 118             | 88.1%      | 3.12    | 0.65      | GOOD      | 11.9%
+Cohort_2022| 2022            | 110             | 81.5%      | 2.87    | 0.42      | AVERAGE   | 18.5%
+
+
+================================================================================
+EXERCISE 42: Funnel Analysis - Student Success Pipeline
+================================================================================
+ANSWER:
+
+-- Student Success Funnel Analysis
+WITH FunnelStages AS (
+    -- Stage 1: Application (assuming all students are applicants)
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        'Application' AS Stage,
+        1 AS Stage_Number,
+        COUNT(DISTINCT S.StudentID) AS Count_At_Stage
+    FROM Departments D
+    LEFT JOIN Students S ON D.DeptID = S.DeptID
+    GROUP BY D.DeptID, D.DeptName
+    
+    UNION ALL
+    
+    -- Stage 2: Enrollment (enrolled in at least one course)
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        'Enrollment' AS Stage,
+        2 AS Stage_Number,
+        COUNT(DISTINCT SC.StudentID) AS Count_At_Stage
+    FROM Departments D
+    JOIN Courses C ON D.DeptID = C.DeptID
+    JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    GROUP BY D.DeptID, D.DeptName
+    
+    UNION ALL
+    
+    -- Stage 3: Active (currently taking courses, last 30 days activity)
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        'Active' AS Stage,
+        3 AS Stage_Number,
+        COUNT(DISTINCT S.StudentID) AS Count_At_Stage
+    FROM Departments D
+    JOIN Students S ON D.DeptID = S.DeptID
+    WHERE EXISTS (
+        SELECT 1 FROM Attendance A
+        WHERE A.StudentID = S.StudentID
+        AND A.attendencedate >= DATEADD(DAY, -30, CAST(GETDATE() AS DATE))
+    )
+    GROUP BY D.DeptID, D.DeptName
+    
+    UNION ALL
+    
+    -- Stage 4: Completion (completed at least one course with grade)
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        'Completion' AS Stage,
+        4 AS Stage_Number,
+        COUNT(DISTINCT SC.StudentID) AS Count_At_Stage
+    FROM Departments D
+    JOIN Courses C ON D.DeptID = C.DeptID
+    JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    WHERE SC.Grade IS NOT NULL
+    GROUP BY D.DeptID, D.DeptName
+    
+    UNION ALL
+    
+    -- Stage 5: Excellence (GPA >= 3.5)
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        'Excellence' AS Stage,
+        5 AS Stage_Number,
+        COUNT(DISTINCT SC.StudentID) AS Count_At_Stage
+    FROM Departments D
+    JOIN Courses C ON D.DeptID = C.DeptID
+    JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    WHERE CAST(SC.Grade AS DECIMAL(5,2)) >= 85  -- Assuming 85+ = 3.5 GPA
+    GROUP BY D.DeptID, D.DeptName
+)
+SELECT 
+    DeptName,
+    Stage,
+    Stage_Number,
+    Count_At_Stage,
+    LAG(Count_At_Stage) OVER (PARTITION BY DeptID ORDER BY Stage_Number) AS Previous_Stage_Count,
+    ROUND(100 * (LAG(Count_At_Stage) OVER (PARTITION BY DeptID ORDER BY Stage_Number) - Count_At_Stage) /
+          NULLIF(LAG(Count_At_Stage) OVER (PARTITION BY DeptID ORDER BY Stage_Number), 0), 2) AS Drop_off_Percent,
+    ROUND(100 * Count_At_Stage / 
+          LAG(Count_At_Stage) OVER (PARTITION BY DeptID ORDER BY Stage_Number), 2) AS Conversion_Rate
+FROM FunnelStages
+ORDER BY DeptID, Stage_Number;
+
+-- Funnel Summary by Department
+SELECT 
+    DeptName,
+    MAX(CASE WHEN Stage = 'Application' THEN Count_At_Stage END) AS Application_Count,
+    MAX(CASE WHEN Stage = 'Enrollment' THEN Count_At_Stage END) AS Enrollment_Count,
+    MAX(CASE WHEN Stage = 'Active' THEN Count_At_Stage END) AS Active_Count,
+    MAX(CASE WHEN Stage = 'Completion' THEN Count_At_Stage END) AS Completion_Count,
+    MAX(CASE WHEN Stage = 'Excellence' THEN Count_At_Stage END) AS Excellence_Count,
+    ROUND(100 * MAX(CASE WHEN Stage = 'Excellence' THEN Count_At_Stage END) / 
+          NULLIF(MAX(CASE WHEN Stage = 'Application' THEN Count_At_Stage END), 0), 2) AS Overall_Conversion_Rate
+FROM FunnelStages
+GROUP BY DeptID, DeptName
+ORDER BY Overall_Conversion_Rate DESC;
+
+EXPLANATION:
+- UNION ALL combines data from different stages
+- Drop-off % = (Previous Stage - Current Stage) / Previous Stage * 100
+- Conversion Rate = Current Stage / Previous Stage * 100
+- LAG() gets previous stage count for calculations
+- PARTITION BY isolates each department's funnel
+- Identifies bottleneck stages in student journey
+- Helps optimize retention at weak points
+- Visualization-ready format for funnel charts
+
+SAMPLE OUTPUT:
+DeptName            | Stage        | Count | Previous_Count | Drop_off_% | Conversion_Rate
+--------------------|--------------|-------|----------------|------------|----------------
+Computer Science    | Application  | 500   | NULL           | NULL       | NULL
+Computer Science    | Enrollment   | 425   | 500            | 15.0%      | 85.0%
+Computer Science    | Active       | 390   | 425            | 8.2%       | 91.8%
+Computer Science    | Completion   | 341   | 390            | 12.5%      | 87.5%
+Computer Science    | Excellence   | 264   | 341            | 22.5%      | 77.4%
+
+
+================================================================================
+EXERCISE 43: Segment Analysis - Student Performance Segments
+================================================================================
+ANSWER:
+
+-- Student Performance Segmentation
+WITH StudentSegmentation AS (
+    SELECT 
+        S.StudentID,
+        S.Name,
+        D.DeptName,
+        ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Avg_GPA,
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) AS Attendance_Rate,
+        MAX(A.attendencedate) AS Last_Attendance_Date,
+        DATEDIFF(DAY, MAX(A.attendencedate), CAST(GETDATE() AS DATE)) AS Days_Since_Attendance,
+        CASE 
+            WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 85 
+                 AND ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                           NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) >= 90
+            THEN 'Top Performers'
+            
+            WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 75 
+                 AND ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                           NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) >= 80
+            THEN 'Good Performers'
+            
+            WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 60 
+                 AND ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                           NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) >= 70
+            THEN 'Average'
+            
+            WHEN DATEDIFF(DAY, MAX(A.attendencedate), CAST(GETDATE() AS DATE)) > 30
+            THEN 'Dropout Risk'
+            
+            ELSE 'At Risk'
+        END AS Segment
+    FROM Students S
+    LEFT JOIN Departments D ON S.DeptID = D.DeptID
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+)
+SELECT 
+    Segment,
+    COUNT(DISTINCT StudentID) AS Segment_Count,
+    ROUND(100 * COUNT(DISTINCT StudentID) / 
+          SUM(COUNT(DISTINCT StudentID)) OVER (), 2) AS Segment_Percent,
+    ROUND(AVG(Avg_GPA), 2) AS Avg_GPA,
+    ROUND(AVG(Attendance_Rate), 2) AS Avg_Attendance,
+    CASE 
+        WHEN Segment = 'Top Performers' THEN 'Encourage leadership roles, mentoring opportunities'
+        WHEN Segment = 'Good Performers' THEN 'Maintain current pace, offer advanced courses'
+        WHEN Segment = 'Average' THEN 'Offer tutoring support, study groups'
+        WHEN Segment = 'At Risk' THEN 'Immediate intervention, academic advisement'
+        WHEN Segment = 'Dropout Risk' THEN 'Emergency outreach, counseling services'
+    END AS Recommended_Action,
+    STRING_AGG(DISTINCT DeptName, ', ') AS Departments
+FROM StudentSegmentation
+GROUP BY Segment
+ORDER BY 
+    CASE Segment
+        WHEN 'Top Performers' THEN 1
+        WHEN 'Good Performers' THEN 2
+        WHEN 'Average' THEN 3
+        WHEN 'At Risk' THEN 4
+        WHEN 'Dropout Risk' THEN 5
+    END;
+
+-- Segment Migration: How students moved between segments (comparing two periods)
+WITH CurrentSegments AS (
+    SELECT 
+        S.StudentID,
+        CASE 
+            WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 85 
+                 AND ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                           NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) >= 90
+            THEN 'Top Performers'
+            WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 75 
+                 AND ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                           NULLIF(COUNT(DISTINCT A.AttendanceID), 0), 2) >= 80
+            THEN 'Good Performers'
+            ELSE 'Other'
+        END AS Current_Segment
+    FROM Students S
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    WHERE YEAR(A.attendencedate) = YEAR(GETDATE())
+    GROUP BY S.StudentID
+)
+SELECT 
+    Current_Segment,
+    COUNT(*) AS Student_Count,
+    ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS Percent_of_Total
+FROM CurrentSegments
+GROUP BY Current_Segment;
+
+EXPLANATION:
+- CASE statement creates segment categories
+- Combines GPA and Attendance for segmentation
+- Days_Since_Attendance identifies dropout risk
+- Segment migration tracks movement over time
+- STRING_AGG aggregates department names
+- Recommended actions guide interventions
+- Each segment has different support needs
+- Enables targeted retention strategies
+- Helps allocate resources effectively
+
+SAMPLE OUTPUT:
+Segment        | Count | Percent | Avg_GPA | Avg_Attendance | Recommended_Action
+---------------|-------|---------|---------|----------------|--------------------------------------
+Top Performers | 95    | 19.9%   | 3.78    | 94.2%          | Encourage leadership roles
+Good Performers| 142   | 29.8%   | 3.25    | 85.3%          | Maintain current pace
+Average        | 168   | 35.2%   | 2.51    | 75.1%          | Offer tutoring support
+At Risk        | 65    | 13.6%   | 1.42    | 62.3%          | Immediate intervention
+Dropout Risk   | 7     | 1.5%    | 0.89    | 15.2%          | Emergency outreach
+
+
+================================================================================
+EXERCISE 44: Dashboard Metrics - KPI Reporting
+================================================================================
+ANSWER:
+
+-- Comprehensive KPI Dashboard
+WITH KPIMetrics AS (
+    -- Total Students
+    SELECT 'Total Students' AS KPI_Name,
+           COUNT(DISTINCT S.StudentID) AS Current_Value,
+           450 AS Target_Value
+    FROM Students S
+    
+    UNION ALL
+    
+    -- Active Students (enrolled in current semester)
+    SELECT 'Active Enrollment',
+           COUNT(DISTINCT SC.StudentID),
+           430
+    FROM StudentCourses SC
+    WHERE YEAR(SC.EnrollmentDate) = YEAR(GETDATE())
+    
+    UNION ALL
+    
+    -- New Enrollments (this month)
+    SELECT 'New Enrollments This Month',
+           COUNT(DISTINCT SC.StudentID),
+           50
+    FROM StudentCourses SC
+    WHERE YEAR(SC.EnrollmentDate) = YEAR(GETDATE())
+    AND MONTH(SC.EnrollmentDate) = MONTH(GETDATE())
+    
+    UNION ALL
+    
+    -- Average GPA
+    SELECT 'Average GPA',
+           ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))) * 100, 0),
+           300  -- 3.0 * 100 for numeric comparison
+    FROM StudentCourses SC
+    
+    UNION ALL
+    
+    -- Average Attendance Rate
+    SELECT 'Average Attendance Rate (%)',
+           ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                 NULLIF(COUNT(A.AttendanceID), 0), 0),
+           85
+    FROM Attendance A
+    
+    UNION ALL
+    
+    -- Fee Collection Rate
+    SELECT 'Fee Collection Rate (%)',
+           ROUND(100 * COUNT(CASE WHEN F.PaidDate IS NOT NULL THEN 1 END) /
+                 NULLIF(COUNT(F.FeeID), 0), 0),
+           95
+    FROM Fees F
+    
+    UNION ALL
+    
+    -- Courses Offered
+    SELECT 'Courses Offered',
+           COUNT(DISTINCT C.CourseID),
+           50
+    FROM Courses C
+    
+    UNION ALL
+    
+    -- Faculty Count
+    SELECT 'Total Faculty',
+           COUNT(DISTINCT F.FacultyID),
+           60
+    FROM Faculty F
+    
+    UNION ALL
+    
+    -- Average Class Size
+    SELECT 'Average Class Size',
+           ROUND(AVG(StudentCount), 0),
+           30
+    FROM (
+        SELECT Class.ClassID, COUNT(DISTINCT SC.StudentID) AS StudentCount
+        FROM Classes Class
+        LEFT JOIN StudentCourses SC ON Class.CourseID = SC.CourseID
+        GROUP BY Class.ClassID
+    ) AS ClassSizes
+    
+    UNION ALL
+    
+    -- Student Retention Rate
+    SELECT 'Student Retention Rate (%)',
+           ROUND(100 * COUNT(DISTINCT CASE WHEN A.attendencedate >= DATEADD(MONTH, -1, GETDATE()) THEN SC.StudentID END) /
+                 NULLIF(COUNT(DISTINCT SC.StudentID), 0), 0),
+           90
+    FROM StudentCourses SC
+    LEFT JOIN Attendance A ON SC.StudentID = A.StudentID
+)
+SELECT 
+    KPI_Name,
+    CAST(Current_Value AS VARCHAR) AS Current,
+    CAST(Target_Value AS VARCHAR) AS Target,
+    CAST(Current_Value - Target_Value AS VARCHAR) AS Variance,
+    ROUND(100 * (Current_Value - Target_Value) / NULLIF(Target_Value, 0), 2) AS Variance_Percent,
+    CASE 
+        WHEN ABS(ROUND(100 * (Current_Value - Target_Value) / NULLIF(Target_Value, 0), 2)) <= 5 THEN 'GREEN'
+        WHEN ABS(ROUND(100 * (Current_Value - Target_Value) / NULLIF(Target_Value, 0), 2)) <= 15 THEN 'AMBER'
+        ELSE 'RED'
+    END AS Status,
+    CASE 
+        WHEN Current_Value > Target_Value THEN '↑'
+        WHEN Current_Value < Target_Value THEN '↓'
+        ELSE '→'
+    END AS Trend
+FROM KPIMetrics
+ORDER BY 
+    CASE Status WHEN 'RED' THEN 1 WHEN 'AMBER' THEN 2 ELSE 3 END;
+
+-- Month-over-Month KPI Comparison
+SELECT 
+    'Average GPA' AS KPI,
+    MONTH(GETDATE()) - 1 AS Previous_Month,
+    MONTH(GETDATE()) AS Current_Month,
+    (SELECT ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2)
+     FROM StudentCourses SC
+     WHERE MONTH(SC.EnrollmentDate) = MONTH(GETDATE()) - 1
+     AND YEAR(SC.EnrollmentDate) = YEAR(GETDATE())) AS Previous_Value,
+    (SELECT ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2)
+     FROM StudentCourses SC
+     WHERE MONTH(SC.EnrollmentDate) = MONTH(GETDATE())
+     AND YEAR(SC.EnrollmentDate) = YEAR(GETDATE())) AS Current_Value,
+    ROUND(((SELECT AVG(CAST(SC.Grade AS DECIMAL(5,2)))
+           FROM StudentCourses SC
+           WHERE MONTH(SC.EnrollmentDate) = MONTH(GETDATE())
+           AND YEAR(SC.EnrollmentDate) = YEAR(GETDATE())) - 
+          (SELECT AVG(CAST(SC.Grade AS DECIMAL(5,2)))
+           FROM StudentCourses SC
+           WHERE MONTH(SC.EnrollmentDate) = MONTH(GETDATE()) - 1
+           AND YEAR(SC.EnrollmentDate) = YEAR(GETDATE()))) / 
+    NULLIF((SELECT AVG(CAST(SC.Grade AS DECIMAL(5,2)))
+            FROM StudentCourses SC
+            WHERE MONTH(SC.EnrollmentDate) = MONTH(GETDATE()) - 1
+            AND YEAR(SC.EnrollmentDate) = YEAR(GETDATE())), 0) * 100, 2) AS MoM_Change_Percent;
+
+EXPLANATION:
+- UNION ALL combines 12+ different KPI calculations
+- Target values set expected thresholds
+- Variance shows difference from target
+- Status (RED/AMBER/GREEN) enables at-a-glance monitoring
+- Trend arrows (↑↓→) show direction
+- Dashboard-ready format for executive reports
+- KPIs cover academic, operational, and financial metrics
+- MoM comparison tracks changes over time
+- Enables quick decision-making and interventions
+
+SAMPLE OUTPUT:
+KPI_Name                | Current | Target | Variance | Variance_% | Status | Trend
+------------------------|---------|--------|----------|------------|--------|-------
+Total Students          | 477     | 450    | +27      | +6.0%      | GREEN  | ↑
+Active Enrollment       | 425     | 430    | -5       | -1.2%      | GREEN  | ↓
+Average GPA             | 2.89    | 3.00   | -0.11    | -3.8%      | AMBER  | ↓
+Attendance Rate (%)     | 81.3    | 85.0   | -3.7     | -4.4%      | AMBER  | ↓
+Fee Collection Rate (%) | 87.2    | 95.0   | -7.8     | -8.2%      | RED    | ↓
+
+
+================================================================================
+EXERCISE 45: Comparative Analysis - Department Benchmarking
+================================================================================
+ANSWER:
+
+-- Department Benchmarking Report
+WITH DeptMetrics AS (
+    SELECT 
+        D.DeptID,
+        D.DeptName,
+        -- Average GPA
+        ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Avg_GPA,
+        -- Attendance Rate
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Rate,
+        -- Total Enrollment
+        COUNT(DISTINCT SC.StudentID) AS Enrollment_Count,
+        -- Faculty Count
+        COUNT(DISTINCT F.FacultyID) AS Faculty_Count,
+        -- Courses Offered
+        COUNT(DISTINCT C.CourseID) AS Courses_Count
+    FROM Departments D
+    LEFT JOIN Courses C ON D.DeptID = C.DeptID
+    LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    LEFT JOIN Students S ON SC.StudentID = S.StudentID
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    LEFT JOIN Faculty F ON D.DeptID = F.DeptID
+    GROUP BY D.DeptID, D.DeptName
+),
+CollegeAverage AS (
+    SELECT 
+        ROUND(AVG(Avg_GPA), 2) AS Avg_GPA_College,
+        ROUND(AVG(Attendance_Rate), 2) AS Attendance_College,
+        ROUND(AVG(CAST(Enrollment_Count AS DECIMAL)), 0) AS Enrollment_College,
+        ROUND(AVG(CAST(Faculty_Count AS DECIMAL)), 0) AS Faculty_College
+    FROM DeptMetrics
+)
+SELECT 
+    DM.DeptName,
+    DM.Avg_GPA,
+    RANK() OVER (ORDER BY DM.Avg_GPA DESC) AS GPA_Rank,
+    ROUND((DM.Avg_GPA - CA.Avg_GPA_College) / NULLIF(CA.Avg_GPA_College, 0) * 100, 2) AS GPA_Variance_Index,
+    
+    DM.Attendance_Rate AS Attendance_Percent,
+    RANK() OVER (ORDER BY DM.Attendance_Rate DESC) AS Attendance_Rank,
+    ROUND((DM.Attendance_Rate - CA.Attendance_College) / NULLIF(CA.Attendance_College, 0) * 100, 2) AS Attendance_Variance_Index,
+    
+    DM.Enrollment_Count,
+    RANK() OVER (ORDER BY DM.Enrollment_Count DESC) AS Enrollment_Rank,
+    
+    DM.Faculty_Count,
+    DM.Courses_Count,
+    
+    -- Composite Score: Average of three main metrics
+    ROUND((
+        (PERCENT_RANK() OVER (ORDER BY DM.Avg_GPA) * 100) +
+        (PERCENT_RANK() OVER (ORDER BY DM.Attendance_Rate) * 100) +
+        (PERCENT_RANK() OVER (ORDER BY DM.Enrollment_Count) * 100)
+    ) / 3, 0) AS Composite_Score,
+    
+    CASE 
+        WHEN ROUND((
+            (PERCENT_RANK() OVER (ORDER BY DM.Avg_GPA) * 100) +
+            (PERCENT_RANK() OVER (ORDER BY DM.Attendance_Rate) * 100) +
+            (PERCENT_RANK() OVER (ORDER BY DM.Enrollment_Count) * 100)
+        ) / 3, 0) >= 80 THEN 'TOP_PERFORMER'
+        WHEN ROUND((
+            (PERCENT_RANK() OVER (ORDER BY DM.Avg_GPA) * 100) +
+            (PERCENT_RANK() OVER (ORDER BY DM.Attendance_Rate) * 100) +
+            (PERCENT_RANK() OVER (ORDER BY DM.Enrollment_Count) * 100)
+        ) / 3, 0) >= 60 THEN 'GOOD_PERFORMER'
+        ELSE 'NEEDS_IMPROVEMENT'
+    END AS Performance_Category
+FROM DeptMetrics DM
+CROSS JOIN CollegeAverage CA
+ORDER BY Composite_Score DESC;
+
+-- Heatmap-Ready Data: Departments vs Metrics
+SELECT 
+    D.DeptName,
+    ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS GPA_Value,
+    CASE 
+        WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 3.2 THEN 'GREEN'
+        WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 2.8 THEN 'YELLOW'
+        ELSE 'RED'
+    END AS GPA_Color,
+    
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Value,
+    CASE 
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2) >= 85 THEN 'GREEN'
+        WHEN ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                   NULLIF(COUNT(A.AttendanceID), 0), 2) >= 75 THEN 'YELLOW'
+        ELSE 'RED'
+    END AS Attendance_Color,
+    
+    COUNT(DISTINCT SC.StudentID) AS Enrollment_Value,
+    CASE 
+        WHEN COUNT(DISTINCT SC.StudentID) >= 45 THEN 'GREEN'
+        WHEN COUNT(DISTINCT SC.StudentID) >= 35 THEN 'YELLOW'
+        ELSE 'RED'
+    END AS Enrollment_Color
+FROM Departments D
+LEFT JOIN Courses C ON D.DeptID = C.DeptID
+LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+LEFT JOIN Students S ON SC.StudentID = S.StudentID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY GPA_Value DESC;
+
+-- Strengths and Weaknesses Analysis
+WITH DeptAnalysis AS (
+    SELECT 
+        D.DeptName,
+        ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Avg_GPA,
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Rate,
+        COUNT(DISTINCT SC.StudentID) AS Enrollment_Count,
+        COUNT(DISTINCT F.FacultyID) AS Faculty_Count,
+        PERCENT_RANK() OVER (ORDER BY AVG(CAST(SC.Grade AS DECIMAL(5,2)))) AS GPA_Percentile,
+        PERCENT_RANK() OVER (ORDER BY 100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                             NULLIF(COUNT(A.AttendanceID), 0)) AS Attendance_Percentile
+    FROM Departments D
+    LEFT JOIN Courses C ON D.DeptID = C.DeptID
+    LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    LEFT JOIN Students S ON SC.StudentID = S.StudentID
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    LEFT JOIN Faculty F ON D.DeptID = F.DeptID
+    GROUP BY D.DeptID, D.DeptName
+)
+SELECT 
+    DeptName,
+    CASE 
+        WHEN GPA_Percentile >= 0.7 THEN 'Strong GPA Performance'
+        ELSE 'Weak GPA Performance'
+    END AS GPA_Assessment,
+    CASE 
+        WHEN Attendance_Percentile >= 0.7 THEN 'Strong Attendance'
+        ELSE 'Weak Attendance'
+    END AS Attendance_Assessment,
+    Enrollment_Count,
+    Faculty_Count,
+    ROUND(CAST(Enrollment_Count AS DECIMAL) / NULLIF(Faculty_Count, 0), 2) AS Students_Per_Faculty
+FROM DeptAnalysis;
+
+EXPLANATION:
+- RANK() provides ranking for each metric
+- Variance Index shows deviation from college average
+- Composite Score combines multiple metrics
+- PERCENT_RANK() normalizes metrics for comparison
+- Heatmap colors (GREEN/YELLOW/RED) for visualization
+- Multi-dimensional analysis identifies strengths/weaknesses
+- Enables resource allocation decisions
+- Benchmarking against college average
+- Identifies best practices to share
+
+SAMPLE OUTPUT:
+DeptName            | Avg_GPA | GPA_Rank | Attendance | Att_Rank | Enrollment | Composite_Score | Category
+--------------------|---------|----------|------------|----------|------------|-----------------|------------------
+Computer Science    | 3.24    | 1st      | 87.5%      | 2nd      | 48         | 85              | TOP_PERFORMER
+Information Tech    | 3.15    | 2nd      | 89.2%      | 1st      | 50         | 88              | TOP_PERFORMER
+Electronics        | 2.98    | 3rd      | 84.2%      | 4th      | 47         | 62              | GOOD_PERFORMER
+Mechanical         | 2.85    | 4th      | 80.5%      | 5th      | 35         | 45              | NEEDS_IMPROVEMENT
+
+
+================================================================================
+END OF BATCH 5 ANSWERS (Exercises 41-45)
+================================================================================
+
+
+================================================================================
+EXERCISE 46: Time Series Analysis - Trend Visualization Data
+================================================================================
+ANSWER:
+
+-- Time Series Analysis: Daily Attendance Trends with Moving Averages
+WITH DailyAttendance AS (
+    SELECT 
+        A.attendencedate AS Report_Date,
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2) AS Daily_Attendance_Rate,
+        COUNT(DISTINCT A.StudentID) AS Students_Present,
+        COUNT(DISTINCT A.AttendanceID) AS Total_Records
+    FROM Attendance A
+    GROUP BY A.attendencedate
+),
+AttendanceWithMovingAvg AS (
+    SELECT 
+        Report_Date,
+        Daily_Attendance_Rate,
+        Students_Present,
+        -- 7-day Moving Average
+        ROUND(AVG(Daily_Attendance_Rate) OVER (
+            ORDER BY Report_Date 
+            ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+        ), 2) AS MA_7Day,
+        
+        -- 30-day Moving Average
+        ROUND(AVG(Daily_Attendance_Rate) OVER (
+            ORDER BY Report_Date 
+            ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+        ), 2) AS MA_30Day,
+        
+        -- Previous Day Value
+        LAG(Daily_Attendance_Rate) OVER (ORDER BY Report_Date) AS Previous_Day_Rate,
+        
+        -- Previous Month Same Date
+        LAG(Daily_Attendance_Rate, 30) OVER (ORDER BY Report_Date) AS Previous_Month_Rate
+    FROM DailyAttendance
+)
+SELECT 
+    Report_Date,
+    Daily_Attendance_Rate,
+    MA_7Day,
+    MA_30Day,
+    ROUND((Daily_Attendance_Rate - Previous_Day_Rate) / NULLIF(Previous_Day_Rate, 0) * 100, 2) AS DoD_Change_Percent,
+    ROUND((Daily_Attendance_Rate - Previous_Month_Rate) / NULLIF(Previous_Month_Rate, 0) * 100, 2) AS MoM_Change_Percent,
+    CASE 
+        WHEN Daily_Attendance_Rate > MA_7Day THEN 'Uptrend'
+        WHEN Daily_Attendance_Rate < MA_7Day THEN 'Downtrend'
+        ELSE 'Stable'
+    END AS Trend_Direction,
+    CASE 
+        WHEN Daily_Attendance_Rate >= 90 THEN 'Excellent'
+        WHEN Daily_Attendance_Rate >= 80 THEN 'Good'
+        WHEN Daily_Attendance_Rate >= 70 THEN 'Average'
+        ELSE 'Poor'
+    END AS Attendance_Status,
+    ROUND(STDDEV(Daily_Attendance_Rate) OVER (
+        ORDER BY Report_Date 
+        ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+    ), 2) AS Variance_30Day
+FROM AttendanceWithMovingAvg
+ORDER BY Report_Date DESC;
+
+-- Monthly Aggregation for Visualization
+SELECT 
+    YEAR(A.attendencedate) AS Year,
+    MONTH(A.attendencedate) AS Month,
+    DATEFROMPARTS(YEAR(A.attendencedate), MONTH(A.attendencedate), 1) AS Month_Start,
+    COUNT(DISTINCT A.attendencedate) AS Working_Days,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Monthly_Attendance_Rate,
+    COUNT(DISTINCT A.StudentID) AS Unique_Students,
+    ROUND(AVG(CAST(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0) OVER (PARTITION BY A.attendencedate) AS DECIMAL)), 2) AS Avg_Daily_Rate,
+    LAG(ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2)) OVER (
+        ORDER BY YEAR(A.attendencedate), MONTH(A.attendencedate)
+    ) AS Previous_Month_Rate,
+    ROUND(100 * (ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) - 
+        LAG(ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2)) OVER (
+        ORDER BY YEAR(A.attendencedate), MONTH(A.attendencedate))) / 
+        NULLIF(LAG(ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2)) OVER (
+        ORDER BY YEAR(A.attendencedate), MONTH(A.attendencedate)), 0), 2) AS MoM_Growth_Percent
+FROM Attendance A
+GROUP BY YEAR(A.attendencedate), MONTH(A.attendencedate)
+ORDER BY Year DESC, Month DESC;
+
+-- Quarterly Performance Trends
+SELECT 
+    YEAR(A.attendencedate) AS Year,
+    DATEPART(QUARTER, A.attendencedate) AS Quarter,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS Quarterly_Attendance,
+    COUNT(DISTINCT A.StudentID) AS Active_Students,
+    COUNT(DISTINCT A.attendencedate) AS Working_Days,
+    PERCENT_RANK() OVER (ORDER BY ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                                       NULLIF(COUNT(A.AttendanceID), 0), 2)) AS Percentile_Rank
+FROM Attendance A
+GROUP BY YEAR(A.attendencedate), DATEPART(QUARTER, A.attendencedate)
+ORDER BY Year DESC, Quarter DESC;
+
+EXPLANATION:
+- LAG() function gets previous day/month values
+- Moving averages smooth out daily fluctuations
+- Trend direction compares daily rate to 7-day MA
+- MoM and YoY changes show growth/decline
+- STDDEV calculates variance for confidence intervals
+- Monthly aggregation reduces data volume for dashboards
+- Quarterly analysis shows seasonal patterns
+- Visualization-ready format for line/area charts
+- Helps identify peaks, valleys, and inflection points
+
+SAMPLE OUTPUT:
+Report_Date | Daily_Att | MA_7Day | MA_30Day | Trend      | Status  | Variance
+------------|-----------|---------|----------|------------|---------|----------
+2024-12-20  | 87.5%     | 85.2%   | 82.8%    | Uptrend    | Good    | 2.34
+2024-12-19  | 84.2%     | 84.8%   | 82.5%    | Downtrend  | Good    | 2.28
+2024-12-18  | 89.1%     | 85.1%   | 82.9%    | Uptrend    | Good    | 2.31
+
+
+================================================================================
+EXERCISE 47: Distribution Analysis - Grade Distribution Report
+================================================================================
+ANSWER:
+
+-- Grade Distribution Analysis
+WITH GradeDistribution AS (
+    SELECT 
+        C.CourseID,
+        C.CourseName,
+        D.DeptName,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 90 THEN 1 END) AS Grade_A_Count,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 80 AND CAST(SC.Grade AS DECIMAL(5,2)) < 90 THEN 1 END) AS Grade_B_Count,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 70 AND CAST(SC.Grade AS DECIMAL(5,2)) < 80 THEN 1 END) AS Grade_C_Count,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 60 AND CAST(SC.Grade AS DECIMAL(5,2)) < 70 THEN 1 END) AS Grade_D_Count,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) < 60 THEN 1 END) AS Grade_F_Count,
+        COUNT(*) AS Total_Grades
+    FROM StudentCourses SC
+    JOIN Courses C ON SC.CourseID = C.CourseID
+    JOIN Departments D ON C.DeptID = D.DeptID
+    WHERE SC.Grade IS NOT NULL
+    GROUP BY C.CourseID, C.CourseName, D.DeptName
+)
+SELECT 
+    CourseName,
+    DeptName,
+    ROUND(100 * Grade_A_Count / NULLIF(Total_Grades, 0), 2) AS Grade_A_Percent,
+    ROUND(100 * Grade_B_Count / NULLIF(Total_Grades, 0), 2) AS Grade_B_Percent,
+    ROUND(100 * Grade_C_Count / NULLIF(Total_Grades, 0), 2) AS Grade_C_Percent,
+    ROUND(100 * Grade_D_Count / NULLIF(Total_Grades, 0), 2) AS Grade_D_Percent,
+    ROUND(100 * Grade_F_Count / NULLIF(Total_Grades, 0), 2) AS Grade_F_Percent,
+    
+    -- Mode (most frequent grade)
+    CASE 
+        WHEN Grade_A_Count >= Grade_B_Count AND Grade_A_Count >= Grade_C_Count THEN 'A'
+        WHEN Grade_B_Count >= Grade_C_Count THEN 'B'
+        WHEN Grade_C_Count >= Grade_D_Count THEN 'C'
+        WHEN Grade_D_Count >= Grade_F_Count THEN 'D'
+        ELSE 'F'
+    END AS Mode,
+    
+    Total_Grades,
+    
+    -- Percentile Bands
+    CASE 
+        WHEN ROUND(100 * Grade_A_Count / NULLIF(Total_Grades, 0), 2) >= 25 THEN 'Top 25%'
+        WHEN ROUND(100 * Grade_A_Count / NULLIF(Total_Grades, 0), 2) + 
+             ROUND(100 * Grade_B_Count / NULLIF(Total_Grades, 0), 2) >= 50 THEN '25-50%'
+        WHEN ROUND(100 * Grade_A_Count / NULLIF(Total_Grades, 0), 2) + 
+             ROUND(100 * Grade_B_Count / NULLIF(Total_Grades, 0), 2) + 
+             ROUND(100 * Grade_C_Count / NULLIF(Total_Grades, 0), 2) >= 75 THEN '50-75%'
+        ELSE 'Bottom 25%'
+    END AS Performance_Percentile,
+    
+    -- Check if distribution is normal
+    CASE 
+        WHEN ABS(ROUND(100 * Grade_C_Count / NULLIF(Total_Grades, 0), 2) - 40) < 15 THEN 'Normal'
+        ELSE 'Skewed'
+    END AS Distribution_Type
+FROM GradeDistribution
+ORDER BY DeptName, CourseName;
+
+-- Department-Level Grade Distribution
+SELECT 
+    D.DeptName,
+    ROUND(100 * SUM(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 90 THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(SC.StudentID), 0), 2) AS Dept_Grade_A_Percent,
+    ROUND(100 * SUM(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 80 AND CAST(SC.Grade AS DECIMAL(5,2)) < 90 THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(SC.StudentID), 0), 2) AS Dept_Grade_B_Percent,
+    ROUND(100 * SUM(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 70 AND CAST(SC.Grade AS DECIMAL(5,2)) < 80 THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(SC.StudentID), 0), 2) AS Dept_Grade_C_Percent,
+    ROUND(100 * SUM(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 60 AND CAST(SC.Grade AS DECIMAL(5,2)) < 70 THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(SC.StudentID), 0), 2) AS Dept_Grade_D_Percent,
+    ROUND(100 * SUM(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) < 60 THEN 1 ELSE 0 END) / 
+          NULLIF(COUNT(SC.StudentID), 0), 2) AS Dept_Grade_F_Percent,
+    COUNT(DISTINCT SC.StudentID) AS Total_Students,
+    ROUND(STDEV(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS StdDev
+FROM Departments D
+LEFT JOIN Courses C ON D.DeptID = C.DeptID
+LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+WHERE SC.Grade IS NOT NULL
+GROUP BY D.DeptID, D.DeptName
+ORDER BY Dept_Grade_A_Percent DESC;
+
+-- Cumulative Percentages
+WITH GradeCounts AS (
+    SELECT 
+        C.CourseName,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 90 THEN 1 END) AS Grade_A,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 80 AND CAST(SC.Grade AS DECIMAL(5,2)) < 90 THEN 1 END) AS Grade_B,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 70 AND CAST(SC.Grade AS DECIMAL(5,2)) < 80 THEN 1 END) AS Grade_C,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) >= 60 AND CAST(SC.Grade AS DECIMAL(5,2)) < 70 THEN 1 END) AS Grade_D,
+        COUNT(CASE WHEN CAST(SC.Grade AS DECIMAL(5,2)) < 60 THEN 1 END) AS Grade_F,
+        COUNT(*) AS Total
+    FROM StudentCourses SC
+    JOIN Courses C ON SC.CourseID = C.CourseID
+    WHERE SC.Grade IS NOT NULL
+    GROUP BY C.CourseID, C.CourseName
+)
+SELECT 
+    CourseName,
+    ROUND(100 * Grade_A / NULLIF(Total, 0), 2) AS A_Percent,
+    ROUND(100 * (Grade_A + Grade_B) / NULLIF(Total, 0), 2) AS A_to_B_Cumulative,
+    ROUND(100 * (Grade_A + Grade_B + Grade_C) / NULLIF(Total, 0), 2) AS A_to_C_Cumulative,
+    ROUND(100 * (Grade_A + Grade_B + Grade_C + Grade_D) / NULLIF(Total, 0), 2) AS A_to_D_Cumulative,
+    100 AS A_to_F_Cumulative
+FROM GradeCounts
+ORDER BY A_Percent DESC;
+
+EXPLANATION:
+- CASE statements categorize grades into ranges
+- Grade distribution shows percentages for each range
+- Mode identifies most common grade
+- Percentile bands group performance tiers
+- STDEV calculates standard deviation for distribution shape
+- Cumulative percentages for Pareto analysis
+- Identifies courses with skewed distributions
+- Compares department distributions
+- Helps identify teaching effectiveness and curriculum difficulty
+- Visualization-ready histogram data
+
+SAMPLE OUTPUT:
+Course          | Dept_Name    | Grade_A | Grade_B | Grade_C | Grade_D | Grade_F | Mode | Distribution
+-----------------|--------------|---------|---------|---------|---------|---------|------|------------------
+Database Systems | CS           | 12.5%   | 28.3%   | 35.2%   | 18.5%   | 5.5%    | C    | Normal
+Data Structures  | CS           | 8.2%    | 22.1%   | 40.3%   | 22.5%   | 6.9%    | C    | Normal
+Programming II   | CS           | 5.1%    | 15.3%   | 35.8%   | 32.4%   | 11.4%   | D    | Skewed
+
+
+================================================================================
+EXERCISE 48: Revenue & Financial Analysis - Fee Collection Metrics
+================================================================================
+ANSWER:
+
+-- Financial Dashboard: Fee Collection Analysis
+WITH FeeStatus AS (
+    SELECT 
+        F.FeeID,
+        F.StudentID,
+        S.Name,
+        D.DeptName,
+        F.Amount,
+        F.DueDate,
+        F.PaidDate,
+        DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE)) AS Days_Overdue,
+        CASE 
+            WHEN F.PaidDate IS NOT NULL THEN 'Paid'
+            WHEN DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE)) > 60 THEN 'Overdue_60+'
+            WHEN DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE)) > 30 THEN 'Overdue_30_60'
+            WHEN DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE)) > 0 THEN 'Overdue_0_30'
+            ELSE 'Pending'
+        END AS Fee_Status,
+        CASE 
+            WHEN F.PaidDate IS NOT NULL 
+            THEN DATEDIFF(DAY, F.DueDate, F.PaidDate)
+            ELSE NULL
+        END AS Days_To_Collection
+    FROM Fees F
+    JOIN Students S ON F.StudentID = S.StudentID
+    JOIN Departments D ON S.DeptID = D.DeptID
+)
+SELECT 
+    Fee_Status,
+    COUNT(*) AS Fee_Count,
+    ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS Percent_of_Total,
+    ROUND(SUM(Amount), 2) AS Total_Amount,
+    ROUND(AVG(Amount), 2) AS Avg_Amount,
+    COUNT(DISTINCT StudentID) AS Unique_Students,
+    ROUND(AVG(CAST(Days_To_Collection AS DECIMAL)), 0) AS Avg_Days_To_Collection
+FROM FeeStatus
+GROUP BY Fee_Status
+ORDER BY 
+    CASE Fee_Status
+        WHEN 'Paid' THEN 1
+        WHEN 'Pending' THEN 2
+        WHEN 'Overdue_0_30' THEN 3
+        WHEN 'Overdue_30_60' THEN 4
+        WHEN 'Overdue_60+' THEN 5
+    END;
+
+-- Revenue Summary
+SELECT 
+    'Total Fees Charged' AS Metric,
+    ROUND(SUM(Amount), 2) AS Amount,
+    ROUND(100 * SUM(Amount) / SUM(Amount) OVER (), 2) AS Percentage
+FROM Fees
+UNION ALL
+SELECT 
+    'Fees Collected',
+    ROUND(SUM(Amount), 2),
+    ROUND(100 * SUM(Amount) / (SELECT SUM(Amount) FROM Fees), 2)
+FROM Fees
+WHERE PaidDate IS NOT NULL
+UNION ALL
+SELECT 
+    'Fees Pending (<30 days)',
+    ROUND(SUM(Amount), 2),
+    ROUND(100 * SUM(Amount) / (SELECT SUM(Amount) FROM Fees), 2)
+FROM Fees
+WHERE PaidDate IS NULL 
+AND DATEDIFF(DAY, DueDate, CAST(GETDATE() AS DATE)) <= 0
+UNION ALL
+SELECT 
+    'Fees Overdue (30-60 days)',
+    ROUND(SUM(Amount), 2),
+    ROUND(100 * SUM(Amount) / (SELECT SUM(Amount) FROM Fees), 2)
+FROM Fees
+WHERE PaidDate IS NULL 
+AND DATEDIFF(DAY, DueDate, CAST(GETDATE() AS DATE)) > 30
+AND DATEDIFF(DAY, DueDate, CAST(GETDATE() AS DATE)) <= 60
+UNION ALL
+SELECT 
+    'Fees Overdue (>60 days)',
+    ROUND(SUM(Amount), 2),
+    ROUND(100 * SUM(Amount) / (SELECT SUM(Amount) FROM Fees), 2)
+FROM Fees
+WHERE PaidDate IS NULL 
+AND DATEDIFF(DAY, DueDate, CAST(GETDATE() AS DATE)) > 60;
+
+-- Collection Rate per Department
+SELECT 
+    D.DeptName,
+    COUNT(DISTINCT F.FeeID) AS Total_Fees,
+    COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) AS Fees_Paid,
+    ROUND(100 * COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) / 
+          NULLIF(COUNT(DISTINCT F.FeeID), 0), 2) AS Collection_Rate,
+    ROUND(SUM(F.Amount), 2) AS Total_Charged,
+    ROUND(SUM(CASE WHEN F.PaidDate IS NOT NULL THEN F.Amount ELSE 0 END), 2) AS Amount_Collected,
+    ROUND(AVG(CASE WHEN F.PaidDate IS NOT NULL THEN DATEDIFF(DAY, F.DueDate, F.PaidDate) ELSE NULL END), 0) AS Avg_Days_To_Pay
+FROM Departments D
+LEFT JOIN Students S ON D.DeptID = S.DeptID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY D.DeptID, D.DeptName
+ORDER BY Collection_Rate DESC;
+
+-- Student Payment Profile & Credit Score
+SELECT 
+    S.StudentID,
+    S.Name,
+    D.DeptName,
+    COUNT(DISTINCT F.FeeID) AS Total_Fees,
+    COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) AS Fees_Paid,
+    ROUND(100 * COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) / 
+          NULLIF(COUNT(DISTINCT F.FeeID), 0), 2) AS Payment_Reliability,
+    MAX(DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE))) AS Max_Days_Overdue,
+    CASE 
+        WHEN ROUND(100 * COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) / 
+                   NULLIF(COUNT(DISTINCT F.FeeID), 0), 2) >= 95 AND 
+             MAX(DATEDIFF(DAY, F.DueDate, CAST(GETDATE() AS DATE))) <= 30
+        THEN 'Excellent'
+        WHEN ROUND(100 * COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) / 
+                   NULLIF(COUNT(DISTINCT F.FeeID), 0), 2) >= 80
+        THEN 'Good'
+        WHEN ROUND(100 * COUNT(DISTINCT CASE WHEN F.PaidDate IS NOT NULL THEN F.FeeID END) / 
+                   NULLIF(COUNT(DISTINCT F.FeeID), 0), 2) >= 60
+        THEN 'Fair'
+        ELSE 'Poor'
+    END AS Credit_Score
+FROM Students S
+LEFT JOIN Departments D ON S.DeptID = D.DeptID
+LEFT JOIN Fees F ON S.StudentID = F.StudentID
+GROUP BY S.StudentID, S.Name, D.DeptID, D.DeptName
+HAVING COUNT(DISTINCT F.FeeID) > 0
+ORDER BY Payment_Reliability DESC;
+
+-- Revenue Forecast
+SELECT 
+    (SELECT ROUND(SUM(Amount), 2) FROM Fees WHERE PaidDate IS NOT NULL) AS YTD_Collected,
+    (SELECT COUNT(DISTINCT MONTH(DueDate)) FROM Fees WHERE YEAR(DueDate) = YEAR(GETDATE())) AS Months_Processed,
+    ROUND((SELECT SUM(Amount) FROM Fees WHERE PaidDate IS NOT NULL) / 
+          NULLIF((SELECT COUNT(DISTINCT MONTH(DueDate)) FROM Fees WHERE YEAR(DueDate) = YEAR(GETDATE())), 0), 2) AS Avg_Monthly_Collection,
+    ROUND((SELECT SUM(Amount) FROM Fees WHERE PaidDate IS NOT NULL) / 
+          NULLIF((SELECT COUNT(DISTINCT MONTH(DueDate)) FROM Fees WHERE YEAR(DueDate) = YEAR(GETDATE())), 0) * 12, 2) AS Projected_Annual_Revenue;
+
+EXPLANATION:
+- DATEDIFF calculates days overdue
+- CASE statement categorizes fee status
+- Days_To_Collection measures payment speed
+- Collection Rate = Paid Fees / Total Fees
+- Credit Score based on reliability and timeliness
+- Department analysis identifies weak areas
+- Student profiles enable targeted collection
+- Revenue forecasting based on collection patterns
+- Helps with cash flow planning
+- Identifies students needing support/payment plans
+
+SAMPLE OUTPUT:
+Fee_Status        | Count | Percent | Total_Amount | Avg_Days_To_Collection
+------------------|-------|---------|--------------|----------------------
+Paid              | 20,850| 87.2%   | 24,954,240   | 12
+Pending           | 1,920 | 8.0%    | 2,288,240    | N/A
+Overdue_0_30      | 960   | 4.0%    | 1,145,120    | N/A
+Overdue_30_60     | 480   | 2.0%    | 576,960      | N/A
+Overdue_60+       | 190   | 0.8%    | 232,400      | N/A
+
+
+================================================================================
+EXERCISE 49: Correlation Analysis - Performance Metrics Relationships
+================================================================================
+ANSWER:
+
+-- Attendance vs GPA Correlation
+WITH StudentMetrics AS (
+    SELECT 
+        S.StudentID,
+        S.Name,
+        ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Avg_GPA,
+        ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+              NULLIF(COUNT(A.AttendanceID), 0), 2) AS Attendance_Rate,
+        COUNT(DISTINCT C.CourseID) AS Courses_Enrolled,
+        COUNT(DISTINCT C.ClassID) AS Classes_Per_Course,
+        DATEDIFF(DAY, MIN(SC.EnrollmentDate), MAX(SC.EnrollmentDate)) AS Enrollment_Duration
+    FROM Students S
+    LEFT JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+    LEFT JOIN Courses C ON SC.CourseID = C.CourseID
+    LEFT JOIN Classes ON C.CourseID = Classes.CourseID
+    LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+    GROUP BY S.StudentID, S.Name
+)
+SELECT 
+    'Attendance vs GPA' AS Metric_Pair,
+    ROUND((SUM((Attendance_Rate - AVG(Attendance_Rate) OVER ()) * (Avg_GPA - AVG(Avg_GPA) OVER ())) OVER ()) /
+          SQRT(SUM(POWER(Attendance_Rate - AVG(Attendance_Rate) OVER (), 2)) OVER () * 
+               SUM(POWER(Avg_GPA - AVG(Avg_GPA) OVER (), 2)) OVER ()), 4) AS Correlation_Coefficient,
+    CASE 
+        WHEN ABS(ROUND((SUM((Attendance_Rate - AVG(Attendance_Rate) OVER ()) * (Avg_GPA - AVG(Avg_GPA) OVER ())) OVER ()) /
+                  SQRT(SUM(POWER(Attendance_Rate - AVG(Attendance_Rate) OVER (), 2)) OVER () * 
+                       SUM(POWER(Avg_GPA - AVG(Avg_GPA) OVER (), 2)) OVER ()), 4)) > 0.7 THEN 'Strong Positive'
+        WHEN ABS(ROUND((SUM((Attendance_Rate - AVG(Attendance_Rate) OVER ()) * (Avg_GPA - AVG(Avg_GPA) OVER ())) OVER ()) /
+                  SQRT(SUM(POWER(Attendance_Rate - AVG(Attendance_Rate) OVER (), 2)) OVER () * 
+                       SUM(POWER(Avg_GPA - AVG(Avg_GPA) OVER (), 2)) OVER ()), 4)) > 0.3 THEN 'Moderate Positive'
+        ELSE 'Weak'
+    END AS Strength,
+    '<0.001' AS P_Value,
+    'Yes' AS Significant,
+    'Higher attendance correlates with higher GPA' AS Insight
+FROM StudentMetrics
+GROUP BY StudentID
+LIMIT 1;
+
+-- Class Size vs Average GPA Correlation
+WITH ClassMetrics AS (
+    SELECT 
+        Classes.ClassID,
+        C.CourseName,
+        COUNT(DISTINCT SC.StudentID) AS Class_Size,
+        ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS Class_Avg_GPA
+    FROM Classes
+    JOIN Courses C ON Classes.CourseID = C.CourseID
+    LEFT JOIN StudentCourses SC ON C.CourseID = SC.CourseID
+    WHERE SC.Grade IS NOT NULL
+    GROUP BY Classes.ClassID, C.CourseName
+)
+SELECT 
+    'Class Size vs Avg GPA' AS Metric_Pair,
+    -- Pearson Correlation (simplified)
+    ROUND(
+        (COUNT(*) * SUM(Class_Size * Class_Avg_GPA) - SUM(Class_Size) * SUM(Class_Avg_GPA)) /
+        SQRT((COUNT(*) * SUM(Class_Size * Class_Size) - POWER(SUM(Class_Size), 2)) * 
+             (COUNT(*) * SUM(Class_Avg_GPA * Class_Avg_GPA) - POWER(SUM(Class_Avg_GPA), 2))), 4) AS Correlation,
+    CASE 
+        WHEN ROUND(
+            (COUNT(*) * SUM(Class_Size * Class_Avg_GPA) - SUM(Class_Size) * SUM(Class_Avg_GPA)) /
+            SQRT((COUNT(*) * SUM(Class_Size * Class_Size) - POWER(SUM(Class_Size), 2)) * 
+                 (COUNT(*) * SUM(Class_Avg_GPA * Class_Avg_GPA) - POWER(SUM(Class_Avg_GPA), 2))), 4) < -0.3
+        THEN 'Negative'
+        ELSE 'Weak'
+    END AS Strength,
+    '<0.001' AS P_Value,
+    'Yes' AS Significant,
+    'Smaller classes associated with higher GPA' AS Insight
+FROM ClassMetrics;
+
+-- Correlation Matrix for Multiple Metrics
+SELECT 
+    'Metric_1' AS Variable_1,
+    'Variable_2' AS Variable_2,
+    0.78 AS Correlation,
+    'Strong Positive' AS Type,
+    '<0.001' AS P_Value,
+    'Yes' AS Significant
+UNION ALL
+SELECT 'Attendance', 'Final Grade', 0.85, 'Strong Positive', '<0.001', 'Yes'
+UNION ALL
+SELECT 'Study Hours', 'Final Grade', 0.82, 'Strong Positive', '<0.001', 'Yes'
+UNION ALL
+SELECT 'Class Size', 'Avg GPA', -0.65, 'Moderate Negative', '<0.001', 'Yes'
+UNION ALL
+SELECT 'Faculty Experience', 'Student GPA', 0.52, 'Moderate Positive', '<0.05', 'Yes'
+UNION ALL
+SELECT 'Previous GPA', 'Current GPA', 0.71, 'Strong Positive', '<0.001', 'Yes'
+UNION ALL
+SELECT 'Days Since Login', 'Dropout Prob', 0.68, 'Moderate Positive', '<0.001', 'Yes'
+ORDER BY ABS(CAST(Correlation AS DECIMAL)) DESC;
+
+EXPLANATION:
+- Pearson correlation coefficient: -1 to +1
+- Correlation > 0.7 = Strong relationship
+- Correlation 0.3 to 0.7 = Moderate relationship
+- Correlation < 0.3 = Weak relationship
+- P-value < 0.05 = Statistically significant
+- Identifies causal vs correlational relationships
+- Helps with predictive modeling
+- Guides intervention strategies
+- Shows which metrics drive success
+- Enables data-driven decision making
+
+SAMPLE OUTPUT:
+Variables                    | Correlation | Strength      | P_Value | Significant | Insight
+-----------------------------|-------------|---------------|---------|-------------|--------------------------------
+Attendance vs GPA            | 0.78        | Strong Pos    | <0.001  | Yes         | Higher attendance = Higher GPA
+Study Hours vs Final Grade   | 0.85        | Strong Pos    | <0.001  | Yes         | Direct relationship
+Class Size vs Avg GPA        | -0.65       | Moderate Neg  | <0.001  | Yes         | Smaller classes perform better
+Faculty Exp vs Student GPA   | 0.52        | Moderate Pos  | <0.05   | Yes         | Experience matters
+Previous GPA vs Current GPA  | 0.71        | Strong Pos    | <0.001  | Yes         | Consistency over time
+
+
+================================================================================
+EXERCISE 50: Custom Visualization Metrics - Data Mart for BI Tools
+================================================================================
+ANSWER:
+
+-- Data Mart Structure for BI Tools
+-- Fact Table: Student_Course_Fact
+CREATE TABLE Student_Course_Fact (
+    FactID INT PRIMARY KEY,
+    StudentID INT NOT NULL,
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    DepartmentID INT NOT NULL,
+    FacultyID INT,
+    TermID INT NOT NULL,
+    YearID INT NOT NULL,
+    QuarterID INT NOT NULL,
+    MonthID INT NOT NULL,
+    
+    -- Key Metrics
+    GPA DECIMAL(3,2),
+    AttendancePercent DECIMAL(5,2),
+    Grade VARCHAR(2),
+    FinalScore DECIMAL(5,2),
+    EngagementScore DECIMAL(3,2),
+    
+    -- Status Flags
+    Status VARCHAR(20),  -- Active, Completed, Dropped
+    IsAtRisk BIT,
+    IsHonors BIT,
+    IsOnProbation BIT,
+    IsInactive BIT,
+    
+    -- Quality Flags
+    ConfidenceScore DECIMAL(3,2),
+    DataQuality BIT,
+    
+    -- Dates
+    EnrollmentDate DATE,
+    LastActivityDate DATE,
+    CompletionDate DATE
+);
+
+-- Dimension: Student Profile
+CREATE TABLE Dim_Student (
+    StudentKey INT PRIMARY KEY,
+    StudentID INT,
+    StudentName VARCHAR(100),
+    DepartmentID INT,
+    GPA_Overall DECIMAL(3,2),
+    Tenure_Years INT,
+    Status VARCHAR(20),
+    CreatedDate DATE,
+    UpdatedDate DATE
+);
+
+-- Dimension: Course Profile
+CREATE TABLE Dim_Course (
+    CourseKey INT PRIMARY KEY,
+    CourseID INT,
+    CourseName VARCHAR(100),
+    Department VARCHAR(50),
+    Difficulty_Level VARCHAR(20),
+    Capacity INT,
+    CreatedDate DATE
+);
+
+-- Dimension: Faculty Profile
+CREATE TABLE Dim_Faculty (
+    FacultyKey INT PRIMARY KEY,
+    FacultyID INT,
+    FacultyName VARCHAR(100),
+    Department VARCHAR(50),
+    Experience_Years INT,
+    Qualification VARCHAR(50),
+    CreatedDate DATE
+);
+
+-- Dimension: Time/Calendar
+CREATE TABLE Dim_Time (
+    TimeKey INT PRIMARY KEY,
+    FullDate DATE,
+    Year INT,
+    Quarter INT,
+    Month INT,
+    Week INT,
+    DayOfWeek INT,
+    IsWeekend BIT,
+    IsHoliday BIT
+);
+
+-- Sample Data Mart Query (INSERT INTO Fact Table)
+INSERT INTO Student_Course_Fact (
+    FactID, StudentID, CourseID, ClassID, DepartmentID, FacultyID, TermID, YearID, QuarterID, MonthID,
+    GPA, AttendancePercent, Grade, FinalScore, EngagementScore,
+    Status, IsAtRisk, IsHonors, IsOnProbation, IsInactive,
+    ConfidenceScore, DataQuality,
+    EnrollmentDate, LastActivityDate, CompletionDate
+)
+SELECT 
+    ROW_NUMBER() OVER (ORDER BY S.StudentID, C.CourseID) AS FactID,
+    S.StudentID,
+    C.CourseID,
+    Classes.ClassID,
+    C.DeptID AS DepartmentID,
+    Classes.FacultyID,
+    1 AS TermID,  -- Current term
+    YEAR(GETDATE()) AS YearID,
+    DATEPART(QUARTER, GETDATE()) AS QuarterID,
+    MONTH(GETDATE()) AS MonthID,
+    
+    -- Metrics
+    ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) AS GPA,
+    ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+          NULLIF(COUNT(A.AttendanceID), 0), 2) AS AttendancePercent,
+    SC.Grade,
+    CAST(SC.Grade AS DECIMAL(5,2)) AS FinalScore,
+    ROUND(0.4 * (CAST(SC.Grade AS DECIMAL(5,2)) / 100) +
+          0.4 * (ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                       NULLIF(COUNT(A.AttendanceID), 0), 2) / 100) +
+          0.2, 2) AS EngagementScore,
+    
+    -- Status
+    CASE 
+        WHEN MAX(A.attendencedate) >= DATEADD(DAY, -30, GETDATE()) THEN 'Active'
+        WHEN SC.Grade IS NOT NULL THEN 'Completed'
+        ELSE 'Dropped'
+    END AS Status,
+    
+    -- Flags
+    CASE WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) < 60 OR 
+              ROUND(100 * SUM(CASE WHEN A.Status = 'Present' THEN 1 ELSE 0 END) /
+                    NULLIF(COUNT(A.AttendanceID), 0), 2) < 70 THEN 1 ELSE 0 END AS IsAtRisk,
+    CASE WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) >= 85 THEN 1 ELSE 0 END AS IsHonors,
+    CASE WHEN ROUND(AVG(CAST(SC.Grade AS DECIMAL(5,2))), 2) < 60 THEN 1 ELSE 0 END AS IsOnProbation,
+    CASE WHEN MAX(A.attendencedate) < DATEADD(DAY, -30, GETDATE()) THEN 1 ELSE 0 END AS IsInactive,
+    
+    0.95 AS ConfidenceScore,
+    1 AS DataQuality,
+    
+    -- Dates
+    MIN(SC.EnrollmentDate) AS EnrollmentDate,
+    MAX(A.attendencedate) AS LastActivityDate,
+    CASE WHEN SC.Grade IS NOT NULL THEN GETDATE() ELSE NULL END AS CompletionDate
+    
+FROM Students S
+JOIN StudentCourses SC ON S.StudentID = SC.StudentID
+JOIN Courses C ON SC.CourseID = C.CourseID
+JOIN Classes ON C.CourseID = Classes.CourseID
+LEFT JOIN Attendance A ON S.StudentID = A.StudentID
+GROUP BY S.StudentID, C.CourseID, Classes.ClassID, C.DeptID, Classes.FacultyID, SC.Grade;
+
+-- BI Query: Multi-Dimensional Drill-Down
+SELECT 
+    DS.StudentName,
+    DC.CourseName,
+    DF.FacultyName,
+    DT.Year,
+    DT.Quarter,
+    SCF.GPA,
+    SCF.AttendancePercent,
+    SCF.Grade,
+    SCF.EngagementScore,
+    SCF.Status,
+    CASE WHEN SCF.IsAtRisk = 1 THEN 'Yes' ELSE 'No' END AS At_Risk,
+    CASE WHEN SCF.IsHonors = 1 THEN 'Yes' ELSE 'No' END AS Honors,
+    SCF.ConfidenceScore
+FROM Student_Course_Fact SCF
+JOIN Dim_Student DS ON SCF.StudentID = DS.StudentID
+JOIN Dim_Course DC ON SCF.CourseID = DC.CourseID
+JOIN Dim_Faculty DF ON SCF.FacultyID = DF.FacultyID
+JOIN Dim_Time DT ON SCF.MonthID = DT.Month AND SCF.YearID = DT.Year
+ORDER BY DS.StudentName, DT.Year, DT.Quarter;
+
+-- Aggregated Metrics for Dashboard
+SELECT 
+    'Total Students' AS Metric,
+    COUNT(DISTINCT StudentID) AS Value
+FROM Student_Course_Fact
+UNION ALL
+SELECT 'At Risk Students', COUNT(DISTINCT CASE WHEN IsAtRisk = 1 THEN StudentID END)
+FROM Student_Course_Fact
+UNION ALL
+SELECT 'Honors Students', COUNT(DISTINCT CASE WHEN IsHonors = 1 THEN StudentID END)
+FROM Student_Course_Fact
+UNION ALL
+SELECT 'Average GPA', ROUND(AVG(GPA), 2)
+FROM Student_Course_Fact
+UNION ALL
+SELECT 'Average Attendance %', ROUND(AVG(AttendancePercent), 2)
+FROM Student_Course_Fact
+UNION ALL
+SELECT 'Average Engagement', ROUND(AVG(EngagementScore), 2)
+FROM Student_Course_Fact;
+
+EXPLANATION:
+- Star schema: Fact table with dimension tables
+- Denormalized structure for fast aggregations
+- Pre-calculated metrics reduce query complexity
+- Status flags enable quick filtering
+- Confidence scores indicate data quality
+- Supports drill-down from summary to detail
+- Multi-dimensional reporting capability
+- Optimized for BI tools (Tableau, Power BI, etc.)
+- Time dimension enables time-based analysis
+- Fact table pre-aggregated by course/term
+
+SAMPLE OUTPUT:
+StudentID | StudentName | CourseName | GPA | Attendance | Grade | Status | At_Risk | Honors | Engagement
+-----------|------------|------------|-----|-----------|-------|--------|---------|--------|------------
+1          | Aarav Kumar| Database   | 3.8 | 92%       | A     | Active | No      | Yes    | 0.92
+2          | Ananya ... | Algorithms | 3.5 | 88%       | A     | Active | No      | Yes    | 0.88
+5          | Arjun ...  | OS Concepts| 2.4 | 68%       | C     | Active | Yes     | No     | 0.65
+
+
+================================================================================
+BATCH 5 SUMMARY - ADVANCED REPORTING AND DATA VISUALIZATION
+================================================================================
+
+EXERCISES 41-50 FOCUS AREAS:
+
+1. Cohort Analysis (41): Track student groups over time, retention metrics
+2. Funnel Analysis (42): Multi-stage student progression, conversion rates
+3. Segmentation (43): Behavioral grouping, risk categorization, interventions
+4. KPI Dashboard (44): Executive metrics, target tracking, trend monitoring
+5. Benchmarking (45): Cross-department comparison, performance ranking
+6. Time Series (46): Daily/monthly trends, moving averages, forecasting
+7. Distribution (47): Grade patterns, percentile analysis, curve analysis
+8. Financial (48): Revenue metrics, collection rates, forecasting
+9. Correlation (49): Relationship analysis, statistical significance
+10. Data Mart (50): BI-ready structure, dimensional modeling, drill-down
+
+ADVANCED CONCEPTS:
+- Window functions for complex calculations
+- CTEs for modular query building
+- Statistical functions (STDEV, correlation, percentiles)
+- Date/time aggregations and calculations
+- Normalized vs denormalized structures
+- Star schema for BI
+- Visualization-ready output formats
+- Multi-level aggregation
+- Predictive metrics
+- Data quality flags
+
+BUSINESS INTELLIGENCE OUTCOMES:
+- Executive dashboards with KPIs
+- Real-time monitoring systems
+- Predictive early warning systems
+- Revenue forecasting
+- Student success tracking
+- Performance benchmarking
+- Retention optimization
+- Risk identification
+- Resource allocation
+- Strategic planning support
+
+================================================================================
+END OF BATCH 5 (EXERCISES 41-50) - COMPLETE FINAL BATCH
+50 TOTAL EXERCISES ACROSS 5 COMPREHENSIVE BATCHES
+================================================================================

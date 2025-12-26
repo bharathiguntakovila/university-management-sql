@@ -1,0 +1,108 @@
+-- Non-Teaching Staff Data Insert Script
+-- Generated: 2025-12-25 20:30:56
+-- Total Records: 80
+
+-- ============================================
+-- Data Summary:
+-- Total Staff: 80
+-- Departments: 10
+-- Staff per department: 8
+
+-- Staff Roles:
+--   1. Admin Officer
+--   2. Librarian
+--   3. Lab Technician
+--   4. IT Support
+--   5. Counselor
+--   6. Accountant
+--   7. Receptionist
+--   8. Security Officer
+--   9. Maintenance Staff
+--   10. Office Manager
+--   11. Database Administrator
+--   12. Network Administrator
+--   13. Human Resources
+--   14. Registrar
+--   15. Clerk
+-- ============================================
+
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1001, 'Barbara Jones', 'IT Support', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1002, 'David Sanchez', 'Security Officer', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1003, 'Robert King', 'Admin Officer', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1004, 'Anthony Young', 'Human Resources', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1005, 'Elizabeth Perez', 'Office Manager', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1006, 'Brian Scott', 'Database Administrator', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1007, 'Thomas Allen', 'Counselor', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1008, 'Betty Wilson', 'Librarian', 1);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1009, 'David Jones', 'Database Administrator', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1010, 'Betty Sanchez', 'Human Resources', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1011, 'Ronald White', 'Human Resources', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1012, 'Ashley Lewis', 'Receptionist', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1013, 'Matthew Moore', 'Office Manager', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1014, 'Anthony Jones', 'Office Manager', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1015, 'Sarah Garcia', 'Network Administrator', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1016, 'Carol Sanchez', 'Accountant', 2);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1017, 'Lisa Walker', 'Security Officer', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1018, 'Lisa Thompson', 'Admin Officer', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1019, 'Michael Torres', 'Security Officer', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1020, 'Charles Hernandez', 'Admin Officer', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1021, 'Patricia Robinson', 'Security Officer', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1022, 'Paul Harris', 'Maintenance Staff', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1023, 'Linda Miller', 'Accountant', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1024, 'Donald Phillips', 'Maintenance Staff', 3);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1025, 'David Brown', 'Maintenance Staff', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1026, 'Amanda Wilson', 'Counselor', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1027, 'Sandra Martin', 'Maintenance Staff', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1028, 'Kenneth Lewis', 'Admin Officer', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1029, 'James Phillips', 'Human Resources', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1030, 'Jessica Johnson', 'Network Administrator', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1031, 'Barbara Harris', 'Database Administrator', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1032, 'Paul Smith', 'Receptionist', 4);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1033, 'Edward Wilson', 'Librarian', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1034, 'Lisa Phillips', 'Clerk', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1035, 'Melissa Miller', 'Human Resources', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1036, 'Amanda King', 'Admin Officer', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1037, 'Edward Sanchez', 'Security Officer', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1038, 'William Torres', 'Receptionist', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1039, 'Paul Moore', 'Office Manager', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1040, 'Elizabeth Phillips', 'Human Resources', 5);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1041, 'Michelle Hernandez', 'Maintenance Staff', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1042, 'Kimberly Robinson', 'Database Administrator', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1043, 'Mary White', 'Receptionist', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1044, 'Nancy Jackson', 'Security Officer', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1045, 'Joshua Lopez', 'Office Manager', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1046, 'James Walker', 'Human Resources', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1047, 'Ronald Scott', 'Admin Officer', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1048, 'Charles King', 'Admin Officer', 6);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1049, 'Edward Moore', 'Receptionist', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1050, 'Margaret Lopez', 'Librarian', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1051, 'Richard Thompson', 'Human Resources', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1052, 'Carol Gonzalez', 'Receptionist', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1053, 'Anthony Martin', 'Clerk', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1054, 'Donald Gonzalez', 'Network Administrator', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1055, 'Anthony Perez', 'Security Officer', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1056, 'Joseph Lopez', 'Office Manager', 7);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1057, 'Paul Martinez', 'Registrar', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1058, 'David Moore', 'Network Administrator', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1059, 'Anthony Jackson', 'IT Support', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1060, 'Ronald Clark', 'Security Officer', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1061, 'Daniel Anderson', 'Human Resources', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1062, 'Lisa Rodriguez', 'Maintenance Staff', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1063, 'Andrew Allen', 'Human Resources', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1064, 'Sarah Brown', 'Security Officer', 8);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1065, 'Kevin Jackson', 'Office Manager', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1066, 'Dorothy Allen', 'Counselor', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1067, 'Robert Williams', 'Database Administrator', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1068, 'Donald Davis', 'Office Manager', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1069, 'Matthew Williams', 'Receptionist', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1070, 'Betty Thompson', 'Office Manager', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1071, 'William Martin', 'Accountant', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1072, 'Steven Scott', 'Database Administrator', 9);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1073, 'Donald Lopez', 'Accountant', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1074, 'Mark Smith', 'Counselor', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1075, 'Richard Clark', 'Security Officer', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1076, 'Andrew Johnson', 'Network Administrator', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1077, 'Donald Hernandez', 'Admin Officer', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1078, 'Charles Lewis', 'Receptionist', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1079, 'James Williams', 'Receptionist', 10);
+INSERT INTO Staff (StaffID, Name, Role, DeptID) VALUES (1080, 'Brian Davis', 'Human Resources', 10);
