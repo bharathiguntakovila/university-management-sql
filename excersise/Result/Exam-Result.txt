@@ -5,3 +5,7 @@ Answer:
 EXERCISE 2: SELECT with WHERE - Find Students by Department
 Answer:
     select studentid,name,email,deptid from STUDENTS where deptid= 1;
+
+EXERCISE 3: SELECT with ORDER BY - Sort Students by Name
+Answer:
+    select studentid,name,email from students order by name;
