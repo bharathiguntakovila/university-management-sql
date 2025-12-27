@@ -1,0 +1,7 @@
+EXERCISE 1: Simple SELECT - Retrieve All Student Records
+Answer:
+    select * from students
+
+EXERCISE 2: SELECT with WHERE - Find Students by Department
+Answer:
+    select studentid,name,email,deptid from STUDENTS where deptid= 1;
