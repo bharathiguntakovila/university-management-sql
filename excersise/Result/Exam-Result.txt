@@ -29,3 +29,10 @@ Answer:
 EXERCISE 8: SELECT with DISTINCT - Get Unique Departments
 Answer:
      select distinct deptid from students;   
+
+EXERCISE 9: SELECT with BETWEEN - Students by ID Range
+ Question: Write a query to find students with StudentID between 10 and 20.
+ Answer:    
+ select studentid, name,email from students where studentid between 10 and 20
+
+ 
