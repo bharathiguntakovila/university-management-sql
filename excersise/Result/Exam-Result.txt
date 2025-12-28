@@ -25,3 +25,7 @@ Answer:
 EXERCISE 7: SELECT with WHERE and ORDER BY - Sorted Department List
 Answer:
      select studentid,name,email,deptid from students where deptid=1 order by name desc; 
+
+EXERCISE 8: SELECT with DISTINCT - Get Unique Departments
+Answer:
+     select distinct deptid from students;   
