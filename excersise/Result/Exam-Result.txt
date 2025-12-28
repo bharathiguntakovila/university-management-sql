@@ -9,3 +9,19 @@ Answer:
 EXERCISE 3: SELECT with ORDER BY - Sort Students by Name
 Answer:
     select studentid,name,email from students order by name;
+
+EXERCISE 4: SELECT with LIMIT - Get Top 5 Students
+Answer:
+
+    SELECT STUDENTID,NAME,EMAIL FROM STUDENTS ORDER BY STUDENTID FETCH FIRST 5 ROWS ONLY;
+    
+EXERCISE 5: SELECT with Multiple Conditions - Complex WHERE
+Answer:
+     select studentid,name,deptid from students where deptid=1 or deptid = 2;
+
+EXERCISE 6: SELECT Specific Columns - Email List
+Answer:
+     select studentid,email from students
+EXERCISE 7: SELECT with WHERE and ORDER BY - Sorted Department List
+Answer:
+     select studentid,name,email,deptid from students where deptid=1 order by name desc; 
