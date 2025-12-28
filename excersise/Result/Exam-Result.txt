@@ -41,3 +41,12 @@ Question: Write a query to find all students whose name starts with 'A'.
 
 Answer: select * from Students where name like 'A%';
 
+EXERCISE 11: UPDATE Single Row - Change Student Email
+
+Update the email address for student with ID 5 to 'newemail@college.edu'.
+
+Answer: update students
+set email = 'newemail@college.edu'
+where studentid =5;
+
+before : Vikram@example.com after update : newemail@college.edu
