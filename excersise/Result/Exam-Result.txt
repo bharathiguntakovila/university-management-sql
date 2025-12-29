@@ -50,3 +50,22 @@ set email = 'newemail@college.edu'
 where studentid =5;
 
 before : Vikram@example.com after update : newemail@college.edu
+
+EXERCISE 12: UPDATE Multiple Rows - Change Phone for Department
+Question: Update phone numbers for all students in Department 2 (Electronics) to '9999999999'.
+
+Answers: update students
+set phone = '9999999999'
+where deptid = 2;
+
+EXERCISE 13: UPDATE with Expression - Increment StudentID
+Question: Update all StudentID values by adding 1000 to each current value using a formula.
+
+Answer:  select studentid+1000 as newstudentid,name, middlename, email,phone from students
+comment: instead of update the the table just i mimick the data
+
+EXERCISE 14: UPDATE with CASE Statement - Conditional Updates
+
+Question: Update Grade for all courses based on current Grade value:
+
+Answer: 
