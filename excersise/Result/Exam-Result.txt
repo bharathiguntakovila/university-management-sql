@@ -68,4 +68,23 @@ EXERCISE 14: UPDATE with CASE Statement - Conditional Updates
 
 Question: Update Grade for all courses based on current Grade value:
 
-Answer: 
+Answer: Select resultid,examid,studentid,marks,
+case
+when marks > 95 then 'outstanding'
+when marks between 85 and 94 then 'distictions'
+when marks between 84 and 75 then 'firstclass'
+when marks between 70 and 60 then 'secondgrade'
+else 'fail'
+end as results
+from results;
+
+second answer
+select resultid,examid,studentid,marks,
+case
+when marks > = 90 then 'goldmeddle'
+when marks > = 84 then 'firstclass'
+when marks > = 70 then ' sencond'
+else 'thirdgrade'
+end as relusult
+from results;
+
