@@ -88,3 +88,28 @@ else 'thirdgrade'
 end as relusult
 from results;
 
+EXERCISE 15: UPDATE with JOIN - Update Fee Amounts by Department
+Question:  Update Fee Amount in Fees table based on Student's Department:
+
+Computer Science (DeptID=1): Increase by 10%
+Electronics (DeptID=2): Increase by 5%
+Other departments: Increase by 2%
+Answer:
+select f.feeid,s.deptid,s.studentid,f.amount from students s
+join fees f on f.studentid=s.studentid
+where deptid not in (1,2)
+
+select f.feeid,s.deptid,s.studentid,f.amount from students s
+join fees f on f.studentid=s.studentid
+where deptid =1
+
+select f.feeid from students s
+join fees f on f.studentid=s.studentid
+where deptid not in (1,2)
+
+
+update fees
+set amount = amount+(amount/100*2)
+where feeid in (select f.feeid from students s
+join fees f on f.studentid=s.studentid
+where deptid not in (1,2))
