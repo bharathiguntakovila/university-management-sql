@@ -117,6 +117,14 @@ where deptid not in (1,2))
 EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
 Question :EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
 Answer: 
+
 select st.studentid,s.name,c.coursename,st.grade from studentcourses st
 join courses c on c.courseid=st.courseid
-join students s on st.studentid=s.studentid
+join students s on st.studentid=s.studentid ORDER BY st.studentid, c.coursename;
+
+EXERCISE 17: SELECT with LEFT JOIN - Students Without Courses
+Question: Find all students who have NOT enrolled in any courses.
+
+Answer:     select s.studentid,s.name,s.email from students s
+
+left join studentcourses st on st.studentid=s.studentid order by s.name;    
