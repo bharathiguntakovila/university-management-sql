@@ -113,3 +113,10 @@ set amount = amount+(amount/100*2)
 where feeid in (select f.feeid from students s
 join fees f on f.studentid=s.studentid
 where deptid not in (1,2))
+
+EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
+Question :EXERCISE 16: SELECT with INNER JOIN - Get Student Courses
+Answer: 
+select st.studentid,s.name,c.coursename,st.grade from studentcourses st
+join courses c on c.courseid=st.courseid
+join students s on st.studentid=s.studentid
