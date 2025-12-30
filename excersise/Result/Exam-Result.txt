@@ -128,3 +128,43 @@ Question: Find all students who have NOT enrolled in any courses.
 Answer:     select s.studentid,s.name,s.email from students s
 
 left join studentcourses st on st.studentid=s.studentid order by s.name;    
+
+EXERCISE 18: SELECT with Multiple JOINs - Complete Student Course Info
+Question: Create comprehensive student course information including:
+
+Answer: 
+
+PERSENTAGE ::SELECT
+    CLASSID,
+    STUDENTID,
+    COUNT(STUDENTID) AS TOTAL,
+    SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END) AS ACTUAL,
+    ROUND (SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END) / COUNT(STUDENTID)* 100,1) AS PERSENTAGE
+from ATTENDANCE
+group by classid,studentid 
+order by classid,studentid;
+
+
+SELECT
+S.STUDENTID,
+S.NAME,
+C.COURSENAME,
+D.DEPTNAME,
+F.NAME,
+ST.GRADE,
+P.PERSENTAGE
+FROM studentcourses ST
+LEFT JOIN STUDENTS S ON ST.STUDENTID=S.STUDENTID
+JOIN COURSES C ON ST.COURSEID=C.COURSEID
+JOIN DEPARTMENTS D ON S.DEPTID=D.DEPTID
+JOIN CLASSES CS ON ST.COURSEID=CS.COURSEID
+JOIN FACULTY F ON CS.FACULTYID=F.FACULTYID
+JOIN (SELECT
+    CLASSID,
+    STUDENTID,
+    COUNT(STUDENTID) AS TOTAL,
+    SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END) AS ACTUAL,
+    ROUND (SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END) / COUNT(STUDENTID)* 100,1) AS PERSENTAGE
+from ATTENDANCE
+group by classid,studentid 
+order by classid,studentid)P ON S.STUDENTID=P.STUDENTID AND P.CLASSID=CS.CLASSID
