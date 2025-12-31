@@ -243,3 +243,47 @@ Attendance < 60%: Status = 'At Risk'
     group by classid,studentid 
     order by classid,studentid) P ON P.STUDENTID=S.STUDENTID AND P.CLASSID=CS.CLASSID
 
+EXERCISE 20: SELECT with UNION - Combine Multiple Queries
+Question: Create a combined report of:
+
+Top 5 students by GPA (from StudentCourses)
+Top 5 students by Attendance (from Attendance)
+
+Answer:
+
+select 
+    classid,
+    studentid,
+    count(studentid) as total,
+    Sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+    ROUND (Sum(case when status='PRESENT' THEN 1 ELSE 0 END) / count(studentid)*100,1)AS PERSENTAGE
+    from attendance 
+    group by classid,studentid 
+    order by classid,studentid
+    
+
+SELECT 
+    ST.STUDENTID,
+    avg(P.PERSENTAGE),
+     round (avg(P.PERSENTAGE),2) as avgpersentage
+FROM STUDENTCOURSES ST
+JOIN students S ON ST.STUDENTID=S.STUDENTID
+JOIN COURSES C ON C.COURSEID=ST.COURSEID
+Join classes CS on c.courseid = cs.courseid
+JOIN (select 
+    classid,
+    studentid,
+    count(studentid) as total,
+    Sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+    ROUND (Sum(case when status='PRESENT' THEN 1 ELSE 0 END) / count(studentid)*100,1)AS PERSENTAGE
+    from attendance 
+    group by classid,studentid 
+    order by classid,studentid)P ON ST.STUDENTID=P.STUDENTID AND CS.CLASSID=P.CLASSID
+    group by st.studentid
+    order by avgpersentage desc
+  fetch first 5 rows only
+
+
+
+    
+
