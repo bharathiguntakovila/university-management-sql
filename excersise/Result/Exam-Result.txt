@@ -168,3 +168,78 @@ JOIN (SELECT
 from ATTENDANCE
 group by classid,studentid 
 order by classid,studentid)P ON S.STUDENTID=P.STUDENTID AND P.CLASSID=CS.CLASSID
+
+EXERCISE 19: UPDATE with Subquery - Update Based on Aggregate
+Question:Update all students' status based on their attendance:
+Attendance >= 90%: Status = 'Excellent'
+Attendance >= 75%: Status = 'Good'
+Attendance >= 60%: Status = 'Average'
+Attendance < 60%: Status = 'At Risk'
+SELECT 
+    S.STUDENTID,
+    S.NAME,
+    C.COURSENAME,
+    P.PERSENTAGE,
+    CASE WHEN PERSENTAGE >90 THEN 'EXCELLENT'
+    WHEN PERSENTAGE >75 THEN 'GOOD'
+    WHEN PERSENTAGE > 60 THEN 'AVERAGE'
+    WHEN PERSENTAGE <60 THEN 'RISK'
+    END AS STATUS
+    FROM STUDENTCOURSES ST
+    JOIN COURSES C ON ST.COURSEID=C.COURSEID
+    JOIN STUDENTS S ON ST.STUDENTID=S.STUDENTID
+    JOIN CLASSES CS ON ST.COURSEID=CS.COURSEID
+    JOIN (select 
+    classid,
+    studentid,
+    count(studentid) as total,
+    Sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+    ROUND (Sum(case when status='PRESENT' THEN 1 ELSE 0 END) / count(studentid)*100,1)AS PERSENTAGE
+    from attendance 
+    group by classid,studentid 
+    order by classid,studentid) P ON P.STUDENTID=S.STUDENTID AND P.CLASSID=CS.CLASSID
+
+EXERCISE 19: UPDATE with Subquery - Update Based on Aggregate
+Question: Update all students' status based on their attendance:
+
+Attendance >= 90%: Status = 'Excellent'
+Attendance >= 75%: Status = 'Good'
+Attendance >= 60%: Status = 'Average'
+Attendance < 60%: Status = 'At Risk'
+
+    Answer:
+    select 
+    classid,
+    studentid,
+    count(studentid) as total,
+    Sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+    ROUND (Sum(case when status='PRESENT' THEN 1 ELSE 0 END) / count(studentid)*100,1)AS PERSENTAGE
+    from attendance 
+    group by classid,studentid 
+    order by classid,studentid;
+
+
+     SELECT 
+    S.STUDENTID,
+    S.NAME,
+    C.COURSENAME,
+    P.PERSENTAGE,
+    CASE WHEN PERSENTAGE >90 THEN 'EXCELLENT'
+    WHEN PERSENTAGE >75 THEN 'GOOD'
+    WHEN PERSENTAGE > 60 THEN 'AVERAGE'
+    WHEN PERSENTAGE <60 THEN 'RISK'
+    END AS STATUS
+    FROM STUDENTCOURSES ST
+    JOIN COURSES C ON ST.COURSEID=C.COURSEID
+    JOIN STUDENTS S ON ST.STUDENTID=S.STUDENTID
+    JOIN CLASSES CS ON ST.COURSEID=CS.COURSEID
+    JOIN (select 
+    classid,
+    studentid,
+    count(studentid) as total,
+    Sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+    ROUND (Sum(case when status='PRESENT' THEN 1 ELSE 0 END) / count(studentid)*100,1)AS PERSENTAGE
+    from attendance 
+    group by classid,studentid 
+    order by classid,studentid) P ON P.STUDENTID=S.STUDENTID AND P.CLASSID=CS.CLASSID
+
