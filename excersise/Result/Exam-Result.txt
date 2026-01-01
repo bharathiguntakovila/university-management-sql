@@ -283,7 +283,76 @@ JOIN (select
     order by avgpersentage desc
   fetch first 5 rows only
 
-
-
     
+    select 
+    s.studentid,
+    s.name,
+round (Sum(marks)/count(marks),2)as persentage,
+round(Sum(marks)/count(marks)/10,2)as errorgpa,
+round((sum(r.marks/e.maxmarks*100)/count(s.studentid))/10,2) as GPA
+from studentcourses st
+join students s on st.studentid=s.studentid
+join results r on st.studentid=r.studentid
+join exams e on r.examid=r.examid
+group by s.studentid,s.name
+order by gpa desc
+fetch first 5 rows only
+EXERCISE 21: DELETE Single Row - Remove Specific Student
+Question:Delete the student record with StudentID = 100 from the Students table.
+
+Answer:
+delete from students where id in (100)
+delete from students where id =100
+
+EXERCISE 1: Simple SELECT - Retrieve All Student Records
+question :Write a SELECT query to retrieve all student records from the Students table.
+
+Answer:
+select studentid,name,middlename,deptid,email,phone from students 
+
+EXERCISE 2: SELECT with WHERE - Find Students by Department
+Question: Write a query to find all students in Computer Science Department (DeptID = 1).
+
+Answer: select studentid,name,email,deptid from students where deptid= 1
+
+EXERCISE 3: SELECT with ORDER BY - Sort Students by Name
+Questions:  Write a query to retrieve all students sorted alphabetically by name.
+
+Answer: select studentid,name,email from students order by name asc;
+
+EXERCISE 4: SELECT with LIMIT - Get Top 5 Students
+
+Question: Write a query to retrieve the first 5 students from the database.
+
+Answer: select studentid,name,email from students fetch first 5 row only
+
+EXERCISE 5: SELECT with Multiple Conditions - Complex WHERE
+question:Write a query to find students in Department 1 OR Department 2, sorted by name.
+
+Answers: 
+select 
+    studentid,
+    name,
+    deptid
+from students
+where deptid =2 or deptid=1
+
+select 
+    studentid,
+    name,
+    deptid
+from students
+where deptid in(1) or deptid=2
+
+EXERCISE 22: DELETE Multiple Rows - Remove All Students Without Courses
+Question: Delete all students who are NOT enrolled in any courses.
+
+Answer:
+
+DELETE  from students 
+where  studentid not in (select studentid from studentcourses)
+
+
+
+
 
