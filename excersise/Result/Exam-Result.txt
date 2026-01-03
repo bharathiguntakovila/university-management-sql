@@ -354,8 +354,13 @@ where  studentid not in (select studentid from studentcourses)
 
 select studentid from studentcourses
 
+EXERCISE 23: DELETE with JOIN - Remove Courses in Specific Department
 
+Delete all courses belonging to a specific department (e.g., DeptID = 5).
+Answer: 
+SELECT * FROM COURSES
 
+WHERE DEPTID  IN  (SELECT DEPTID FROM DEPARTMENTS WHERE DEPTID=5)
 
 
 
