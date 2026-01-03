@@ -349,8 +349,12 @@ Question: Delete all students who are NOT enrolled in any courses.
 
 Answer:
 
-DELETE  from students 
+select * from students 
 where  studentid not in (select studentid from studentcourses)
+
+select studentid from studentcourses
+
+
 
 
 
