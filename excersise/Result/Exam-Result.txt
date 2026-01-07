@@ -357,11 +357,66 @@ select studentid from studentcourses
 EXERCISE 23: DELETE with JOIN - Remove Courses in Specific Department
 
 Delete all courses belonging to a specific department (e.g., DeptID = 5).
+
 Answer: 
 SELECT * FROM COURSES
 
 WHERE DEPTID  IN  (SELECT DEPTID FROM DEPARTMENTS WHERE DEPTID=5)
 
+EXERCISE 24: DELETE with Subquery - Remove Low Attendance Students
+Delete all students whose attendance is below 40% across all classes.
 
+Answer:
 
+select 
+studentid,
+classid,
+count(studentid),
+sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+ROUND(SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END)/count(studentid)*100,2) AS PERSENTAGE
+from attendance 
+group by studentid,classid
+order by studentid,classid
 
+DELETE 
+S.STUDENTID,
+COUNT(S.STUDENTID),
+ROUND(SUM(P.PERSENTAGE)/COUNT(S.STUDENTID),2) AS AVERAGE
+FROM STUDENTS S
+JOIN(select 
+studentid,
+classid,
+count(studentid),
+sum(case when status='PRESENT' THEN 1 ELSE 0 END) AS ACTUVAL,
+ROUND(SUM(CASE WHEN STATUS='PRESENT' THEN 1 ELSE 0 END)/count(studentid)*100,2) AS PERSENTAGE
+from attendance 
+group by studentid,classid
+order by studentid,classid) P ON S.STUDENTID=P.STUDENTID
+GROUP BY S.STUDENTID
+HAVING AVERAGE<40
+ORDER BY S.STUDENTID
+
+EXERCISE 31: GROUP BY and COUNT - Student Enrollment Distribution
+Question: Find the number of students enrolled in each course.
+
+Answer:
+
+SELECT C.COURSEID,
+COURSENAME,
+COUNT(C.COURSEID)
+FROM STUDENTCOURSES S
+LEFT JOIN COURSES C ON S.COURSEID=C.COURSEID
+JOIN DEPARTMENTS D ON C.DEPTID=D.DEPTID
+GROUP BY C.COURSEID,C.COURSENAME
+
+EXERCISE 32: GROUP BY Multiple Columns - Student Grades by Course
+question: Get grade distribution (A, B, C, F) for each course.
+
+Answer:
+select 
+c.coursename,
+s.grade,
+count(c.coursename)
+from studentcourses s
+join courses c on s.courseid=c.courseid
+group by c.coursename,s.grade
