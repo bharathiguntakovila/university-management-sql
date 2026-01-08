@@ -1,0 +1,176 @@
+University Management System – Database Requirements Document
+1. Project Overview
+The University Management System (UMS) manages all academic and administrative operations:
+	• Student enrollment and courses
+	• Faculty and departments
+	• Class scheduling and exams
+	• Library and books
+	• Hostel and rooms
+	• Transport and vehicles
+	• Clubs and extracurriculars
+	• Attendance tracking
+	• Fee management
+	• Staff management
+The database ensures data integrity via primary keys, foreign keys, unique constraints, not null constraints, and check constraints.
+
+2. Tables and Detailed Specifications
+2.1 Departments
+Column	Data Type	Constraints	Requirement / Notes
+DeptID	NUMBER(6)	PRIMARY KEY	Unique department ID
+DeptName	VARCHAR2(50)	NOT NULL, UNIQUE	Name of department
+HeadID	NUMBER(6)	FOREIGN KEY → Faculty(FacultyID)	Department head
+
+2.2 Faculty
+Column	Data Type	Constraints	Requirement / Notes
+FacultyID	NUMBER(6)	PRIMARY KEY	Unique faculty ID
+Name	VARCHAR2(100)	NOT NULL	Full faculty name
+DeptID	NUMBER(6)	FOREIGN KEY → Departments(DeptID)	Department
+Email	VARCHAR2(100)	UNIQUE	Contact email
+Phone	VARCHAR2(15)	NULL allowed	Optional phone
+
+2.3 Students
+Column	Data Type	Constraints	Requirement / Notes
+StudentID	NUMBER(6)	PRIMARY KEY	Unique student ID
+Name	VARCHAR2(100)	NOT NULL	Full name
+MiddleName	VARCHAR2(50)	NULL allowed	Optional
+DeptID	NUMBER(6)	FOREIGN KEY → Departments(DeptID)	Department
+Email	VARCHAR2(100)	UNIQUE	Contact email
+Phone	VARCHAR2(15)	NULL allowed	Optional
+
+2.4 Courses
+Column	Data Type	Constraints	Requirement / Notes
+CourseID	NUMBER(6)	PRIMARY KEY	Unique course ID
+CourseName	VARCHAR2(100)	NOT NULL, UNIQUE	Name of course
+DeptID	NUMBER(6)	FOREIGN KEY → Departments(DeptID)	Department offering course
+Credits	NUMBER(2)	CHECK (Credits > 0)	Number of credits
+
+2.5 StudentCourses
+Column	Data Type	Constraints	Requirement / Notes
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Enrolled student
+CourseID	NUMBER(6)	FOREIGN KEY → Courses(CourseID)	Enrolled course
+Grade	VARCHAR2(2)	NULL allowed	Grade obtained
+PRIMARY KEY	(StudentID, CourseID)	Composite PK	Prevent duplicate enrollments
+
+2.6 Classes
+Column	Data Type	Constraints	Requirement / Notes
+ClassID	NUMBER(6)	PRIMARY KEY	Unique class ID
+CourseID	NUMBER(6)	FOREIGN KEY → Courses(CourseID)	Linked course
+FacultyID	NUMBER(6)	FOREIGN KEY → Faculty(FacultyID)	Assigned faculty
+Semester	VARCHAR2(10)	NOT NULL	Semester info
+Year	NUMBER(4)	NOT NULL	Year
+
+2.7 Exams
+Column	Data Type	Constraints	Requirement / Notes
+ExamID	NUMBER(6)	PRIMARY KEY	Unique exam ID
+CourseID	NUMBER(6)	FOREIGN KEY → Courses(CourseID)	Exam course
+ExamDate	DATE	NOT NULL	Exam scheduled date
+MaxMarks	NUMBER(3)	CHECK (MaxMarks > 0)	Maximum marks
+
+2.8 Results
+Column	Data Type	Constraints	Requirement / Notes
+ResultID	NUMBER(6)	PRIMARY KEY	Unique result ID
+ExamID	NUMBER(6)	FOREIGN KEY → Exams(ExamID)	Exam reference
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Student reference
+Marks	NUMBER(3)	CHECK (Marks >= 0)	Marks obtained
+
+2.9 LibraryBooks
+Column	Data Type	Constraints	Requirement / Notes
+BookID	NUMBER(6)	PRIMARY KEY	Unique book ID
+Title	VARCHAR2(100)	NOT NULL	Book title
+Author	VARCHAR2(100)	NOT NULL	Author name
+DeptID	NUMBER(6)	FOREIGN KEY → Departments(DeptID)	Owning department
+Copies	NUMBER(3)	CHECK (Copies > 0)	Number of copies
+
+2.10 BookIssue
+Column	Data Type	Constraints	Requirement / Notes
+IssueID	NUMBER(6)	PRIMARY KEY	Unique issue ID
+BookID	NUMBER(6)	FOREIGN KEY → LibraryBooks(BookID)	Book issued
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Borrowing student
+IssueDate	DATE	NOT NULL	Date issued
+ReturnDate	DATE	NULL allowed	Date returned
+
+2.11 Hostel
+Column	Data Type	Constraints	Requirement / Notes
+HostelID	NUMBER(6)	PRIMARY KEY	Unique hostel ID
+Name	VARCHAR2(50)	NOT NULL, UNIQUE	Hostel name
+Capacity	NUMBER(3)	CHECK (Capacity > 0)	Max capacity
+
+2.12 HostelRooms
+Column	Data Type	Constraints	Requirement / Notes
+RoomID	NUMBER(6)	PRIMARY KEY	Unique room ID
+HostelID	NUMBER(6)	FOREIGN KEY → Hostel(HostelID)	Linked hostel
+RoomNumber	VARCHAR2(10)	NOT NULL	Room number
+Capacity	NUMBER(2)	CHECK (Capacity > 0)	Max students per room
+
+2.13 StudentHostel
+Column	Data Type	Constraints	Requirement / Notes
+			
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Assigned student
+RoomID	NUMBER(6)	FOREIGN KEY → HostelRooms(RoomID)	Room assigned
+PRIMARY KEY	(StudentID, RoomID)	Composite PK	Prevent duplicate room assignments
+
+2.14 Transport
+Column	Data Type	Constraints	Requirement / Notes
+VehicleID	NUMBER(6)	PRIMARY KEY	Unique vehicle ID
+Type	VARCHAR2(20)	NOT NULL	Vehicle type (bus, van, etc.)
+Route	VARCHAR2(50)	NOT NULL	Assigned route
+Capacity	NUMBER(2)	CHECK (Capacity > 0)	Max students
+
+2.15 StudentTransport
+Column	Data Type	Constraints	Requirement / Notes
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Student assigned to transport
+VehicleID	NUMBER(6)	FOREIGN KEY → Transport(VehicleID)	Vehicle assigned
+PRIMARY KEY	(StudentID, VehicleID)	Composite PK	Prevent duplicate assignments
+
+2.16 Attendance
+Column	Data Type	Constraints	Requirement / Notes
+AttendanceID	NUMBER(6)	PRIMARY KEY	Unique attendance ID
+ClassID	NUMBER(6)	FOREIGN KEY → Classes(ClassID)	Class reference
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Student reference
+Status	VARCHAR2(10)	CHECK (Status IN ('Present','Absent'))	Attendance status
+Date	DATE	NOT NULL	Date of attendance
+
+2.17 Fees
+Column	Data Type	Constraints	Requirement / Notes
+FeeID	NUMBER(6)	PRIMARY KEY	Unique fee ID
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Student reference
+Amount	NUMBER(10,2)	CHECK (Amount > 0)	Fee amount
+DueDate	DATE	NOT NULL	Fee due date
+PaidDate	DATE	NULL allowed	Payment date
+
+2.18 Staff
+Column	Data Type	Constraints	Requirement / Notes
+StaffID	NUMBER(6)	PRIMARY KEY	Unique staff ID
+Name	VARCHAR2(100)	NOT NULL	Staff name
+Role	VARCHAR2(50)	NOT NULL	Staff role
+DeptID	NUMBER(6)	FOREIGN KEY → Departments(DeptID)	Assigned department
+
+2.19 Timetable
+Column	Data Type	Constraints	Requirement / Notes
+TimetableID	NUMBER(6)	PRIMARY KEY	Unique timetable entry
+ClassID	NUMBER(6)	FOREIGN KEY → Classes(ClassID)	Class scheduled
+Day	VARCHAR2(10)	NOT NULL	Day of the week
+StartTime	DATE	NOT NULL	Start time
+EndTime	DATE	NOT NULL	End time
+
+2.20 Clubs
+Column	Data Type	Constraints	Requirement / Notes
+ClubID	NUMBER(6)	PRIMARY KEY	Unique club ID
+ClubName	VARCHAR2(50)	NOT NULL, UNIQUE	Club name
+PresidentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Student president (optional)
+
+2.21 StudentClubs
+Column	Data Type	Constraints	Requirement / Notes
+StudentID	NUMBER(6)	FOREIGN KEY → Students(StudentID)	Club member
+ClubID	NUMBER(6)	FOREIGN KEY → Clubs(ClubID)	Linked club
+PRIMARY KEY	(StudentID, ClubID)	Composite PK	Prevent duplicate memberships
+
+3. Key Design Rules
+	• Primary keys for all tables
+	• Foreign keys enforce referential integrity
+	• NOT NULL for mandatory fields
+	• UNIQUE for emails, course names, department names
+	• CHECK for validation (marks, capacities, credits, attendance)
+	• Composite keys for junction tables
+
+✅ This gives you 20 main tables + 1 junction table (StudentClubs), fully defined with requirements, ready to be converted into SQL DDL when needed.

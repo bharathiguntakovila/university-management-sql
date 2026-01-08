@@ -420,3 +420,13 @@ count(c.coursename)
 from studentcourses s
 join courses c on s.courseid=c.courseid
 group by c.coursename,s.grade
+
+EXERCISE 33: HAVING Clause - Filter Groups
+select 
+    s.courseid, 
+    c.coursename,
+    round (count(s.courseid)/(select count(*) from students)*100,2),
+    count(s.courseid) as tatalcourses
+from studentcourses s 
+join courses c on s.courseid=c.courseid
+group by s.courseid,c.coursename
