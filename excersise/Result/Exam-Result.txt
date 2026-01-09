@@ -472,4 +472,10 @@ group by c.coursename
 having count (distinct s.grade)>2
 order by uniquegrade
 
+EXERCISE 37: Subquery in WHERE - Complex Filtering
+question:    Find all students who scored above the average grade in their course.
+
+Answer:   
+
+
 
