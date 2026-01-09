@@ -430,3 +430,46 @@ select
 from studentcourses s 
 join courses c on s.courseid=c.courseid
 group by s.courseid,c.coursename
+
+EXERCISE 34: Aggregate Functions - Department Statistics
+question:
+answer :Calculate min, max, average, and count for student grades per department.
+select
+    d.deptname,
+    count(d.deptname),
+    round (count(d.deptname)/(select count(*) from students)*100,2) as avggrade,
+    min (s.studentid),
+    max(s.studentid)
+from departments d
+join students s on d.deptid=s.deptid
+group by d.deptname
+EXERCISE 35: SUM and AVG with GROUP BY - Fee Analysis
+question:
+answer: Calculate total and average fees collected per department.
+
+select 
+    d.deptname,
+    count(distinct s.studentid) as studentcount,
+    count(f.feeid) as feeid,
+    sum(f.amount) as totalfee,
+    sum(f.amount)/count(distinct s.studentid)
+from fees f
+join students s on f.studentid=s.studentid
+join departments d on s.deptid=d.deptid
+group by d.deptname
+
+EXERCISE 36: DISTINCT with Aggregates - Unique Value Counts
+question:   CountFind number of unique students per course and unique grades per student.
+
+Answer:
+select 
+    c.coursename,
+    count(distinct s.studentid) as uniquestudents,
+    count(distinct s.grade) as uniquegrade
+from courses c
+join studentcourses s on c.courseid=s.courseid
+group by c.coursename
+having count (distinct s.grade)>2
+order by uniquegrade
+
+
